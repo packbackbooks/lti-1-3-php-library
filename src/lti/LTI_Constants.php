@@ -74,4 +74,34 @@ class LTI_Constants
     public const COURSE_OFFERING = 'http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering';
     public const COURSE_SECTION = 'http://purl.imsglobal.org/vocab/lis/v2/course#CourseSection';
     public const COURSE_GROUP = 'http://purl.imsglobal.org/vocab/lis/v2/course#Group';
+
+    // Context sub-roles
+    public const SUB_ADMINISTRATOR = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Administrator#Administrator';
+    public const SUB_DEVELOPER = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Administrator#Developer';
+    public const SUB_EXTERNALDEVELOPER = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Administrator#ExternalDeveloper';
+    public const SUB_EXTERNALSUPPORT = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Administrator#ExternalSupport';
+    public const SUB_EXTERNALSYSTEMADMINISTRATOR = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Administrator#ExternalSystemAdministrator';
+    public const SUB_SUPPORT = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Administrator#Support';
+    public const SUB_SYSTEMADMINISTRATOR = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Administrator#SystemAdministrator';
+    public const SUB_CONTENTDEVELOPER = 'http://purl.imsglobal.org/vocab/lis/v2/membership/ContentDeveloper#ContentDeveloper';
+    public const SUB_CONTENTEXPERT = 'http://purl.imsglobal.org/vocab/lis/v2/membership/ContentDeveloper#ContentExpert';
+    public const SUB_EXTERNALCONTENTEXPERT = 'http://purl.imsglobal.org/vocab/lis/v2/membership/ContentDeveloper#ExternalContentExpert';
+    public const SUB_LIBRARIAN = 'http://purl.imsglobal.org/vocab/lis/v2/membership/ContentDeveloper#Librarian';
+    public const SUB_EXTERNALINSTRUCTOR = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#ExternalInstructor';
+    public const SUB_GRADER = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#Grader';
+    public const SUB_GUESTINSTRUCTOR = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#GuestInstructor';
+    public const SUB_LECTURER = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#Lecturer';
+    public const SUB_PRIMARYINSTRUCTOR = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#PrimaryInstructor';
+    public const SUB_SECONDARYINSTRUCTOR = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#SecondaryInstructor';
+    public const SUB_TA = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#TeachingAssistant';
+    public const SUB_TAGROUP = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#TeachingAssistantGroup';
+    public const SUB_TAOFFERING = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#TeachingAssistantOffering';
+    public const SUB_TASECTION = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#TeachingAssistantSection';
+    public const SUB_TASECTIONASSOCIATION = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#TeachingAssistantSectionAssociation';
+    public const SUB_TATEMPLATE = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Instructor#TeachingAssistantTemplate';
+    public const SUB_EXTERNALLEARNER = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Learner#ExternalLearner';
+    public const SUB_GUESTLEARNER = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Learner#GuestLearner';
+    public const SUB_INSTRUCTOR = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Learner#Instructor';
+    public const SUB_LEARNER = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Learner#Learner';
+    public const SUB_NONCREDITLEARNER = 'http://purl.imsglobal.org/vocab/lis/v2/membership/Learner#NonCreditLearner';
 }
