@@ -5,6 +5,7 @@ namespace Packback\Lti1p3;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
+use GuzzleHttp\Client;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -16,6 +17,7 @@ class LtiMessageLaunch
 {
     private $db;
     private $cache;
+    private $client;
     private $request;
     private $cookie;
     private $jwt;
@@ -29,7 +31,7 @@ class LtiMessageLaunch
      * @param ICache    $cache    instance of the Cache interface used to loading and storing launches
      * @param ICookie   $cookie   instance of the Cookie interface used to set and read cookies
      */
-    public function __construct(IDatabase $database, ICache $cache = null, ICookie $cookie = null)
+    public function __construct(IDatabase $database, ICache $cache = null, ICookie $cookie = null, Client $client = null)
     {
         $this->db = $database;
 
@@ -37,14 +39,15 @@ class LtiMessageLaunch
 
         $this->cache = $cache;
         $this->cookie = $cookie;
+        $this->client = $client;
     }
 
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      */
-    public static function new(IDatabase $database, ICache $cache = null, ICookie $cookie = null)
+    public static function new(IDatabase $database, ICache $cache = null, ICookie $cookie = null, Client $client = null)
     {
-        return new LtiMessageLaunch($database, $cache, $cookie);
+        return new LtiMessageLaunch($database, $cache, $cookie, $client);
     }
 
     /**
@@ -58,9 +61,9 @@ class LtiMessageLaunch
      *
      * @return LtiMessageLaunch a populated and validated LtiMessageLaunch
      */
-    public static function fromCache($launch_id, IDatabase $database, ICache $cache = null)
+    public static function fromCache($launch_id, IDatabase $database, ICache $cache = null, Client $client = null)
     {
-        $new = new LtiMessageLaunch($database, $cache, null);
+        $new = new LtiMessageLaunch($database, $cache, null, $client);
         $new->launch_id = $launch_id;
         $new->jwt = ['body' => $new->cache->getLaunchData($launch_id)];
 
@@ -111,7 +114,7 @@ class LtiMessageLaunch
     public function getNrps()
     {
         return new LtiNamesRolesProvisioningService(
-            new LtiServiceConnector($this->registration),
+            new LtiServiceConnector($this->registration, $this->cache, $this->client),
             $this->jwt['body'][LtiConstants::NRPS_CLAIM_SERVICE]);
     }
 
@@ -133,7 +136,7 @@ class LtiMessageLaunch
     public function getGs()
     {
         return new LtiCourseGroupsService(
-            new LtiServiceConnector($this->registration),
+            new LtiServiceConnector($this->registration, $this->cache, $this->client),
             $this->jwt['body'][LtiConstants::GS_CLAIM_SERVICE]);
     }
 
@@ -155,7 +158,7 @@ class LtiMessageLaunch
     public function getAgs()
     {
         return new LtiAssignmentsGradesService(
-            new LtiServiceConnector($this->registration),
+            new LtiServiceConnector($this->registration, $this->cache, $this->client),
             $this->jwt['body'][LtiConstants::AGS_CLAIM_ENDPOINT]);
     }
 
