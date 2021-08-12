@@ -4,6 +4,7 @@ namespace Tests;
 
 use Mockery;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
+use Packback\Lti1p3\LtiServiceConnector;
 use Packback\Lti1p3\LtiNamesRolesProvisioningService;
 use PHPUnit\Framework\TestCase;
 
@@ -23,42 +24,19 @@ class LtiNamesRolesProvisioningServiceTest extends TestCase
 
     public function testItGetsMembers()
     {
-        $expected = ['members'];
+        $expected = [
+            'headers' => [
+                'Content-Type' => LtiServiceConnector::CONTENT_TYPE_JSON,
+                'Server' => 'nginx',
+            ],
+            'body' => ['members'],
+        ];
 
         $nrps = new LtiNamesRolesProvisioningService($this->connector, [
             'context_memberships_url' => 'url',
         ]);
-        $this->connector->shouldReceive('get')
-            ->once()->andReturn([
-                'headers' => [],
-                'body' => ['members' => $expected],
-            ]);
-
-        $result = $nrps->getMembers();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testItGetsMembersIteratively()
-    {
-        $response = ['members'];
-        $expected = array_merge($response, $response);
-
-        $nrps = new LtiNamesRolesProvisioningService($this->connector, [
-            'context_memberships_url' => 'url',
-        ]);
-        // First response
-        $this->connector->shouldReceive('get')
-            ->once()->andReturn([
-                'headers' => ['Link:Something<else>;rel="next"'],
-                'body' => ['members' => $response],
-            ]);
-        // Second response
-        $this->connector->shouldReceive('get')
-            ->once()->andReturn([
-                'headers' => [],
-                'body' => ['members' => $response],
-            ]);
+        $this->connector->shouldReceive('getAll')
+            ->once()->andReturn($expected);
 
         $result = $nrps->getMembers();
 

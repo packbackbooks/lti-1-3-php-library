@@ -17,62 +17,20 @@ class LtiCourseGroupsService
 
     public function getGroups()
     {
-        $groups = [];
-
-        $next_page = $this->service_data['context_groups_url'];
-
-        while ($next_page) {
-            $page = $this->service_connector->get(
-                $next_page,
-                $this->service_data['scope'],
-                LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
-            );
-
-            $groups = array_merge($groups, $page['body']['groups']);
-
-            $next_page = false;
-            foreach ($page['headers'] as $header) {
-                if (preg_match(LtiServiceConnector::NEXT_PAGE_REGEX, $header, $matches)) {
-                    $next_page = $matches[1];
-                    break;
-                }
-            }
-        }
-
-        return $groups;
+        return $this->service_connector->getAll(
+            $this->service_data['context_groups_url'],
+            $this->service_data['scope'],
+            LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
+        );
     }
 
     public function getSets()
     {
-        $sets = [];
-
-        // Sets are optional.
-        if (!isset($this->service_data['context_group_sets_url'])) {
-            return [];
-        }
-
-        $next_page = $this->service_data['context_group_sets_url'];
-
-        while ($next_page) {
-            $page = $this->service_connector->makeServiceRequest(
-                LtiServiceConnector::METHOD_GET,
-                $this->service_data['scope'],
-                $next_page,
-                LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
-            );
-
-            $sets = array_merge($sets, $page['body']['sets']);
-
-            $next_page = false;
-            foreach ($page['headers'] as $header) {
-                if (preg_match(LtiServiceConnector::NEXT_PAGE_REGEX, $header, $matches)) {
-                    $next_page = $matches[1];
-                    break;
-                }
-            }
-        }
-
-        return $sets;
+        return $this->service_connector->getAll(
+            $this->service_data['context_group_sets_url'],
+            $this->service_data['scope'],
+            LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
+        );
     }
 
     public function getGroupsBySet()
