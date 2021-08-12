@@ -111,18 +111,16 @@ class LtiServiceConnector implements ILtiServiceConnector
     {
         $collection = [];
 
-        $nextUrl = $url;
-
-        while ($nextUrl) {
+        while ($url) {
             $response = $this->get(
                 $url,
-                $this->service_data['scope'],
+                $scopes,
                 LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
             );
 
             $collection = array_merge($collection, $response['body']);
 
-            $nextUrl = $this->getNextUrl($response['headers']);
+            $url = $this->getNextUrl($response['headers']);
         }
 
         return $collection;
