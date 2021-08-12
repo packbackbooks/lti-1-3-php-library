@@ -9,4 +9,6 @@ interface ILtiServiceConnector
     public function post(string $url, string $params, array $scopes, string $contentType);
 
     public function get(string $url, array $scopes, string $contentType);
+
+    public function getAll(string $url, array $scopes, string $contentType);
 }

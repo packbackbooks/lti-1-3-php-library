@@ -108,6 +108,31 @@ class LtiServiceConnector implements ILtiServiceConnector
         return $this->makeServiceRequest(static::METHOD_GET, $url, $payload);
     }
 
+    public function getAll(string $url, array $scopes, string $contentType)
+    {
+        $collection = [];
+
+        $hasMoreItemsToRetrieve = true;
+
+        while ($hasMoreItemsToRetrieve) {
+            $response = $this->get(
+                $url,
+                $this->service_data['scope'],
+                LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
+            );
+
+            $collection = array_merge($collection, $response['body']);
+
+            if (preg_match(LtiServiceConnector::NEXT_PAGE_REGEX, $response['headers']['Link'], $matches)) {
+                $url = $matches[1];
+            } else {
+                $hasMoreItemsToRetrieve = false;
+            }
+        }
+
+        return $collection;
+    }
+
     private function makeServiceRequest(string $method, string $url, array $payload)
     {
         $response = $this->client->request($method, $url, $payload);
