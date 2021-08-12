@@ -22,13 +22,10 @@ class LtiNamesRolesProvisioningService
         $next_page = $this->service_data['context_memberships_url'];
 
         while ($next_page) {
-            $page = $this->service_connector->makeServiceRequest(
-                [LtiConstants::NRPS_SCOPE_MEMBERSHIP_READONLY],
-                LtiServiceConnector::METHOD_GET,
+            $page = $this->service_connector->get(
                 $next_page,
-                null,
-                null,
-                'application/vnd.ims.lti-nrps.v2.membershipcontainer+json'
+                [LtiConstants::NRPS_SCOPE_MEMBERSHIP_READONLY],
+                LtiServiceConnector::CONTENT_TYPE_MEMBERSHIPCONTAINER
             );
 
             $members = array_merge($members, $page['body']['members']);

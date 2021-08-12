@@ -22,13 +22,10 @@ class LtiCourseGroupsService
         $next_page = $this->service_data['context_groups_url'];
 
         while ($next_page) {
-            $page = $this->service_connector->makeServiceRequest(
-                $this->service_data['scope'],
-                LtiServiceConnector::METHOD_GET,
+            $page = $this->service_connector->get(
                 $next_page,
-                null,
-                null,
-                'application/vnd.ims.lti-gs.v1.contextgroupcontainer+json'
+                $this->service_data['scope'],
+                LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
             );
 
             $groups = array_merge($groups, $page['body']['groups']);
@@ -58,12 +55,10 @@ class LtiCourseGroupsService
 
         while ($next_page) {
             $page = $this->service_connector->makeServiceRequest(
-                $this->service_data['scope'],
                 LtiServiceConnector::METHOD_GET,
+                $this->service_data['scope'],
                 $next_page,
-                null,
-                null,
-                'application/vnd.ims.lti-gs.v1.contextgroupcontainer+json'
+                LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
             );
 
             $sets = array_merge($sets, $page['body']['sets']);

@@ -15,6 +15,13 @@ class LtiServiceConnector implements ILtiServiceConnector
     const METHOD_GET = 'GET';
     const METHOD_POST = 'POST';
 
+    const CONTENT_TYPE_JSON = 'application/json';
+    const CONTENT_TYPE_SCORE = 'application/vnd.ims.lis.v1.score+json';
+    const CONTENT_TYPE_LINEITEM = 'application/vnd.ims.lis.v2.lineitem+json';
+    const CONTENT_TYPE_RESULTCONTAINER = 'application/vnd.ims.lis.v2.resultcontainer+json';
+    const CONTENT_TYPE_CONTEXTGROUPCONTAINER = 'application/vnd.ims.lti-gs.v1.contextgroupcontainer+json';
+    const CONTENT_TYPE_MEMBERSHIPCONTAINER = 'application/vnd.ims.lti-nrps.v2.membershipcontainer+json';
+
     private $cache;
     private $client;
     private $registration;
@@ -40,12 +47,12 @@ class LtiServiceConnector implements ILtiServiceConnector
         // Build up JWT to exchange for an auth token
         $clientId = $this->registration->getClientId();
         $jwtClaim = [
-                'iss' => $clientId,
-                'sub' => $clientId,
-                'aud' => $this->registration->getAuthServer(),
-                'iat' => time() - 5,
-                'exp' => time() + 60,
-                'jti' => 'lti-service-token'.hash('sha256', random_bytes(64)),
+            'iss' => $clientId,
+            'sub' => $clientId,
+            'aud' => $this->registration->getAuthServer(),
+            'iat' => time() - 5,
+            'exp' => time() + 60,
+            'jti' => 'lti-service-token'.hash('sha256', random_bytes(64)),
         ];
 
         // Sign the JWT with our private key (given by the platform on registration)
@@ -75,27 +82,35 @@ class LtiServiceConnector implements ILtiServiceConnector
         return $tokenData['access_token'];
     }
 
-    public function makeServiceRequest(array $scopes, string $method, string $url, string $body = null, $contentType = 'application/json', $accept = 'application/json')
+    public function post(string $url, string $params, array $scopes, string $contentType)
     {
-        $headers = [
-            'Authorization' => 'Bearer '.$this->getAccessToken($scopes),
-            'Accept' => $accept,
+        $payload = [
+            'headers' => [
+                'Authorization' => 'Bearer '.$this->getAccessToken($scopes),
+                'Accept' => static::CONTENT_TYPE_JSON,
+                'Content-Type' => $contentType,
+            ],
+            'body' => $params,
         ];
 
-        switch (strtoupper($method)) {
-            case 'POST':
-                $headers = array_merge($headers, ['Content-Type' => $contentType]);
-                $response = $this->client->request($method, $url, [
-                    'headers' => $headers,
-                    'body' => $body,
-                ]);
-                break;
-            default:
-                $response = $this->client->request($method, $url, [
-                    'headers' => $headers,
-                ]);
-                break;
-        }
+        return $this->makeServiceRequest(static::METHOD_POST, $url, $payload);
+    }
+
+    public function get(string $url, array $scopes, string $contentType)
+    {
+        $payload = [
+            'headers' => [
+                'Authorization' => 'Bearer '.$this->getAccessToken($scopes),
+                'Accept' => $contentType,
+            ],
+        ];
+
+        return $this->makeServiceRequest(static::METHOD_GET, $url, $payload);
+    }
+
+    private function makeServiceRequest(string $method, string $url, array $payload)
+    {
+        $response = $this->client->request($method, $url, $payload);
 
         $respHeaders = $response->getHeaders();
         array_walk($respHeaders, function (&$value) {

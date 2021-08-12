@@ -15,11 +15,17 @@ class LtiAssignmentsGradesService
         $this->service_data = $service_data;
     }
 
-    public function putGrade(LtiGrade $grade, LtiLineitem $lineitem = null)
+    public function validateScope(string $needle, array $haystack)
     {
-        if (!in_array(LtiConstants::AGS_SCOPE_SCORE, $this->service_data['scope'])) {
+        if (!in_array($needle, $haystack)) {
             throw new LtiException('Missing required scope', 1);
         }
+    }
+
+    public function putGrade(LtiGrade $grade, LtiLineitem $lineitem = null)
+    {
+        $this->validateScope(LtiConstants::AGS_SCOPE_SCORE, $this->service_data['scope']);
+
         if ($lineitem !== null && empty($lineitem->getId())) {
             $lineitem = $this->findOrCreateLineitem($lineitem);
             $score_url = $lineitem->getId();
@@ -37,12 +43,11 @@ class LtiAssignmentsGradesService
         $pos = strpos($score_url, '?');
         $score_url = $pos === false ? $score_url.'/scores' : substr_replace($score_url, '/scores', $pos, 0);
 
-        return $this->service_connector->makeServiceRequest(
-            $this->service_data['scope'],
-            LtiServiceConnector::METHOD_POST,
+        return $this->service_connector->post(
             $score_url,
             $grade,
-            'application/vnd.ims.lis.v1.score+json'
+            $this->service_data['scope'],
+            LtiServiceConnector::CONTENT_TYPE_SCORE,
         );
     }
 
@@ -61,13 +66,11 @@ class LtiAssignmentsGradesService
                 }
             }
         }
-        $created_line_item = $this->service_connector->makeServiceRequest(
-            $this->service_data['scope'],
-            LtiServiceConnector::METHOD_POST,
+        $created_line_item = $this->service_connector->post(
             $this->service_data['lineitems'],
             $new_line_item,
-            'application/vnd.ims.lis.v2.lineitem+json',
-            'application/vnd.ims.lis.v2.lineitem+json'
+            $this->service_data['scope'],
+            LtiServiceConnector::CONTENT_TYPE_LINEITEM,
         );
 
         return new LtiLineitem($created_line_item['body']);
@@ -79,13 +82,10 @@ class LtiAssignmentsGradesService
         // Place '/results' before url params
         $pos = strpos($lineitem->getId(), '?');
         $results_url = $pos === false ? $lineitem->getId().'/results' : substr_replace($lineitem->getId(), '/results', $pos, 0);
-        $scores = $this->service_connector->makeServiceRequest(
-            $this->service_data['scope'],
-            LtiServiceConnector::METHOD_GET,
+        $scores = $this->service_connector->get(
             $results_url,
-            null,
-            null,
-            'application/vnd.ims.lis.v2.resultcontainer+json'
+            $this->service_data['scope'],
+            LtiServiceConnector::CONTENT_TYPE_RESULTCONTAINER,
         );
 
         return $scores['body'];
@@ -93,21 +93,17 @@ class LtiAssignmentsGradesService
 
     public function getLineItems()
     {
-        if (!in_array(LtiConstants::AGS_SCOPE_LINEITEM, $this->service_data['scope'])) {
-            throw new LtiException('Missing required scope', 1);
-        }
+        $this->validateScope(LtiConstants::AGS_SCOPE_LINEITEM, $this->service_data['scope']);
+
         $line_items = [];
 
         $next_page = $this->service_data['lineitems'];
 
         while ($next_page) {
-            $page = $this->service_connector->makeServiceRequest(
+            $page = $this->service_connector->get(
                 $this->service_data['scope'],
-                LtiServiceConnector::METHOD_GET,
                 $next_page,
-                null,
-                null,
-                'application/vnd.ims.lti-gs.v1.contextgroupcontainer+json'
+                LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
             );
 
             $line_items = array_merge($line_items, $page['body']);
