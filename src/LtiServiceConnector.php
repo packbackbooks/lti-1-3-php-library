@@ -45,10 +45,9 @@ class LtiServiceConnector implements ILtiServiceConnector
         }
 
         // Build up JWT to exchange for an auth token
-        $clientId = $this->registration->getClientId();
         $jwtClaim = [
-            'iss' => $clientId,
-            'sub' => $clientId,
+            'iss' => $this->registration->getClientId(),
+            'sub' => $this->registration->getClientId(),
             'aud' => $this->registration->getAuthServer(),
             'iat' => time() - 5,
             'exp' => time() + 60,

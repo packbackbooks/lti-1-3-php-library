@@ -63,7 +63,7 @@ class LtiAssignmentsGradesService
         }
     }
 
-    private function getLineitemUrl(LtiLineitem $lineItem = null)
+    private function getLineitemUrl(LtiLineitem $lineitem = null)
     {
         if ($lineitem && empty($lineitem->getId())) {
             $lineitem = $this->findOrCreateLineitem($lineitem);
@@ -81,7 +81,7 @@ class LtiAssignmentsGradesService
         }
     }
 
-    private function getUrlFromLineItem(LtiLineitem $lineItem = null, string $suffix = null)
+    private function getUrlFromLineItem(LtiLineitem $lineitem = null, string $suffix = null)
     {
         $lineitemUrl = $this->getLineitemUrl($lineItem);
 
