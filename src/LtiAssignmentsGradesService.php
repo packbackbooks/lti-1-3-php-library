@@ -83,7 +83,7 @@ class LtiAssignmentsGradesService
 
     private function getUrlFromLineItem(LtiLineitem $lineitem = null, string $suffix = null)
     {
-        $lineitemUrl = $this->getLineitemUrl($lineItem);
+        $lineitemUrl = $this->getLineitemUrl($lineitem);
 
         // Place suffix before url params
         $position = strpos($lineitemUrl, '?');
@@ -107,9 +107,9 @@ class LtiAssignmentsGradesService
 
     private function findMatchingLineItem(LtiLineitem $needle, array $haystack)
     {
-        foreach ($haystack as $lineItem) {
-            if ($this->isMatchingLineItem($needle, $lineItem)) {
-                return $lineItem;
+        foreach ($haystack as $lineitem) {
+            if ($this->isMatchingLineItem($needle, $lineitem)) {
+                return $lineitem;
             }
         }
     }
