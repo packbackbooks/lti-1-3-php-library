@@ -28,7 +28,7 @@ class LtiNamesRolesProvisioningServiceTest extends TestCase
         $nrps = new LtiNamesRolesProvisioningService($this->connector, [
             'context_memberships_url' => 'url',
         ]);
-        $this->connector->shouldReceive('makeServiceRequest')
+        $this->connector->shouldReceive('get')
             ->once()->andReturn([
                 'headers' => [],
                 'body' => ['members' => $expected],
@@ -48,13 +48,13 @@ class LtiNamesRolesProvisioningServiceTest extends TestCase
             'context_memberships_url' => 'url',
         ]);
         // First response
-        $this->connector->shouldReceive('makeServiceRequest')
+        $this->connector->shouldReceive('get')
             ->once()->andReturn([
                 'headers' => ['Link:Something<else>;rel="next"'],
                 'body' => ['members' => $response],
             ]);
         // Second response
-        $this->connector->shouldReceive('makeServiceRequest')
+        $this->connector->shouldReceive('get')
             ->once()->andReturn([
                 'headers' => [],
                 'body' => ['members' => $response],

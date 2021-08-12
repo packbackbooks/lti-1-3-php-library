@@ -92,22 +92,21 @@ class LtiServiceConnectorTest extends TestCase
     public function testItMakesPostServiceRequest()
     {
         $scopes = ['scopeKey'];
-        $method = 'post';
         $url = 'https://example.com';
         $body = json_encode(['post' => 'body']);
         $requestHeaders = [
             'Authorization' => 'Bearer '.$this->token,
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
+            'Accept' => LtiServiceConnector::CONTENT_TYPE_JSON,
+            'Content-Type' => LtiServiceConnector::CONTENT_TYPE_JSON,
         ];
         $responseHeaders = [
-            'Content-Type' => ['application/json'],
+            'Content-Type' => [LtiServiceConnector::CONTENT_TYPE_JSON],
             'Server' => ['nginx'],
         ];
         $responseBody = ['some' => 'response'];
         $expected = [
             'headers' => [
-                'Content-Type' => 'application/json',
+                'Content-Type' => LtiServiceConnector::CONTENT_TYPE_JSON,
                 'Server' => 'nginx',
             ],
             'body' => $responseBody,
@@ -115,7 +114,7 @@ class LtiServiceConnectorTest extends TestCase
 
         $this->mockCacheHasAccessToken();
         $this->client->shouldReceive('request')
-            ->with($method, $url, [
+            ->with(LtiServiceConnector::METHOD_POST, $url, [
                 'headers' => $requestHeaders,
                 'body' => $body,
             ])->once()->andReturn($this->response);
@@ -124,7 +123,7 @@ class LtiServiceConnectorTest extends TestCase
         $this->response->shouldReceive('getBody')
             ->once()->andReturn(json_encode($responseBody));
 
-        $result = $this->connector->makeServiceRequest($scopes, $method, $url, $body);
+        $result = $this->connector->post($url, $body, $scopes, LtiServiceConnector::CONTENT_TYPE_JSON);
 
         $this->assertEquals($expected, $result);
     }
@@ -132,20 +131,19 @@ class LtiServiceConnectorTest extends TestCase
     public function testItMakesDefaultServiceRequest()
     {
         $scopes = ['scopeKey'];
-        $method = 'get';
         $url = 'https://example.com';
         $requestHeaders = [
             'Authorization' => 'Bearer '.$this->token,
-            'Accept' => 'application/json',
+            'Accept' => LtiServiceConnector::CONTENT_TYPE_JSON,
         ];
         $responseHeaders = [
-            'Content-Type' => ['application/json'],
+            'Content-Type' => [LtiServiceConnector::CONTENT_TYPE_JSON],
             'Server' => ['nginx'],
         ];
         $responseBody = ['some' => 'response'];
         $expected = [
             'headers' => [
-                'Content-Type' => 'application/json',
+                'Content-Type' => LtiServiceConnector::CONTENT_TYPE_JSON,
                 'Server' => 'nginx',
             ],
             'body' => $responseBody,
@@ -153,7 +151,7 @@ class LtiServiceConnectorTest extends TestCase
 
         $this->mockCacheHasAccessToken();
         $this->client->shouldReceive('request')
-            ->with($method, $url, [
+            ->with(LtiServiceConnector::METHOD_GET, $url, [
                 'headers' => $requestHeaders,
             ])->once()->andReturn($this->response);
         $this->response->shouldReceive('getHeaders')
@@ -161,7 +159,7 @@ class LtiServiceConnectorTest extends TestCase
         $this->response->shouldReceive('getBody')
             ->once()->andReturn(json_encode($responseBody));
 
-        $result = $this->connector->makeServiceRequest($scopes, $method, $url);
+        $result = $this->connector->get($url, $scopes, LtiServiceConnector::CONTENT_TYPE_JSON);
 
         $this->assertEquals($expected, $result);
     }
