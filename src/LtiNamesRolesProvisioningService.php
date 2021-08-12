@@ -6,19 +6,19 @@ use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 
 class LtiNamesRolesProvisioningService
 {
-    private $service_connector;
-    private $service_data;
+    private $serviceConnector;
+    private $serviceData;
 
-    public function __construct(ILtiServiceConnector $service_connector, array $service_data)
+    public function __construct(ILtiServiceConnector $serviceConnector, array $serviceData)
     {
-        $this->service_connector = $service_connector;
-        $this->service_data = $service_data;
+        $this->serviceConnector = $serviceConnector;
+        $this->serviceData = $serviceData;
     }
 
     public function getMembers()
     {
-        return $this->service_connector->getAll(
-            $this->service_data['context_memberships_url'],
+        return $this->serviceConnector->getAll(
+            $this->serviceData['context_memberships_url'],
             [LtiConstants::NRPS_SCOPE_MEMBERSHIP_READONLY],
             LtiServiceConnector::CONTENT_TYPE_MEMBERSHIPCONTAINER
         );
