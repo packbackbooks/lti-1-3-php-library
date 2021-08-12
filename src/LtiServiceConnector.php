@@ -111,9 +111,9 @@ class LtiServiceConnector implements ILtiServiceConnector
     {
         $collection = [];
 
-        $hasMoreItemsToRetrieve = true;
+        $nextUrl = $url;
 
-        while ($hasMoreItemsToRetrieve) {
+        while ($nextUrl) {
             $response = $this->get(
                 $url,
                 $this->service_data['scope'],
@@ -122,11 +122,7 @@ class LtiServiceConnector implements ILtiServiceConnector
 
             $collection = array_merge($collection, $response['body']);
 
-            if (preg_match(LtiServiceConnector::NEXT_PAGE_REGEX, $response['headers']['Link'], $matches)) {
-                $url = $matches[1];
-            } else {
-                $hasMoreItemsToRetrieve = false;
-            }
+            $nextUrl = $this->getNextUrl($response['headers']);
         }
 
         return $collection;
@@ -154,5 +150,13 @@ class LtiServiceConnector implements ILtiServiceConnector
         $scopeKey = md5(implode('|', $scopes));
 
         return $this->registration->getIssuer().$this->registration->getClientId().$scopeKey;
+    }
+
+    private function getNextUrl(array $headers)
+    {
+        $subject = $response['headers']['Link'] ?? '';
+        preg_match(LtiServiceConnector::NEXT_PAGE_REGEX, $subject, $matches);
+
+        return $matches[1] ?? null;
     }
 }
