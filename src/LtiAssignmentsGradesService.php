@@ -31,7 +31,7 @@ class LtiAssignmentsGradesService
 
     public function findOrCreateLineitem(LtiLineitem $lineitem)
     {
-        $foundLineItems = $this->getAllLineItems();
+        $foundLineItems = $this->getLineItems();
 
         $foundLineItem = $this->findMatchingLineItem($lineitem, $foundLineItems);
         if ($foundLineItem) {
@@ -126,7 +126,7 @@ class LtiAssignmentsGradesService
         return new LtiLineitem($response['body']);
     }
 
-    private function getAllLineItems()
+    public function getLineItems()
     {
         $this->validateScope(LtiConstants::AGS_SCOPE_LINEITEM, $this->serviceData['scope']);
 
