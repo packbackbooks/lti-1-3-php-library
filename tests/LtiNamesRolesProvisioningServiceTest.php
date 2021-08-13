@@ -4,8 +4,8 @@ namespace Tests;
 
 use Mockery;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\LtiServiceConnector;
 use Packback\Lti1p3\LtiNamesRolesProvisioningService;
+use Packback\Lti1p3\LtiServiceConnector;
 use PHPUnit\Framework\TestCase;
 
 class LtiNamesRolesProvisioningServiceTest extends TestCase
