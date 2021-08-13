@@ -131,7 +131,7 @@ class LtiAssignmentsGradesService
         $this->validateScope(LtiConstants::AGS_SCOPE_LINEITEM, $this->serviceData['scope']);
 
         $line_items = $this->serviceConnector->getAll(
-            $next_page,
+            $this->serviceData['lineitems'],
             $this->serviceData['scope'],
             LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
         );
