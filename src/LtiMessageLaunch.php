@@ -5,7 +5,7 @@ namespace Packback\Lti1p3;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -31,7 +31,7 @@ class LtiMessageLaunch
      * @param ICache    $cache    instance of the Cache interface used to loading and storing launches
      * @param ICookie   $cookie   instance of the Cookie interface used to set and read cookies
      */
-    public function __construct(IDatabase $database, ICache $cache = null, ICookie $cookie = null, Client $client = null)
+    public function __construct(IDatabase $database, ICache $cache = null, ICookie $cookie = null, ClientInterface $client = null)
     {
         $this->db = $database;
 
@@ -45,7 +45,7 @@ class LtiMessageLaunch
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      */
-    public static function new(IDatabase $database, ICache $cache = null, ICookie $cookie = null, Client $client = null)
+    public static function new(IDatabase $database, ICache $cache = null, ICookie $cookie = null, ClientInterface $client = null)
     {
         return new LtiMessageLaunch($database, $cache, $cookie, $client);
     }
@@ -61,7 +61,7 @@ class LtiMessageLaunch
      *
      * @return LtiMessageLaunch a populated and validated LtiMessageLaunch
      */
-    public static function fromCache($launch_id, IDatabase $database, ICache $cache = null, Client $client = null)
+    public static function fromCache($launch_id, IDatabase $database, ICache $cache = null, ClientInterface $client = null)
     {
         $new = new LtiMessageLaunch($database, $cache, null, $client);
         $new->launch_id = $launch_id;

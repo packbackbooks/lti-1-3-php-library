@@ -3,7 +3,7 @@
 namespace Packback\Lti1p3;
 
 use Firebase\JWT\JWT;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
@@ -27,7 +27,7 @@ class LtiServiceConnector implements ILtiServiceConnector
     private $registration;
     private $access_tokens = [];
 
-    public function __construct(ILtiRegistration $registration, ICache $cache, Client $client)
+    public function __construct(ILtiRegistration $registration, ICache $cache, ClientInterface $client)
     {
         $this->registration = $registration;
         $this->cache = $cache;
