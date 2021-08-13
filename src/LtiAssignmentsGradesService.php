@@ -56,6 +56,24 @@ class LtiAssignmentsGradesService
         return $results['body'];
     }
 
+    public function getLineItems()
+    {
+        $this->validateScope(LtiConstants::AGS_SCOPE_LINEITEM, $this->serviceData['scope']);
+
+        $line_items = $this->serviceConnector->getAll(
+            $this->serviceData['lineitems'],
+            $this->serviceData['scope'],
+            LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
+        );
+
+        // If there is only one item, then wrap it in an array so the foreach works
+        if (isset($line_items['body']['id'])) {
+            $line_items['body'] = [$line_items['body']];
+        }
+
+        return $line_items;
+    }
+
     private function validateScope(string $needle, array $haystack)
     {
         if (!in_array($needle, $haystack)) {
@@ -124,23 +142,5 @@ class LtiAssignmentsGradesService
         );
 
         return new LtiLineitem($response['body']);
-    }
-
-    public function getLineItems()
-    {
-        $this->validateScope(LtiConstants::AGS_SCOPE_LINEITEM, $this->serviceData['scope']);
-
-        $line_items = $this->serviceConnector->getAll(
-            $this->serviceData['lineitems'],
-            $this->serviceData['scope'],
-            LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
-        );
-
-        // If there is only one item, then wrap it in an array so the foreach works
-        if (isset($line_items['body']['id'])) {
-            $line_items['body'] = [$line_items['body']];
-        }
-
-        return $line_items;
     }
 }
