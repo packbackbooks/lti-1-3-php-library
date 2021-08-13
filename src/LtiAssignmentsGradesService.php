@@ -112,15 +112,25 @@ class LtiAssignmentsGradesService
         }
     }
 
+    private function actualKeyMatches(array $actual, string $key, $match)
+    {
+        return isset($actual[$key]) && $actual[$key] == $match;
+    }
+
     private function isMatchingLineItem(LtiLineitem $expected, array $actual)
     {
         return (
+            // There is no expected resource ID or resource link ID
             (empty($expected->getResourceId()) && empty($expected->getResourceLinkId())) ||
-            (isset($actual['resourceId']) && $actual['resourceId'] == $expected->getResourceId()) ||
-            (isset($actual['resourceLinkId']) && $actual['resourceLinkId'] == $expected->getResourceLinkId())
+            // The resource IDs match
+            $this->actualKeyMatches($actual, 'resourceId', $expected->getResourceId()) ||
+            // The resource link IDs match
+            $this->actualKeyMatches($actual, 'resourceLinkId', $expected->getResourceLinkId())
         ) && (
+            // There is no expected tag
             empty($expected->getTag()) ||
-            (isset($actual['tag']) && $actual['tag'] == $expected->getTag())
+            // The tags match
+            $this->actualKeyMatches($actual, 'tag', $expected->getTag())
         );
     }
 

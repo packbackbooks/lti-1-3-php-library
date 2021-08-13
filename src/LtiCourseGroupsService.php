@@ -6,29 +6,29 @@ use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 
 class LtiCourseGroupsService
 {
-    private $service_connector;
-    private $service_data;
+    private $serviceConnector;
+    private $serviceData;
 
-    public function __construct(ILtiServiceConnector $service_connector, array $service_data)
+    public function __construct(ILtiServiceConnector $serviceConnector, array $serviceData)
     {
-        $this->service_connector = $service_connector;
-        $this->service_data = $service_data;
+        $this->serviceConnector = $serviceConnector;
+        $this->serviceData = $serviceData;
     }
 
     public function getGroups()
     {
-        return $this->service_connector->getAll(
-            $this->service_data['context_groups_url'],
-            $this->service_data['scope'],
+        return $this->serviceConnector->getAll(
+            $this->serviceData['context_groups_url'],
+            $this->serviceData['scope'],
             LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
         );
     }
 
     public function getSets()
     {
-        return $this->service_connector->getAll(
-            $this->service_data['context_group_sets_url'],
-            $this->service_data['scope'],
+        return $this->serviceConnector->getAll(
+            $this->serviceData['context_group_sets_url'],
+            $this->serviceData['scope'],
             LtiServiceConnector::CONTENT_TYPE_CONTEXTGROUPCONTAINER,
         );
     }
