@@ -119,7 +119,8 @@ class LtiAssignmentsGradesService
             (isset($actual['resourceId']) && $actual['resourceId'] == $expected->getResourceId()) ||
             (isset($actual['resourceLinkId']) && $actual['resourceLinkId'] == $expected->getResourceLinkId())
         ) && (
-            empty($expected->getTag()) || $actual['tag'] == $expected->getTag()
+            empty($expected->getTag()) ||
+            (isset($actual['tag']) && $actual['tag'] == $expected->getTag())
         );
     }
 
