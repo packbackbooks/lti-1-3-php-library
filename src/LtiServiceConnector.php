@@ -152,7 +152,7 @@ class LtiServiceConnector implements ILtiServiceConnector
 
     private function getNextUrl(array $headers)
     {
-        $subject = $response['headers']['Link'] ?? '';
+        $subject = $headers['Link'] ?? '';
         preg_match(LtiServiceConnector::NEXT_PAGE_REGEX, $subject, $matches);
 
         return $matches[1] ?? null;
