@@ -300,15 +300,13 @@ class LtiMessageLaunch
                 $key['alg'] = $this->getKeyAlgorithm($key);
 
                 try {
-                    $keySet = JWK::parseKeySet([
-                        'keys' => [$key],
-                    ]);
+                    return openssl_pkey_get_details(
+                        JWK::parseKeySet([
+                            'keys' => [$key],
+                        ])[$key['kid']]
+                    );
                 } catch (\Exception $e) {
-                    // Do nothing
-                }
-
-                if (isset($keySet[$key['kid']])) {
-                    return $keySet[$key['kid']];
+                    return false;
                 }
             }
         }
@@ -427,7 +425,7 @@ class LtiMessageLaunch
 
         // Validate JWT signature
         try {
-            JWT::decode($this->request['id_token'], $public_key, ['RS256']);
+            JWT::decode($this->request['id_token'], $public_key['key'], ['RS256']);
         } catch (ExpiredException $e) {
             // Error validating signature.
             throw new LtiException(static::ERR_INVALID_SIGNATURE);
