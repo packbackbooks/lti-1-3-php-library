@@ -53,7 +53,7 @@ class LtiMessageLaunch
     private ICache $cache;
     private ICookie $cookie;
     private ILtiServiceConnector $serviceConnector;
-    private mixed $request;
+    private array $request;
     private array $jwt;
     private LtiRegistration $registration;
     private string $launchId;
