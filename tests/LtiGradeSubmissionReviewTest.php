@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Packback\Lti1p3\LtiGradeSubmissionReview;
+use BNSoftware\Lti1p3\LtiGradeSubmissionReview;
 
 class LtiGradeSubmissionReviewTest extends TestCase
 {

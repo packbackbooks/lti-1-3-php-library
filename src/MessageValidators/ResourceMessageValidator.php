@@ -1,10 +1,10 @@
 <?php
 
-namespace Packback\Lti1p3\MessageValidators;
+namespace BNSoftware\Lti1p3\MessageValidators;
 
-use Packback\Lti1p3\Interfaces\IMessageValidator;
-use Packback\Lti1p3\LtiConstants;
-use Packback\Lti1p3\LtiException;
+use BNSoftware\Lti1p3\Interfaces\IMessageValidator;
+use BNSoftware\Lti1p3\LtiConstants;
+use BNSoftware\Lti1p3\LtiException;
 
 class ResourceMessageValidator implements IMessageValidator
 {

@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Packback\Lti1p3\LtiLineitem;
+use BNSoftware\Lti1p3\LtiLineitem;
 
 class LtiLineitemTest extends TestCase
 {

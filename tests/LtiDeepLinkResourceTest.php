@@ -3,9 +3,9 @@
 namespace Tests;
 
 use Mockery;
-use Packback\Lti1p3\LtiDeepLinkResource;
-use Packback\Lti1p3\LtiDeepLinkResourceIcon;
-use Packback\Lti1p3\LtiLineitem;
+use BNSoftware\Lti1p3\LtiDeepLinkResource;
+use BNSoftware\Lti1p3\LtiDeepLinkResourceIcon;
+use BNSoftware\Lti1p3\LtiLineitem;
 
 class LtiDeepLinkResourceTest extends TestCase
 {

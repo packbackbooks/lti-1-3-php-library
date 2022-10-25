@@ -2,7 +2,7 @@
 
 namespace Tests\MessageValidators;
 
-use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
+use BNSoftware\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 use Tests\TestCase;
 
 class DeepLinkMessageValidatorTest extends TestCase

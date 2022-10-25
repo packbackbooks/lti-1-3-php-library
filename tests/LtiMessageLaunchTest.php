@@ -6,19 +6,19 @@ use Carbon\Carbon;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
-use Packback\Lti1p3\Interfaces\ICache;
-use Packback\Lti1p3\Interfaces\ICookie;
-use Packback\Lti1p3\Interfaces\IDatabase;
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
-use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\JwksEndpoint;
-use Packback\Lti1p3\LtiAssignmentsGradesService;
-use Packback\Lti1p3\LtiConstants;
-use Packback\Lti1p3\LtiCourseGroupsService;
-use Packback\Lti1p3\LtiDeepLink;
-use Packback\Lti1p3\LtiException;
-use Packback\Lti1p3\LtiMessageLaunch;
-use Packback\Lti1p3\LtiNamesRolesProvisioningService;
+use BNSoftware\Lti1p3\Interfaces\ICache;
+use BNSoftware\Lti1p3\Interfaces\ICookie;
+use BNSoftware\Lti1p3\Interfaces\IDatabase;
+use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
+use BNSoftware\Lti1p3\Interfaces\ILtiServiceConnector;
+use BNSoftware\Lti1p3\JwksEndpoint;
+use BNSoftware\Lti1p3\LtiAssignmentsGradesService;
+use BNSoftware\Lti1p3\LtiConstants;
+use BNSoftware\Lti1p3\LtiCourseGroupsService;
+use BNSoftware\Lti1p3\LtiDeepLink;
+use BNSoftware\Lti1p3\LtiException;
+use BNSoftware\Lti1p3\LtiMessageLaunch;
+use BNSoftware\Lti1p3\LtiNamesRolesProvisioningService;
 
 class LtiMessageLaunchTest extends TestCase
 {

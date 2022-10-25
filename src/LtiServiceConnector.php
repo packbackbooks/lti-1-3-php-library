@@ -1,15 +1,15 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace BNSoftware\Lti1p3;
 
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
-use Packback\Lti1p3\Interfaces\ICache;
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
-use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\Interfaces\IServiceRequest;
+use BNSoftware\Lti1p3\Interfaces\ICache;
+use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
+use BNSoftware\Lti1p3\Interfaces\ILtiServiceConnector;
+use BNSoftware\Lti1p3\Interfaces\IServiceRequest;
 
 class LtiServiceConnector implements ILtiServiceConnector
 {

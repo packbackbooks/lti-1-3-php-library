@@ -1,8 +1,8 @@
 <?php
 
-namespace Packback\Lti1p3\ImsStorage;
+namespace BNSoftware\Lti1p3\ImsStorage;
 
-use Packback\Lti1p3\Interfaces\ICache;
+use BNSoftware\Lti1p3\Interfaces\ICache;
 
 class ImsCache implements ICache
 {

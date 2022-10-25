@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Packback\Lti1p3\LtiDeployment;
+use BNSoftware\Lti1p3\LtiDeployment;
 
 class LtiDeploymentTest extends TestCase
 {

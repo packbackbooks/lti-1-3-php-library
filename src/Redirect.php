@@ -1,8 +1,8 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace BNSoftware\Lti1p3;
 
-use Packback\Lti1p3\Interfaces\ICookie;
+use BNSoftware\Lti1p3\Interfaces\ICookie;
 
 class Redirect
 {

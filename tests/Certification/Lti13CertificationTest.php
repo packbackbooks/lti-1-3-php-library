@@ -6,17 +6,17 @@ use Carbon\Carbon;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
-use Packback\Lti1p3\Interfaces\ICache;
-use Packback\Lti1p3\Interfaces\ICookie;
-use Packback\Lti1p3\Interfaces\IDatabase;
-use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\JwksEndpoint;
-use Packback\Lti1p3\LtiConstants;
-use Packback\Lti1p3\LtiDeployment;
-use Packback\Lti1p3\LtiException;
-use Packback\Lti1p3\LtiMessageLaunch;
-use Packback\Lti1p3\LtiOidcLogin;
-use Packback\Lti1p3\LtiRegistration;
+use BNSoftware\Lti1p3\Interfaces\ICache;
+use BNSoftware\Lti1p3\Interfaces\ICookie;
+use BNSoftware\Lti1p3\Interfaces\IDatabase;
+use BNSoftware\Lti1p3\Interfaces\ILtiServiceConnector;
+use BNSoftware\Lti1p3\JwksEndpoint;
+use BNSoftware\Lti1p3\LtiConstants;
+use BNSoftware\Lti1p3\LtiDeployment;
+use BNSoftware\Lti1p3\LtiException;
+use BNSoftware\Lti1p3\LtiMessageLaunch;
+use BNSoftware\Lti1p3\LtiOidcLogin;
+use BNSoftware\Lti1p3\LtiRegistration;
 use Tests\TestCase;
 
 class TestCache implements ICache

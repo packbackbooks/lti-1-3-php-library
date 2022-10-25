@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Packback\Lti1p3\Redirect;
+use BNSoftware\Lti1p3\Redirect;
 
 class RedirectTest extends TestCase
 {

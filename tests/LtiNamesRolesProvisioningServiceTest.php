@@ -3,9 +3,9 @@
 namespace Tests;
 
 use Mockery;
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
-use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\LtiNamesRolesProvisioningService;
+use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
+use BNSoftware\Lti1p3\Interfaces\ILtiServiceConnector;
+use BNSoftware\Lti1p3\LtiNamesRolesProvisioningService;
 
 class LtiNamesRolesProvisioningServiceTest extends TestCase
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace BNSoftware\Lti1p3;
 
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
-use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\Interfaces\IServiceRequest;
+use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
+use BNSoftware\Lti1p3\Interfaces\ILtiServiceConnector;
+use BNSoftware\Lti1p3\Interfaces\IServiceRequest;
 
 abstract class LtiAbstractService
 {

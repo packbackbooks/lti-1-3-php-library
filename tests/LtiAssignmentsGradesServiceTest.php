@@ -3,11 +3,11 @@
 namespace Tests;
 
 use Mockery;
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
-use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\LtiAssignmentsGradesService;
-use Packback\Lti1p3\LtiConstants;
-use Packback\Lti1p3\LtiLineitem;
+use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
+use BNSoftware\Lti1p3\Interfaces\ILtiServiceConnector;
+use BNSoftware\Lti1p3\LtiAssignmentsGradesService;
+use BNSoftware\Lti1p3\LtiConstants;
+use BNSoftware\Lti1p3\LtiLineitem;
 
 class LtiAssignmentsGradesServiceTest extends TestCase
 {

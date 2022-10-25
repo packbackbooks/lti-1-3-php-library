@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace BNSoftware\Lti1p3;
 
 class LtiGradeSubmissionReview
 {
@@ -25,7 +25,7 @@ class LtiGradeSubmissionReview
             'label' => $this->label,
             'url' => $this->url,
             'custom' => $this->custom,
-        ], '\Packback\Lti1p3\Helpers\Helpers::checkIfNullValue'));
+        ], '\BNSoftware\Lti1p3\Helpers\Helpers::checkIfNullValue'));
     }
 
     /**

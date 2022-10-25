@@ -3,12 +3,12 @@
 namespace Tests;
 
 use Mockery;
-use Packback\Lti1p3\Interfaces\ICache;
-use Packback\Lti1p3\Interfaces\ICookie;
-use Packback\Lti1p3\Interfaces\IDatabase;
-use Packback\Lti1p3\LtiMessageLaunch;
-use Packback\Lti1p3\LtiOidcLogin;
-use Packback\Lti1p3\OidcException;
+use BNSoftware\Lti1p3\Interfaces\ICache;
+use BNSoftware\Lti1p3\Interfaces\ICookie;
+use BNSoftware\Lti1p3\Interfaces\IDatabase;
+use BNSoftware\Lti1p3\LtiMessageLaunch;
+use BNSoftware\Lti1p3\LtiOidcLogin;
+use BNSoftware\Lti1p3\OidcException;
 
 class LtiOidcLoginTest extends TestCase
 {

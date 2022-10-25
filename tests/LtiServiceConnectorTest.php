@@ -6,12 +6,12 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
-use Packback\Lti1p3\Interfaces\ICache;
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
-use Packback\Lti1p3\Interfaces\IServiceRequest;
-use Packback\Lti1p3\LtiRegistration;
-use Packback\Lti1p3\LtiServiceConnector;
-use Packback\Lti1p3\ServiceRequest;
+use BNSoftware\Lti1p3\Interfaces\ICache;
+use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
+use BNSoftware\Lti1p3\Interfaces\IServiceRequest;
+use BNSoftware\Lti1p3\LtiRegistration;
+use BNSoftware\Lti1p3\LtiServiceConnector;
+use BNSoftware\Lti1p3\ServiceRequest;
 use Psr\Http\Message\StreamInterface;
 
 class LtiServiceConnectorTest extends TestCase
