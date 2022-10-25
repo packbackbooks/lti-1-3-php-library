@@ -10,18 +10,6 @@
         {
             "name": "Dave Young",
             "email": "dave@screencast-o-matic.com"
-        },
-        {
-            "name": "Davo Hynds",
-            "email": "davo@packback.co"
-        },
-        {
-            "name": "Eric Tendian",
-            "email": "eric@packback.co"
-        },
-        {
-            "name": "Martin Lenord",
-            "email": "ims.m@rtin.dev"
         }
     ],
     "require": {
