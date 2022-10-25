@@ -1,12 +1,16 @@
 # LTI 1.3 Tool Library
 
-![Test status](https://github.com/packbackbooks/lti-1-3-php-library/actions/workflows/run_tests.yml/badge.svg?branch=master)
+# THIS IS A WORK IN PROGRESS - YOU SHOULD NOT USE THIS LIBRARY AT THIS TIME!!
+## If you're looking for a solid LTI v1.3 PHP package definitely check out [packbackbooks/lti-1p3-tool](https://github.com/packbackbooks/lti-1p3-tool) created by [Packback](https://packback.io)
+
+[Test status](https://github.com/bnsoftware/lti-1-3-php-library/actions/workflows/run_tests.yml/badge.svg?branch=master)
 
 A library used for building IMS-certified LTI 1.3 tool providers in PHP.
 
 This library allows a tool provider (your app) to receive LTI launches from a tool consumer (i.e. LMS). It validates LTI launches and lets an application interact with services like the Names Roles Provisioning Service (to fetch a roster for an LMS course) and Assignment Grades Service (to update grades for students in a course in the LMS).
 
 This library was forked from [packbackbooks/lti-1p3-tool](https://github.com/packbackbooks/lti-1p3-tool) created by [Packback](https://packback.io), which was in turn forked from [IMSGlobal/lti-1-3-php-library](https://github.com/IMSGlobal/lti-1-3-php-library), initially created by @MartinLenord.
+
 ## Installation
 
 Run:
