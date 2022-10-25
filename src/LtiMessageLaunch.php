@@ -50,9 +50,9 @@ class LtiMessageLaunch
     public const ERR_MISMATCHED_ALG_KEY = 'The alg specified in the JWT header is incompatible with the JWK key type.';
 
     private IDatabase $db;
-    private ICache $cache;
-    private ICookie $cookie;
-    private ILtiServiceConnector $serviceConnector;
+    private ?ICache $cache;
+    private ?ICookie $cookie;
+    private ?ILtiServiceConnector $serviceConnector;
     private array $request;
     private array $jwt;
     private LtiRegistration $registration;
@@ -81,9 +81,9 @@ class LtiMessageLaunch
      */
     public function __construct(
         IDatabase $database,
-        ICache $cache = null,
-        ICookie $cookie = null,
-        ILtiServiceConnector $serviceConnector = null
+        ?ICache $cache = null,
+        ?ICookie $cookie = null,
+        ?ILtiServiceConnector $serviceConnector = null
     ) {
         $this->db = $database;
 
@@ -96,14 +96,25 @@ class LtiMessageLaunch
 
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
+     *
+     * @param IDatabase                 $database
+     * @param ICache|null               $cache
+     * @param ICookie|null              $cookie
+     * @param ILtiServiceConnector|null $serviceConnector
+     * @return LtiMessageLaunch
      */
     public static function new(
         IDatabase $database,
-        ICache $cache = null,
-        ICookie $cookie = null,
-        ILtiServiceConnector $serviceConnector = null
+        ?ICache $cache = null,
+        ?ICookie $cookie = null,
+        ?ILtiServiceConnector $serviceConnector = null
     ): LtiMessageLaunch {
-        return new LtiMessageLaunch($database, $cache, $cookie, $serviceConnector);
+        return new LtiMessageLaunch(
+            $database,
+            $cache,
+            $cookie,
+            $serviceConnector
+        );
     }
 
     /**
@@ -122,10 +133,15 @@ class LtiMessageLaunch
     public static function fromCache(
         string $launchId,
         IDatabase $database,
-        ICache $cache = null,
-        ILtiServiceConnector $serviceConnector = null
+        ?ICache $cache = null,
+        ?ILtiServiceConnector $serviceConnector = null
     ): LtiMessageLaunch {
-        $new = new LtiMessageLaunch($database, $cache, null, $serviceConnector);
+        $new = new LtiMessageLaunch(
+            $database,
+            $cache,
+            null,
+            $serviceConnector
+        );
         $new->launchId = $launchId;
         $new->jwt = ['body' => $new->cache->getLaunchData($launchId)];
 
