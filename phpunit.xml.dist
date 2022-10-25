@@ -11,7 +11,7 @@
     </report>
   </coverage>
   <testsuites>
-    <testsuite name="Packback LTI Test Suite">
+    <testsuite name="BNSoftware LTI Test Suite">
       <directory>tests</directory>
     </testsuite>
   </testsuites>

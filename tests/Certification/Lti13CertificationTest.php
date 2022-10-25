@@ -165,7 +165,7 @@ class Lti13CertificationTest extends TestCase
             ],
             LtiConstants::TOOL_PLATFORM => [
                 'guid' => 'FnwyPrXqSxwv8QCm11UwILpDJMAUPJ9WGn8zcvBM:canvas-lms',
-                'name' => 'Packback Engineering',
+                'name' => 'BNSoftware',
                 'version' => 'cloud',
                 'product_family_code' => 'canvas',
                 'validation_context' => null,

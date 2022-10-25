@@ -16,7 +16,7 @@ return (new \Jubeki\LaravelCodeStyle\Config())
         '@Symfony' => true,
         '@Laravel' => true,
 
-        /* Packback-specific style preferences */
+        /* BNSoftware-specific style preferences */
         'not_operator_with_successor_space' => false,
         'concat_space' => ['spacing' => 'one'],
         'explicit_indirect_variable' => true,
