@@ -11,6 +11,11 @@ class LtiDeepLink
     private $deployment_id;
     private $deep_link_settings;
 
+    /**
+     * @param ILtiRegistration $registration
+     * @param string           $deployment_id
+     * @param array            $deep_link_settings
+     */
     public function __construct(ILtiRegistration $registration, string $deployment_id, array $deep_link_settings)
     {
         $this->registration = $registration;
@@ -18,18 +23,27 @@ class LtiDeepLink
         $this->deep_link_settings = $deep_link_settings;
     }
 
+    /**
+     * @param $resources
+     * @return mixed
+     */
     public function getResponseJwt($resources)
     {
         $message_jwt = [
-            'iss' => $this->registration->getClientId(),
-            'aud' => [$this->registration->getIssuer()],
-            'exp' => time() + 600,
-            'iat' => time(),
-            'nonce' => LtiOidcLogin::secureRandomString('nonce-'),
-            LtiConstants::DEPLOYMENT_ID => $this->deployment_id,
-            LtiConstants::MESSAGE_TYPE => 'LtiDeepLinkingResponse',
-            LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::DL_CONTENT_ITEMS => array_map(function ($resource) { return $resource->toArray(); }, $resources),
+            'iss'                          => $this->registration->getClientId(),
+            'aud'                          => [$this->registration->getIssuer()],
+            'exp'                          => time() + 600,
+            'iat'                          => time(),
+            'nonce'                        => LtiOidcLogin::secureRandomString('nonce-'),
+            LtiConstants::DEPLOYMENT_ID    => $this->deployment_id,
+            LtiConstants::MESSAGE_TYPE     => 'LtiDeepLinkingResponse',
+            LtiConstants::VERSION          => LtiConstants::V1_3,
+            LtiConstants::DL_CONTENT_ITEMS => array_map(
+                function ($resource) {
+                    return $resource->toArray();
+                },
+                $resources
+            ),
         ];
 
         // https://www.imsglobal.org/spec/lti-dl/v2p0/#deep-linking-request-message
@@ -37,19 +51,31 @@ class LtiDeepLink
         if (isset($this->deep_link_settings['data'])) {
             $message_jwt[LtiConstants::DL_DATA] = $this->deep_link_settings['data'];
         }
+        \Log::info("LtiDeepLink::getResponseJwt - jwt before encoding", $message_jwt);
 
-        return JWT::encode($message_jwt, $this->registration->getToolPrivateKey(), 'RS256', $this->registration->getKid());
+        return JWT::encode(
+            $message_jwt,
+            $this->registration->getToolPrivateKey(),
+            'RS256',
+            $this->registration->getKid()
+        );
     }
 
+    /**
+     * @param $resources
+     * @return void
+     */
     public function outputResponseForm($resources)
     {
         $jwt = $this->getResponseJwt($resources);
         /*
          * @todo Fix this
          */ ?>
-        <form id="auto_submit" action="<?php echo $this->deep_link_settings['deep_link_return_url']; ?>" method="POST">
-            <input type="hidden" name="JWT" value="<?php echo $jwt; ?>" />
-            <input type="submit" name="Go" />
+        <form id="auto_submit" action="<?php
+        echo $this->deep_link_settings['deep_link_return_url']; ?>" method="POST">
+            <input type="hidden" name="JWT" value="<?php
+            echo $jwt; ?>"/>
+            <input type="submit" name="Go"/>
         </form>
         <script>
             document.getElementById('auto_submit').submit();
