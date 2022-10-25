@@ -1,5 +1,5 @@
 {
-    "name": "packbackbooks/lti-1p3-tool",
+    "name": "bnsoftware/lti-1p3-tool",
     "type": "library",
     "description": "A library used for building IMS-certified LTI 1.3 tool providers in PHP.",
     "license": "Apache-2.0",
@@ -7,6 +7,10 @@
         "lti"
     ],
     "authors": [
+        {
+            "name": "Dave Young",
+            "email": "dave@screencast-o-matic.com"
+        },
         {
             "name": "Davo Hynds",
             "email": "davo@packback.co"
@@ -33,7 +37,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Packback\\Lti1p3\\": "src"
+            "BNSoftware\\Lti1p3\\": "src"
         }
     },
     "autoload-dev": {
