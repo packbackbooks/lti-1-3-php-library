@@ -4,29 +4,39 @@ namespace BNSoftware\Lti1p3;
 
 class LtiDeepLinkResource
 {
-    private $type = 'ltiResourceLink';
-    private $title;
-    private $text;
-    private $url;
-    private $line_item;
-    private $icon;
-    private $thumbnail;
-    private $custom_params = [];
-    private $target = 'iframe';
-    private $html;
-    private $width = '800';
-    private $height = '600';
+    private string $type = 'ltiResourceLink';
+    private string $title;
+    private string $text;
+    private string $url;
+    private ?LtiLineItem $lineItem = null;
+    private ?LtiDeepLinkResourceImage $icon = null;
+    private ?LtiDeepLinkResourceImage $thumbnail = null;
+    private array $custom;
+    private string $target;
+    private string $html;
+    private int $width;
+    private int $height;
 
+    /**
+     * @return LtiDeepLinkResource
+     */
     public static function new(): LtiDeepLinkResource
     {
         return new LtiDeepLinkResource();
     }
 
+    /**
+     * @return string
+     */
     public function getType(): string
     {
         return $this->type;
     }
 
+    /**
+     * @param string $value
+     * @return LtiDeepLinkResource
+     */
     public function setType(string $value): LtiDeepLinkResource
     {
         $this->type = $value;
@@ -34,95 +44,151 @@ class LtiDeepLinkResource
         return $this;
     }
 
-    public function getTitle(): ?string
+    /**
+     * @return string
+     */
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle(?string $value): LtiDeepLinkResource
+    /**
+     * @param string|null $value
+     * @return LtiDeepLinkResource
+     */
+    public function setTitle(string $value): LtiDeepLinkResource
     {
         $this->title = $value;
 
         return $this;
     }
 
-    public function getText(): ?string
+    /**
+     * @return string
+     */
+    public function getText(): string
     {
         return $this->text;
     }
 
-    public function setText(?string $value): LtiDeepLinkResource
+    /**
+     * @param string $value
+     * @return LtiDeepLinkResource
+     */
+    public function setText(string $value): LtiDeepLinkResource
     {
         $this->text = $value;
 
         return $this;
     }
 
-    public function getUrl(): ?string
+    /**
+     * @return string
+     */
+    public function getUrl(): string
     {
         return $this->url;
     }
 
-    public function setUrl(?string $value): LtiDeepLinkResource
+    /**
+     * @param string $value
+     * @return LtiDeepLinkResource
+     */
+    public function setUrl(string $value): LtiDeepLinkResource
     {
         $this->url = $value;
 
         return $this;
     }
 
-    public function getLineItem(): ?LtiLineitem
+    /**
+     * @return LtiLineItem
+     */
+    public function getLineItem(): LtiLineItem
     {
-        return $this->line_item;
+        return $this->lineItem;
     }
 
-    public function setLineItem(?LtiLineitem $value): LtiDeepLinkResource
+    /**
+     * @param LtiLineItem $value
+     * @return LtiDeepLinkResource
+     */
+    public function setLineItem(LtiLineItem $value): LtiDeepLinkResource
     {
-        $this->line_item = $value;
+        $this->lineItem = $value;
 
         return $this;
     }
 
-    public function setIcon(?LtiDeepLinkResourceIcon $icon): LtiDeepLinkResource
+    /**
+     * @param LtiDeepLinkResourceImage $icon
+     * @return LtiDeepLinkResource
+     */
+    public function setIcon(LtiDeepLinkResourceImage $icon): LtiDeepLinkResource
     {
         $this->icon = $icon;
 
         return $this;
     }
 
-    public function getIcon(): ?LtiDeepLinkResourceIcon
+    /**
+     * @return LtiDeepLinkResourceImage
+     */
+    public function getIcon(): LtiDeepLinkResourceImage
     {
         return $this->icon;
     }
 
-    public function setThumbnail(?LtiDeepLinkResourceIcon $thumbnail): LtiDeepLinkResource
+    /**
+     * @param LtiDeepLinkResourceImage $thumbnail
+     * @return LtiDeepLinkResource
+     */
+    public function setThumbnail(LtiDeepLinkResourceImage $thumbnail): LtiDeepLinkResource
     {
         $this->thumbnail = $thumbnail;
 
         return $this;
     }
 
-    public function getThumbnail(): ?LtiDeepLinkResourceIcon
+    /**
+     * @return LtiDeepLinkResourceImage
+     */
+    public function getThumbnail(): LtiDeepLinkResourceImage
     {
         return $this->thumbnail;
     }
 
+    /**
+     * @return array
+     */
     public function getCustomParams(): array
     {
-        return $this->custom_params;
+        return $this->custom;
     }
 
+    /**
+     * @param array $value
+     * @return LtiDeepLinkResource
+     */
     public function setCustomParams(array $value): LtiDeepLinkResource
     {
-        $this->custom_params = $value;
+        $this->custom = $value;
 
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getTarget(): string
     {
         return $this->target;
     }
 
+    /**
+     * @param string $value
+     * @return LtiDeepLinkResource
+     */
     public function setTarget(string $value): LtiDeepLinkResource
     {
         $this->target = $value;
@@ -130,11 +196,18 @@ class LtiDeepLinkResource
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getHtml(): string
     {
         return $this->html;
     }
 
+    /**
+     * @param string $value
+     * @return LtiDeepLinkResource
+     */
     public function setHtml(string $value): LtiDeepLinkResource
     {
         $this->html = $value;
@@ -142,11 +215,18 @@ class LtiDeepLinkResource
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getWidth(): string
     {
         return $this->width;
     }
 
+    /**
+     * @param string $value
+     * @return LtiDeepLinkResource
+     */
     public function setWidth(string $value): LtiDeepLinkResource
     {
         $this->width = $value;
@@ -154,11 +234,18 @@ class LtiDeepLinkResource
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getHeight(): string
     {
         return $this->height;
     }
 
+    /**
+     * @param string $value
+     * @return LtiDeepLinkResource
+     */
     public function setHeight(string $value): LtiDeepLinkResource
     {
         $this->height = $value;
@@ -166,9 +253,28 @@ class LtiDeepLinkResource
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         switch ($this->type) {
+            case 'ltiResourceLink':
+                $resource = [
+                    'type'  => "ltiResourceLink",
+                    'title' => $this->title,
+                    'text'  => $this->text,
+                    'url'   => $this->url,
+                ];
+                break;
+            case 'link':
+                $resource = [
+                    'type'  => "link",
+                    'title' => $this->title,
+                    'text'  => $this->text,
+                    'url'   => $this->url,
+                ];
+                break;
             case 'iframe':
                 $resource = [
                     'type'   => "link",
@@ -189,6 +295,18 @@ class LtiDeepLinkResource
                     ],
                 ];
                 break;
+            case 'html':
+                $resource = [
+                    'type' => "html",
+                    'html' => $this->html,
+                ];
+                break;
+            case 'image':
+                $resource = [
+                    'type' => "image",
+                    'url'  => $this->url,
+                ];
+                break;
             default:
                 $resource = [
                     'type'         => $this->type,
@@ -199,24 +317,33 @@ class LtiDeepLinkResource
                         'documentTarget' => $this->target,
                     ],
                 ];
-                if (!empty($this->html)) {
+                if ($this->html) {
                     $resource['html'] = $this->html;
                 }
-                if (!empty($this->custom_params)) {
-                    $resource['custom'] = $this->custom_params;
-                }
-                if (isset($this->icon)) {
-                    $resource['icon'] = $this->icon->toArray();
-                }
-                if (isset($this->thumbnail)) {
-                    $resource['thumbnail'] = $this->thumbnail->toArray();
-                }
-                if ($this->line_item !== null) {
-                    $resource['lineItem'] = [
-                        'scoreMaximum' => $this->line_item->getScoreMaximum(),
-                        'label'        => $this->line_item->getLabel(),
-                    ];
-                }
+        }
+        if ($this->custom) {
+            $resource['custom'] = $this->custom;
+        }
+        if ($this->icon) {
+            $resource['icon'] = $this->icon->toArray();
+        }
+        if ($this->thumbnail) {
+            $resource['thumbnail'] = $this->thumbnail->toArray();
+        }
+        if ($this->lineItem) {
+            $resource['lineItem'] = [
+                'scoreMaximum' => $this->lineItem->getScoreMaximum(),
+                'label'        => $this->lineItem->getLabel(),
+            ];
+        }
+        if ($this->iframe) {
+            $resource['iframe'] = $this->iframe;
+        }
+        if ($this->width) {
+            $resource['width'] = $this->width;
+        }
+        if ($this->height) {
+            $resource['height'] = $this->height;
         }
 
         return $resource;

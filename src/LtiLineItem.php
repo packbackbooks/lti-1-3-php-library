@@ -2,7 +2,7 @@
 
 namespace BNSoftware\Lti1p3;
 
-class LtiLineitem
+class LtiLineItem
 {
     private $id;
     private $score_maximum;
@@ -45,7 +45,7 @@ class LtiLineitem
      */
     public static function new()
     {
-        return new LtiLineitem();
+        return new LtiLineItem();
     }
 
     public function getId()

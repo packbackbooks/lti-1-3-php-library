@@ -4,21 +4,31 @@ namespace BNSoftware\Lti1p3;
 
 class LtiDeployment
 {
-    private $deployment_id;
+    private $deploymentId;
 
-    public static function new()
+    /**
+     * @return LtiDeployment
+     */
+    public static function new(): LtiDeployment
     {
         return new LtiDeployment();
     }
 
+    /**
+     * @return mixed
+     */
     public function getDeploymentId()
     {
-        return $this->deployment_id;
+        return $this->deploymentId;
     }
 
-    public function setDeploymentId($deployment_id)
+    /**
+     * @param $deploymentId
+     * @return LtiDeployment
+     */
+    public function setDeploymentId($deploymentId): LtiDeployment
     {
-        $this->deployment_id = $deployment_id;
+        $this->deploymentId = $deploymentId;
 
         return $this;
     }
