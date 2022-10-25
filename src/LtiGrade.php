@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace BNSoftware\Lti1p3;
 
 class LtiGrade
 {
@@ -39,7 +39,7 @@ class LtiGrade
             'userId' => $this->user_id,
             'submissionReview' => $this->submission_review,
             'https://canvas.instructure.com/lti/submission' => $this->canvas_extension,
-        ], '\Packback\Lti1p3\Helpers\Helpers::checkIfNullValue');
+        ], '\BNSoftware\Lti1p3\Helpers\Helpers::checkIfNullValue');
 
         return json_encode($request);
     }

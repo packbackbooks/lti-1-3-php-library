@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3\Interfaces;
+namespace BNSoftware\Lti1p3\Interfaces;
 
 use GuzzleHttp\Psr7\Response;
 

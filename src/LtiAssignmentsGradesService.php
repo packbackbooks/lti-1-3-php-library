@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace BNSoftware\Lti1p3;
 
 class LtiAssignmentsGradesService extends LtiAbstractService
 {

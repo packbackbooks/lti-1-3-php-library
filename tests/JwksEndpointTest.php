@@ -3,9 +3,9 @@
 namespace Tests;
 
 use Mockery;
-use Packback\Lti1p3\Interfaces\IDatabase;
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
-use Packback\Lti1p3\JwksEndpoint;
+use BNSoftware\Lti1p3\Interfaces\IDatabase;
+use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
+use BNSoftware\Lti1p3\JwksEndpoint;
 
 class JwksEndpointTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 namespace Tests\ImsStorage;
 
-use Packback\Lti1p3\ImsStorage\ImsCache;
+use BNSoftware\Lti1p3\ImsStorage\ImsCache;
 use Tests\TestCase;
 
 class ImsCacheTest extends TestCase

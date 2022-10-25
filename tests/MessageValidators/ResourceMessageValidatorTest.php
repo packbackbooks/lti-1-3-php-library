@@ -2,7 +2,7 @@
 
 namespace Tests\MessageValidators;
 
-use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
+use BNSoftware\Lti1p3\MessageValidators\ResourceMessageValidator;
 use Tests\TestCase;
 
 class ResourceMessageValidatorTest extends TestCase

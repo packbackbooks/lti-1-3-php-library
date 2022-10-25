@@ -1,8 +1,8 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace BNSoftware\Lti1p3;
 
-use Packback\Lti1p3\Interfaces\IServiceRequest;
+use BNSoftware\Lti1p3\Interfaces\IServiceRequest;
 
 class ServiceRequest implements IServiceRequest
 {

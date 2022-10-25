@@ -1,8 +1,8 @@
 <?php
 
-namespace Packback\Lti1p3\ImsStorage;
+namespace BNSoftware\Lti1p3\ImsStorage;
 
-use Packback\Lti1p3\Interfaces\ICookie;
+use BNSoftware\Lti1p3\Interfaces\ICookie;
 
 class ImsCookie implements ICookie
 {

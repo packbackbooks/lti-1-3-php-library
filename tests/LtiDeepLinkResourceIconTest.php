@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Packback\Lti1p3\LtiDeepLinkResourceIcon;
+use BNSoftware\Lti1p3\LtiDeepLinkResourceIcon;
 
 class LtiDeepLinkResourceIconTest extends TestCase
 {

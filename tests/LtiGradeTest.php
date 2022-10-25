@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Packback\Lti1p3\LtiGrade;
+use BNSoftware\Lti1p3\LtiGrade;
 
 class LtiGradeTest extends TestCase
 {

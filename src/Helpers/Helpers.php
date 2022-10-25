@@ -1,11 +1,12 @@
 <?php
 
-namespace Packback\Lti1p3\Helpers;
+namespace BNSoftware\Lti1p3\Helpers;
 
 class Helpers
 {
     /**
      * @param $value
+     * @return bool
      */
     public static function checkIfNullValue($value): bool
     {

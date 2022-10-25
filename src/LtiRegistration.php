@@ -1,8 +1,8 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace BNSoftware\Lti1p3;
 
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
+use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
 
 class LtiRegistration implements ILtiRegistration
 {

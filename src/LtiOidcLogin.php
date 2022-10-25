@@ -1,10 +1,10 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace BNSoftware\Lti1p3;
 
-use Packback\Lti1p3\Interfaces\ICache;
-use Packback\Lti1p3\Interfaces\ICookie;
-use Packback\Lti1p3\Interfaces\IDatabase;
+use BNSoftware\Lti1p3\Interfaces\ICache;
+use BNSoftware\Lti1p3\Interfaces\ICookie;
+use BNSoftware\Lti1p3\Interfaces\IDatabase;
 
 class LtiOidcLogin
 {
