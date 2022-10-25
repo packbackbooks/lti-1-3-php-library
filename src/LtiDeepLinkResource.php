@@ -14,8 +14,8 @@ class LtiDeepLinkResource
     private $custom_params = [];
     private $target = 'iframe';
     private $html;
-    private $width;
-    private $height;
+    private $width = '800';
+    private $height = '600';
 
     public static function new(): LtiDeepLinkResource
     {
@@ -168,53 +168,57 @@ class LtiDeepLinkResource
 
     public function toArray(): array
     {
-        $resource = [
-            'type' => $this->type,
-            'title' => $this->title,
-            'text' => $this->text,
-            'url' => $this->url,
-            'presentation' => [
-                'documentTarget' => $this->target,
-            ],
-        ];
-        if (!empty($this->html)) {
-            $resource['html'] = $this->html;
-        }
-        if (!empty($this->custom_params)) {
-            $resource['custom'] = $this->custom_params;
-        }
-        if (isset($this->icon)) {
-            $resource['icon'] = $this->icon->toArray();
-        }
-        if (isset($this->thumbnail)) {
-            $resource['thumbnail'] = $this->thumbnail->toArray();
-        }
-        if ($this->line_item !== null) {
-            $resource['lineItem'] = [
-                'scoreMaximum' => $this->line_item->getScoreMaximum(),
-                'label' => $this->line_item->getLabel(),
-            ];
+        switch ($this->type) {
+            case 'iframe':
+                $resource = [
+                    'type'   => "link",
+                    'title'  => $this->title,
+                    'url'    => $this->url,
+                    'embed'  => [
+                        'html' => '<iframe width="' . $this->width . '" height="' . $this->height . '" '
+                            . 'src="' . $this->url . '" frameborder="0" allow="autoplay; encrypted-media" '
+                            . 'allowfullscreen="allowfullscreen"></iframe>"',
+                    ],
+                    'window' => [
+                        'windowFeatures' => "height={$this->height},width={$this->width},menubar=no",
+                    ],
+                    'iframe' => [
+                        'width'  => $this->width,
+                        'height' => $this->height,
+                        'src'    => $this->url,
+                    ],
+                ];
+                break;
+            default:
+                $resource = [
+                    'type'         => $this->type,
+                    'title'        => $this->title,
+                    'text'         => $this->text,
+                    'url'          => $this->url,
+                    'presentation' => [
+                        'documentTarget' => $this->target,
+                    ],
+                ];
+                if (!empty($this->html)) {
+                    $resource['html'] = $this->html;
+                }
+                if (!empty($this->custom_params)) {
+                    $resource['custom'] = $this->custom_params;
+                }
+                if (isset($this->icon)) {
+                    $resource['icon'] = $this->icon->toArray();
+                }
+                if (isset($this->thumbnail)) {
+                    $resource['thumbnail'] = $this->thumbnail->toArray();
+                }
+                if ($this->line_item !== null) {
+                    $resource['lineItem'] = [
+                        'scoreMaximum' => $this->line_item->getScoreMaximum(),
+                        'label'        => $this->line_item->getLabel(),
+                    ];
+                }
         }
 
-//        return $resource;
-
-        $test = [
-            'type' => "link",
-            'url' => "https://www.youtube.com/watch?v=corV3-WsIro",
-            'embed' => [
-                'html' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/corV3-WsIro" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>"',
-            ],
-            'window' => [
-                'targetName' => "youtube-corV3-WsIro",
-                'windowFeatures' => "height=315,width=560,menubar=no",
-            ],
-            'iframe' => [
-                'width' => 560,
-                'height'=> 315,
-                'src' => "https://www.youtube.com/embed/corV3-WsIro",
-            ],
-        ];
-
-        return $test;
+        return $resource;
     }
 }
