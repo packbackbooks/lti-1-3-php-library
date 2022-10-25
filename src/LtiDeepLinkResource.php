@@ -11,11 +11,11 @@ class LtiDeepLinkResource
     private ?LtiLineItem $lineItem = null;
     private ?LtiDeepLinkResourceImage $icon = null;
     private ?LtiDeepLinkResourceImage $thumbnail = null;
-    private array $custom;
-    private string $target;
-    private string $html;
-    private int $width;
-    private int $height;
+    private ?array $custom = null;
+    private ?string $target = null;
+    private ?string $html = null;
+    private ?int $width = null;
+    private ?int $height = null;
 
     /**
      * @return LtiDeepLinkResource
@@ -102,9 +102,9 @@ class LtiDeepLinkResource
     }
 
     /**
-     * @return LtiLineItem
+     * @return ?LtiLineItem
      */
-    public function getLineItem(): LtiLineItem
+    public function getLineItem(): ?LtiLineItem
     {
         return $this->lineItem;
     }
@@ -121,6 +121,14 @@ class LtiDeepLinkResource
     }
 
     /**
+     * @return ?LtiDeepLinkResourceImage
+     */
+    public function getIcon(): ?LtiDeepLinkResourceImage
+    {
+        return $this->icon;
+    }
+
+    /**
      * @param LtiDeepLinkResourceImage $icon
      * @return LtiDeepLinkResource
      */
@@ -132,11 +140,11 @@ class LtiDeepLinkResource
     }
 
     /**
-     * @return LtiDeepLinkResourceImage
+     * @return ?LtiDeepLinkResourceImage
      */
-    public function getIcon(): LtiDeepLinkResourceImage
+    public function getThumbnail(): ?LtiDeepLinkResourceImage
     {
-        return $this->icon;
+        return $this->thumbnail;
     }
 
     /**
@@ -151,17 +159,9 @@ class LtiDeepLinkResource
     }
 
     /**
-     * @return LtiDeepLinkResourceImage
+     * @return ?array
      */
-    public function getThumbnail(): LtiDeepLinkResourceImage
-    {
-        return $this->thumbnail;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCustomParams(): array
+    public function getCustomParams(): ?array
     {
         return $this->custom;
     }
@@ -178,9 +178,9 @@ class LtiDeepLinkResource
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getTarget(): string
+    public function getTarget(): ?string
     {
         return $this->target;
     }
@@ -197,9 +197,9 @@ class LtiDeepLinkResource
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getHtml(): string
+    public function getHtml(): ?string
     {
         return $this->html;
     }
@@ -216,9 +216,9 @@ class LtiDeepLinkResource
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getWidth(): string
+    public function getWidth(): ?string
     {
         return $this->width;
     }
@@ -235,9 +235,9 @@ class LtiDeepLinkResource
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getHeight(): string
+    public function getHeight(): ?string
     {
         return $this->height;
     }
