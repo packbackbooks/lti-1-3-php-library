@@ -433,9 +433,18 @@ class LtiMessageLaunch
     private function validateState(): LtiMessageLaunch
     {
         // Check State for OIDC.
-        if ($this->cookie->getCookie(
-                LtiOidcLogin::COOKIE_PREFIX . $this->request['state']
-            ) !== $this->request['state']) {
+        $state = $this->cookie->getCookie(
+            LtiOidcLogin::COOKIE_PREFIX . $this->request['state']
+        );
+        if ($state !== $this->request['state']) {
+            \Log::error(
+                "LtiMessageLaunch::validateSate() - state cookie doesn't match state in request!",
+                [
+                    'request_state' => $this->request['state'],
+                    'cookie_state' => $state,
+                    'cookie_class' => (array)$this->cookie,
+                ]
+            );
             // Error if state doesn't match
             throw new LtiException(static::ERR_STATE_NOT_FOUND);
         }
