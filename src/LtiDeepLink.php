@@ -51,7 +51,6 @@ class LtiDeepLink
         if (isset($this->deep_link_settings['data'])) {
             $message_jwt[LtiConstants::DL_DATA] = $this->deep_link_settings['data'];
         }
-        \Log::info("LtiDeepLink::getResponseJwt - jwt before encoding", $message_jwt);
 
         return JWT::encode(
             $message_jwt,

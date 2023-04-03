@@ -5,6 +5,7 @@ namespace BNSoftware\Lti1p3;
 use BNSoftware\Lti1p3\Interfaces\ICache;
 use BNSoftware\Lti1p3\Interfaces\ICookie;
 use BNSoftware\Lti1p3\Interfaces\IDatabase;
+use Exception;
 
 class LtiOidcLogin
 {
@@ -14,19 +15,27 @@ class LtiOidcLogin
     public const ERROR_MSG_ISSUER = 'Could not find issuer';
     public const ERROR_MSG_LOGIN_HINT = 'Could not find login hint';
 
-    private $db;
-    private $cache;
-    private $cookie;
+    private int $stateCookieLifetime = 20;
+
+    private IDatabase $db;
+    private ICache $cache;
+    private ICookie $cookie;
 
     /**
      * Constructor.
      *
-     * @param IDatabase $database instance of the database interface used for looking up registrations and deployments
-     * @param ICache    $cache    Instance of the Cache interface used to loading and storing launches. If non is provided launch data will be store in $_SESSION.
-     * @param ICookie   $cookie   Instance of the Cookie interface used to set and read cookies. Will default to using $_COOKIE and setcookie.
+     * @param IDatabase $database    instance of the database interface used for looking up registrations and
+     *                               deployments
+     * @param ICache|null $cache     Instance of the Cache interface used to loading and storing launches.
+     *                               If none is provided launch data will be store in $_SESSION.
+     * @param ICookie|null $cookie   Instance of the Cookie interface used to set and read cookies.
+     *                               Will default to using $_COOKIE and setcookie().
      */
-    public function __construct(IDatabase $database, ICache $cache = null, ICookie $cookie = null)
-    {
+    public function __construct(
+        IDatabase $database,
+        ICache $cache = null,
+        ICookie $cookie = null
+    ) {
         $this->db = $database;
         $this->cache = $cache;
         $this->cookie = $cookie;
@@ -34,21 +43,31 @@ class LtiOidcLogin
 
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
+     *
+     * @param IDatabase    $database
+     * @param ICache|null  $cache
+     * @param ICookie|null $cookie
+     * @return LtiOidcLogin
      */
-    public static function new(IDatabase $database, ICache $cache = null, ICookie $cookie = null)
-    {
+    public static function new(
+        IDatabase $database,
+        ICache $cache = null,
+        ICookie $cookie = null
+    ): LtiOidcLogin {
         return new LtiOidcLogin($database, $cache, $cookie);
     }
 
     /**
      * Calculate the redirect location to return to based on an OIDC third party initiated login request.
      *
-     * @param string       $launch_url URL to redirect back to after the OIDC login. This URL must match exactly a URL white listed in the platform.
-     * @param array|string $request    An array of request parameters. If not set will default to $_REQUEST.
+     * @param string     $launch_url   URL to redirect back to after the OIDC login. This URL must match exactly a URL
+     *                                 white listed in the platform.
+     * @param array|null $request      An array of request parameters. If not set will default to $_REQUEST.
      *
      * @return Redirect returns a redirect object containing the fully formed OIDC login URL
+     * @throws OidcException
      */
-    public function doOidcLoginRedirect($launch_url, array $request = null)
+    public function doOidcLoginRedirect($launch_url, array $request = null): Redirect
     {
         if ($request === null) {
             $request = $_REQUEST;
@@ -68,7 +87,11 @@ class LtiOidcLogin
         // Generate State.
         // Set cookie (short lived)
         $state = static::secureRandomString('state-');
-        $this->cookie->setCookie(static::COOKIE_PREFIX.$state, $state, 60);
+        $this->cookie->setCookie(
+            static::COOKIE_PREFIX.$state,
+            $state,
+            $this->stateCookieLifetime
+        );
 
         // Generate Nonce.
         $nonce = static::secureRandomString('nonce-');
@@ -99,7 +122,15 @@ class LtiOidcLogin
         return new Redirect($auth_login_return_url, http_build_query($request));
     }
 
-    public function validateOidcLogin($request)
+    /**
+     * Validate the OIDC login request.
+     *
+     * @param array $request
+     *
+     * @return Registration
+     * @throws OidcException
+     */
+    public function validateOidcLogin($request): Registration
     {
         // Validate Issuer.
         if (empty($request['iss'])) {
@@ -117,7 +148,10 @@ class LtiOidcLogin
 
         // Check we got something.
         if (empty($registration)) {
-            $errorMsg = LtiMessageLaunch::getMissingRegistrationErrorMsg($request['iss'], $clientId);
+            $errorMsg = LtiMessageLaunch::getMissingRegistrationErrorMsg(
+                $request['iss'],
+                $clientId
+            );
 
             throw new OidcException($errorMsg, 1);
         }
@@ -126,8 +160,30 @@ class LtiOidcLogin
         return $registration;
     }
 
+    /**
+     * Generate a secure random string.
+     *
+     * @param string $prefix
+     *
+     * @return string
+     * @throws Exception
+     */
     public static function secureRandomString(string $prefix = ''): string
     {
         return $prefix.hash('sha256', random_bytes(64));
+    }
+
+    /**
+     * Set the lifetime of the state cookie in seconds.
+     *
+     * @param int $lifetime
+     *
+     * @return LtiOidcLogin
+     */
+    public function setStateCookieLifetime(int $lifetime): self
+    {
+        $this->stateCookieLifetime = $lifetime;
+
+        return $this;
     }
 }

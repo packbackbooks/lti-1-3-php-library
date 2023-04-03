@@ -2,11 +2,6 @@
 
 namespace BNSoftware\Lti1p3;
 
-use Firebase\JWT\ExpiredException;
-use Firebase\JWT\JWK;
-use Firebase\JWT\JWT;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\TransferException;
 use BNSoftware\Lti1p3\Interfaces\ICache;
 use BNSoftware\Lti1p3\Interfaces\ICookie;
 use BNSoftware\Lti1p3\Interfaces\IDatabase;
@@ -14,6 +9,9 @@ use BNSoftware\Lti1p3\Interfaces\ILtiServiceConnector;
 use BNSoftware\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 use BNSoftware\Lti1p3\MessageValidators\ResourceMessageValidator;
 use BNSoftware\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\JWK;
+use Firebase\JWT\JWT;
 use Throwable;
 
 class LtiMessageLaunch
@@ -296,9 +294,9 @@ class LtiMessageLaunch
     /**
      * Fetches the decoded body of the JWT used in the current launch.
      *
-     * @return array|object returns the decoded json body of the launch as an array
+     * @return array returns the decoded json body of the launch as an array
      */
-    public function getLaunchData()
+    public function getLaunchData(): array
     {
         return $this->jwt['body'];
     }
@@ -335,7 +333,7 @@ class LtiMessageLaunch
      * @return mixed
      * @throws LtiException
      */
-    private function getPublicKey()
+    private function getPublicKey(): mixed
     {
         $request = new ServiceRequest(
             ServiceRequest::METHOD_GET,
@@ -437,14 +435,6 @@ class LtiMessageLaunch
             LtiOidcLogin::COOKIE_PREFIX . $this->request['state']
         );
         if ($state !== $this->request['state']) {
-            \Log::error(
-                "LtiMessageLaunch::validateSate() - state cookie doesn't match state in request!",
-                [
-                    'request_state' => $this->request['state'],
-                    'cookie_state' => $state,
-                    'cookie_class' => (array)$this->cookie,
-                ]
-            );
             // Error if state doesn't match
             throw new LtiException(static::ERR_STATE_NOT_FOUND);
         }
