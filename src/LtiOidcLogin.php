@@ -124,13 +124,11 @@ class LtiOidcLogin
 
     /**
      * Validate the OIDC login request.
-     *
      * @param array $request
-     *
-     * @return Registration
+     * @return LtiRegistration
      * @throws OidcException
      */
-    public function validateOidcLogin($request): Registration
+    public function validateOidcLogin(array $request): LtiRegistration
     {
         // Validate Issuer.
         if (empty($request['iss'])) {
