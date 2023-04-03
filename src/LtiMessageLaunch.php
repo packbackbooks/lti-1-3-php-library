@@ -12,6 +12,7 @@ use BNSoftware\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key as JWTKey;
 use Throwable;
 
 class LtiMessageLaunch
@@ -149,7 +150,7 @@ class LtiMessageLaunch
     /**
      * Validates all aspects of an incoming LTI message launch and caches the launch if successful.
      *
-     * @param mixed $request An array of post request parameters. If not set will default to $_POST.
+     * @param ?array $request An array of post request parameters. If not set will default to $_POST.
      *
      * @return LtiMessageLaunch will return $this if validation is successful
      * @throws LtiException will throw an LtiException if validation fails
@@ -330,10 +331,11 @@ class LtiMessageLaunch
     }
 
     /**
-     * @return mixed
+     *
+     * @return JWTKey
      * @throws LtiException
      */
-    private function getPublicKey(): mixed
+    private function getPublicKey(): JWTKey
     {
         $request = new ServiceRequest(
             ServiceRequest::METHOD_GET,
