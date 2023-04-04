@@ -136,7 +136,7 @@ class LtiAssignmentsGradesService extends LtiAbstractService
 
     public function getLineItems(): array
     {
-        if (!in_array(LtiConstants::AGS_SCOPE_LINEITEM, $this->getScope())) {
+        if (count(array_intersect([LtiConstants::AGS_SCOPE_LINEITEM, LtiConstants::AGS_SCOPE_LINEITEM_READONLY], $this->getScope())) == 0) {
             throw new LtiException('Missing required scope', 1);
         }
 
@@ -159,7 +159,7 @@ class LtiAssignmentsGradesService extends LtiAbstractService
 
     public function getLineItem(string $url): LtiLineitem
     {
-        if (!in_array(LtiConstants::AGS_SCOPE_LINEITEM, $this->getScope())) {
+        if (count(array_intersect([LtiConstants::AGS_SCOPE_LINEITEM, LtiConstants::AGS_SCOPE_LINEITEM_READONLY], $this->getScope())) == 0) {
             throw new LtiException('Missing required scope', 1);
         }
 
