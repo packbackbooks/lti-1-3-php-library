@@ -6,7 +6,6 @@
 .php-cs-fixer.cache
 
 build
-composer.lock
 composer.phar
 tests/_output/*
 tests/_support/_generated/*
