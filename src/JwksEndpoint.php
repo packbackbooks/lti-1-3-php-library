@@ -9,7 +9,6 @@ use phpseclib3\Crypt\RSA;
 
 class JwksEndpoint
 {
-
     private $keys;
 
     public function __construct(array $keys)
