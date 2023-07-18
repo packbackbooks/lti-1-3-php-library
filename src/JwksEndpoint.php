@@ -5,10 +5,11 @@ namespace BNSoftware\Lti1p3;
 use Firebase\JWT\JWT;
 use BNSoftware\Lti1p3\Interfaces\IDatabase;
 use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
-use phpseclib\Crypt\RSA;
+use phpseclib3\Crypt\RSA;
 
 class JwksEndpoint
 {
+
     private $keys;
 
     public function __construct(array $keys)
