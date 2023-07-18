@@ -70,12 +70,12 @@ class LtiMessageLaunch
     /**
      * Constructor.
      *
-     * @param IDatabase             $database         instance of the database interface used for looking up
+     * @param IDatabase             $database         Instance of the IDatabase interface used for looking up
      *                                                registrations and deployments
-     * @param ?ICache               $cache            instance of the Cache interface used to loading and storing
+     * @param ?ICache               $cache            Instance of the ICache interface used to loading and storing
      *                                                launches
-     * @param ?ICookie              $cookie           instance of the Cookie interface used to set and read cookies
-     * @param ?ILtiServiceConnector $serviceConnector instance of the LtiServiceConnector used to by LTI services to
+     * @param ?ICookie              $cookie           Instance of the ICookie interface used to set and read cookies
+     * @param ?ILtiServiceConnector $serviceConnector Instance of the LtiServiceConnector used to by LTI services to
      *                                                make API requests
      */
     public function __construct(
@@ -96,10 +96,10 @@ class LtiMessageLaunch
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      *
-     * @param IDatabase                 $database
-     * @param ICache|null               $cache
-     * @param ICookie|null              $cookie
-     * @param ILtiServiceConnector|null $serviceConnector
+     * @param IDatabase             $database
+     * @param ?ICache               $cache
+     * @param ?ICookie              $cookie
+     * @param ?ILtiServiceConnector $serviceConnector
      * @return LtiMessageLaunch
      */
     public static function new(
@@ -119,12 +119,14 @@ class LtiMessageLaunch
     /**
      * Load an LtiMessageLaunch from a Cache using a launch id.
      *
-     * @param string                $launchId     the launch id of the LtiMessageLaunch object that is being pulled
+     * @param string                $launchId     Launch ID of the LtiMessageLaunch object that is being pulled
      *                                            from the cache
-     * @param IDatabase             $database     instance of the database interface used for looking up registrations
+     * @param IDatabase             $database     Instance of the IDatabase interface used for looking up registrations
      *                                            and deployments
-     * @param ?ICache               $cache        Instance of the Cache interface used to loading and storing launches.
-     *                                            If non is provided launch data will be store in $_SESSION.
+     * @param ?ICache               $cache        Instance of the ICache interface used to store and load launches
+     *                                            to and from cache
+     *                                            If none is provided launch data will be stored in $_SESSION
+     * @param ?ICookie              $cookie       Instance of the ICookie interface used to set and read cookies
      * @param ?ILtiServiceConnector $serviceConnector
      * @return LtiMessageLaunch a populated and validated LtiMessageLaunch
      * @throws LtiException will throw an LtiException if validation fails or launch cannot be found
@@ -133,12 +135,13 @@ class LtiMessageLaunch
         string $launchId,
         IDatabase $database,
         ?ICache $cache = null,
+        ?ICookie $cookie = null,
         ?ILtiServiceConnector $serviceConnector = null
     ): LtiMessageLaunch {
         $new = new LtiMessageLaunch(
             $database,
             $cache,
-            null,
+            $cookie,
             $serviceConnector
         );
         $new->launchId = $launchId;
