@@ -5,7 +5,7 @@ namespace BNSoftware\Lti1p3;
 use Firebase\JWT\JWT;
 use BNSoftware\Lti1p3\Interfaces\IDatabase;
 use BNSoftware\Lti1p3\Interfaces\ILtiRegistration;
-use phpseclib3\Crypt\RSA;
+use phpseclib\Crypt\RSA;
 
 class JwksEndpoint
 {
