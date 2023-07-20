@@ -127,9 +127,9 @@ class LtiAssignmentsGradesService extends LtiAbstractService
             ServiceRequest::TYPE_GET_GRADES
         );
         $request->setAccept(static::CONTENTTYPE_RESULTCONTAINER);
-        $scores = $this->makeServiceRequest($request);
+        $scores = $this->getAll($request);
 
-        return $scores['body'];
+        return $scores;
     }
 
     public function getLineItems(): array
