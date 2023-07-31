@@ -283,7 +283,7 @@ class LtiMessageLaunch
         return $this->launch_id;
     }
 
-    public static function getMissingRegistrationErrorMsg(string $issuerUrl, ?string $clientId = null): string
+    public static function getMissingRegistrationErrorMsg(string $issuerUrl, string $clientId = null): string
     {
         // Guard against client ID being null
         if (!isset($clientId)) {

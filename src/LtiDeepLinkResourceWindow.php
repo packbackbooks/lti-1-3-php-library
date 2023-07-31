@@ -9,7 +9,7 @@ class LtiDeepLinkResourceWindow
     private ?int $height;
     private ?string $window_features;
 
-    public function __construct(?string $targetName = null, ?int $width = null, ?int $height = null, ?string $windowFeatures = null)
+    public function __construct(string $targetName = null, int $width = null, int $height = null, string $windowFeatures = null)
     {
         $this->target_name = $targetName ?? null;
         $this->width = $width ?? null;
