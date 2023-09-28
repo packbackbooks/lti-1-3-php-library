@@ -2,6 +2,9 @@
 
 namespace Packback\Lti1p3;
 
+use DateTime;
+use InvalidArgumentException;
+
 class LtiGrade
 {
     private $score_given;
@@ -120,6 +123,8 @@ class LtiGrade
 
     public function setTimestamp($value)
     {
+        $this->validateTimestamp($value);
+
         $this->timestamp = $value;
 
         return $this;
@@ -168,5 +173,28 @@ class LtiGrade
         $this->canvas_extension = $value;
 
         return $this;
+    }
+
+    /**
+     * Validates that the given time is an ISO 8601 string with sub-second precision
+     * per the LTI spec. Some LMS (e.g. Schoology) include validation logic that will
+     * throw a validation error if this isn't enforced.
+     *
+     * @see https://www.imsglobal.org/spec/lti-ags/v2p0#timestamp
+     * @throws InvalidArgumentException Thrown if the given timestamp is not an ISO8601
+     *   compatible string with sub-second precision.
+     */
+    private function validateTimestamp(string $timestamp): void
+    {
+        // Attempt to parse the timestamp as an ISO8601 string.
+        $dt = DateTime::createFromFormat(DateTime::ATOM, $timestamp);
+
+        // Check if the parsed timestamp contains sub-second precision
+        if ($dt && strpos($timestamp, '.') !== false) {
+            return;
+        }
+
+        throw new InvalidArgumentException("Invalid timestamp: $timestamp. ".
+            "Timestamp must be in ISO 8601 format with sub-second precision.");
     }
 }
