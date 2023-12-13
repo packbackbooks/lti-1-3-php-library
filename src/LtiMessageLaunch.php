@@ -48,17 +48,11 @@ class LtiMessageLaunch
     public const ERR_MISMATCHED_ALG_KEY = 'The alg specified in the JWT header is incompatible with the JWK key type.';
     public const ERR_OAUTH_KEY_SIGN_NOT_VERIFIED = 'Unable to upgrade from LTI 1.1 to 1.3. No OAuth Consumer Key matched this signature.';
     public const ERR_OAUTH_KEY_SIGN_MISSING = 'Unable to upgrade from LTI 1.1 to 1.3. The oauth_consumer_key_sign was not provided.';
-    private IDatabase $db;
-    private ICache $cache;
-
-    // @TODO: Type these on the next major version
-    private $cookie;
-    private $serviceConnector;
-    private $request;
-    private $jwt;
-    private $registration;
-    private $deployment;
-    private $launch_id;
+    private array $request;
+    private array $jwt;
+    private LtiRegistration $registration;
+    private LtiDeployment $deployment;
+    private string $launch_id;
 
     // See https://www.imsglobal.org/spec/security/v1p1#approved-jwt-signing-algorithms.
     private static $ltiSupportedAlgs = [
@@ -70,46 +64,32 @@ class LtiMessageLaunch
         'ES512' => 'EC',
     ];
 
-    /**
-     * Constructor.
-     *
-     * @param  IDatabase  $database         Instance of the database interface used for looking up registrations and deployments
-     * @param  ICache  $cache            Instance of the Cache interface used to loading and storing launches
-     * @param  ICookie  $cookie           Instance of the Cookie interface used to set and read cookies
-     * @param  ILtiServiceConnector  $serviceConnector Instance of the LtiServiceConnector used to by LTI services to make API requests
-     */
     public function __construct(
-        IDatabase $database,
-        ?ICache $cache = null,
-        ?ICookie $cookie = null,
-        ?ILtiServiceConnector $serviceConnector = null
+        private IDatabase $db,
+        private ICache $cache,
+        private ICookie $cookie,
+        private ILtiServiceConnector $serviceConnector
     ) {
-        $this->db = $database;
-
         $this->launch_id = uniqid('lti1p3_launch_', true);
-
-        $this->cache = $cache;
-        $this->cookie = $cookie;
-        $this->serviceConnector = $serviceConnector;
     }
 
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      */
     public static function new(
-        IDatabase $database,
+        IDatabase $db,
         ?ICache $cache = null,
         ?ICookie $cookie = null,
         ?ILtiServiceConnector $serviceConnector = null
-    ) {
-        return new LtiMessageLaunch($database, $cache, $cookie, $serviceConnector);
+    ): self {
+        return new LtiMessageLaunch($db, $cache, $cookie, $serviceConnector);
     }
 
     /**
      * Load an LtiMessageLaunch from a Cache using a launch id.
      *
      * @param  string  $launch_id The launch id of the LtiMessageLaunch object that is being pulled from the cache
-     * @param  IDatabase  $database  Instance of the database interface used for looking up registrations and deployments
+     * @param  IDatabase  $db  Instance of the database interface used for looking up registrations and deployments
      * @param  ICache  $cache     Instance of the Cache interface used to loading and storing launches. If non is provided launch data will be store in $_SESSION.
      * @return LtiMessageLaunch A populated and validated LtiMessageLaunch
      *
@@ -117,65 +97,49 @@ class LtiMessageLaunch
      */
     public static function fromCache(
         $launch_id,
-        IDatabase $database,
+        IDatabase $db,
         ?ICache $cache = null,
         ?ILtiServiceConnector $serviceConnector = null
-    ) {
-        // @todo: Fix the null here on the next major version
-        $new = new LtiMessageLaunch($database, $cache, null, $serviceConnector);
+    ): self {
+        $new = new LtiMessageLaunch($db, $cache, $cache, $serviceConnector);
         $new->launch_id = $launch_id;
         $new->jwt = ['body' => $new->cache->getLaunchData($launch_id)];
 
         return $new->validateRegistration();
     }
 
-    public function setRequest(array $request)
+    public function setRequest(array $request): self
     {
         $this->request = $request;
 
         return $this;
     }
 
-    public function initialize(array $request)
+    public function initialize(array $request): self
     {
         return $this->setRequest($request)
             ->validate()
-            ->migrate();
-        // @TODO: Add this in v6.0
-        // ->cacheLaunchData();
+            ->migrate()
+            ->cacheLaunchData();
     }
 
     /**
      * Validates all aspects of an incoming LTI message launch and caches the launch if successful.
      *
-     * @param  array|string  $request An array of post request parameters. If not set will default to $_POST.
-     * @return LtiMessageLaunch Will return $this if validation is successful
-     *
      * @throws LtiException Will throw an LtiException if validation fails
      */
-    public function validate(?array $request = null)
+    public function validate(): self
     {
-        // @TODO: Remove this on the next major release.
-        if (!isset($this->request)) {
-            if ($request === null) {
-                $request = $_POST;
-            }
-
-            $this->setRequest($request);
-        }
-
         return $this->validateState()
             ->validateJwtFormat()
             ->validateNonce()
             ->validateRegistration()
             ->validateJwtSignature()
             ->validateDeployment()
-            ->validateMessage()
-            // @todo remove this in v6.0
-            ->cacheLaunchData();
+            ->validateMessage();
     }
 
-    public function migrate()
+    public function migrate(): self
     {
         if (!$this->shouldMigrate()) {
             return $this->ensureDeploymentExists();
@@ -194,7 +158,7 @@ class LtiMessageLaunch
         return $this->ensureDeploymentExists();
     }
 
-    public function cacheLaunchData()
+    public function cacheLaunchData(): self
     {
         $this->cache->cacheLaunchData($this->launch_id, $this->jwt['body']);
 
@@ -203,20 +167,16 @@ class LtiMessageLaunch
 
     /**
      * Returns whether or not the current launch can use the names and roles service.
-     *
-     * @return bool Returns a boolean indicating the availability of names and roles
      */
-    public function hasNrps()
+    public function hasNrps(): bool
     {
         return !empty($this->jwt['body'][LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url']);
     }
 
     /**
      * Fetches an instance of the names and roles service for the current launch.
-     *
-     * @return LtiNamesRolesProvisioningService An instance of the names and roles service that can be used to make calls within the scope of the current launch
      */
-    public function getNrps()
+    public function getNrps(): LtiNamesRolesProvisioningService
     {
         return new LtiNamesRolesProvisioningService(
             $this->serviceConnector,
@@ -227,20 +187,16 @@ class LtiMessageLaunch
 
     /**
      * Returns whether or not the current launch can use the groups service.
-     *
-     * @return bool Returns a boolean indicating the availability of groups
      */
-    public function hasGs()
+    public function hasGs(): bool
     {
         return !empty($this->jwt['body'][LtiConstants::GS_CLAIM_SERVICE]['context_groups_url']);
     }
 
     /**
      * Fetches an instance of the groups service for the current launch.
-     *
-     * @return LtiCourseGroupsService An instance of the groups service that can be used to make calls within the scope of the current launch
      */
-    public function getGs()
+    public function getGs(): LtiCourseGroupsService
     {
         return new LtiCourseGroupsService(
             $this->serviceConnector,
@@ -251,20 +207,16 @@ class LtiMessageLaunch
 
     /**
      * Returns whether or not the current launch can use the assignments and grades service.
-     *
-     * @return bool Returns a boolean indicating the availability of assignments and grades
      */
-    public function hasAgs()
+    public function hasAgs(): bool
     {
         return !empty($this->jwt['body'][LtiConstants::AGS_CLAIM_ENDPOINT]);
     }
 
     /**
      * Fetches an instance of the assignments and grades service for the current launch.
-     *
-     * @return LtiAssignmentsGradesService An instance of the assignments an grades service that can be used to make calls within the scope of the current launch
      */
-    public function getAgs()
+    public function getAgs(): LtiAssignmentsGradesService
     {
         return new LtiAssignmentsGradesService(
             $this->serviceConnector,
@@ -275,20 +227,16 @@ class LtiMessageLaunch
 
     /**
      * Returns whether or not the current launch is a deep linking launch.
-     *
-     * @return bool Returns true if the current launch is a deep linking launch
      */
-    public function isDeepLinkLaunch()
+    public function isDeepLinkLaunch(): bool
     {
         return $this->jwt['body'][LtiConstants::MESSAGE_TYPE] === static::TYPE_DEEPLINK;
     }
 
     /**
      * Fetches a deep link that can be used to construct a deep linking response.
-     *
-     * @return LtiDeepLink An instance of a deep link to construct a deep linking response for the current launch
      */
-    public function getDeepLink()
+    public function getDeepLink(): LtiDeepLink
     {
         return new LtiDeepLink(
             $this->registration,
@@ -299,40 +247,32 @@ class LtiMessageLaunch
 
     /**
      * Returns whether or not the current launch is a submission review launch.
-     *
-     * @return bool Returns true if the current launch is a submission review launch
      */
-    public function isSubmissionReviewLaunch()
+    public function isSubmissionReviewLaunch(): bool
     {
         return $this->jwt['body'][LtiConstants::MESSAGE_TYPE] === static::TYPE_SUBMISSIONREVIEW;
     }
 
     /**
      * Returns whether or not the current launch is a resource launch.
-     *
-     * @return bool Returns true if the current launch is a resource launch
      */
-    public function isResourceLaunch()
+    public function isResourceLaunch(): bool
     {
         return $this->jwt['body'][LtiConstants::MESSAGE_TYPE] === static::TYPE_RESOURCELINK;
     }
 
     /**
      * Fetches the decoded body of the JWT used in the current launch.
-     *
-     * @return array|object Returns the decoded json body of the launch as an array
      */
-    public function getLaunchData()
+    public function getLaunchData(): array
     {
         return $this->jwt['body'];
     }
 
     /**
      * Get the unique launch id for the current launch.
-     *
-     * @return string A unique identifier used to re-reference the current launch in subsequent requests
      */
-    public function getLaunchId()
+    public function getLaunchId(): string
     {
         return $this->launch_id;
     }
@@ -350,7 +290,10 @@ class LtiMessageLaunch
         return str_replace($search, $replace, static::ERR_MISSING_REGISTRATION);
     }
 
-    private function getPublicKey()
+    /**
+     * @throws LtiException
+     */
+    private function getPublicKey(): array
     {
         $request = new ServiceRequest(
             ServiceRequest::METHOD_GET,
@@ -412,7 +355,7 @@ class LtiMessageLaunch
         throw new LtiException(static::ERR_MISMATCHED_ALG_KEY);
     }
 
-    private function jwtAlgMatchesJwkKty($key): bool
+    private function jwtAlgMatchesJwkKty(array $key): bool
     {
         $jwtAlg = $this->jwt['header']['alg'];
 
@@ -569,6 +512,9 @@ class LtiMessageLaunch
         }
     }
 
+    /**
+     * @throws LtiException
+     */
     private function ensureDeploymentExists(): self
     {
         if (!isset($this->deployment)) {

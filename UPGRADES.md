@@ -32,6 +32,14 @@ The following methods have been removed:
 * `Packback\Lti1p3\Redirect::doHybridRedirect()`
 * `Packback\Lti1p3\Redirect::getRedirectUrl()`
 
+### Strict typing added
+
+All arguments and returns are now strictly typed.
+
+### Changes to method signatures
+
+* `LtiMessageLaunch::__construct()` now requires all arguments instead of some being optional.
+
 ## 5.5 to 5.6
 
 No breaking changes were introduced. However, going forward when processing a `LtiMessageLaunch`, it is recommended to do `$message->initialize($request);` instead of the previous `$message->validate($request);` to support potential migrations.
