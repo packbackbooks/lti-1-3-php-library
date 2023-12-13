@@ -8,31 +8,28 @@ use phpseclib3\Crypt\RSA;
 
 class JwksEndpoint
 {
-    private $keys;
-
-    public function __construct(array $keys)
+    public function __construct(private array $keys)
     {
-        $this->keys = $keys;
     }
 
-    public static function new(array $keys)
+    public static function new(array $keys): self
     {
         return new JwksEndpoint($keys);
     }
 
-    public static function fromIssuer(IDatabase $database, $issuer)
+    public static function fromIssuer(IDatabase $database, string $issuer): self
     {
         $registration = $database->findRegistrationByIssuer($issuer);
 
         return new JwksEndpoint([$registration->getKid() => $registration->getToolPrivateKey()]);
     }
 
-    public static function fromRegistration(ILtiRegistration $registration)
+    public static function fromRegistration(ILtiRegistration $registration): self
     {
         return new JwksEndpoint([$registration->getKid() => $registration->getToolPrivateKey()]);
     }
 
-    public function getPublicJwks()
+    public function getPublicJwks(): array
     {
         $jwks = [];
         foreach ($this->keys as $kid => $private_key) {

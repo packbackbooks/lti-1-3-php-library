@@ -39,6 +39,8 @@ All arguments and returns are now strictly typed.
 ### Changes to method signatures
 
 * `LtiMessageLaunch::__construct()` now requires all arguments instead of some being optional.
+* `Lti1p1Key` methods `setKey()` and `setSecret()` accept strings instead of arrays.
+* `LtiServiceConnector::setDebuggingMode()` now returns self instead of void.
 
 ## 5.5 to 5.6
 

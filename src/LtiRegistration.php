@@ -6,16 +6,16 @@ use Packback\Lti1p3\Interfaces\ILtiRegistration;
 
 class LtiRegistration implements ILtiRegistration
 {
-    private $issuer;
-    private $clientId;
-    private $keySetUrl;
-    private $authTokenUrl;
-    private $authLoginUrl;
-    private $authServer;
+    private string $issuer;
+    private string $clientId;
+    private string $keySetUrl;
+    private string $authTokenUrl;
+    private string $authLoginUrl;
+    private string $authServer;
     private $toolPrivateKey;
-    private $kid;
+    private string $kid;
 
-    public function __construct(array $registration = [])
+    public function __construct(?array $registration)
     {
         $this->issuer = $registration['issuer'] ?? null;
         $this->clientId = $registration['clientId'] ?? null;
@@ -27,7 +27,7 @@ class LtiRegistration implements ILtiRegistration
         $this->kid = $registration['kid'] ?? null;
     }
 
-    public static function new(array $registration = [])
+    public static function new(?array $registration): LtiRegistration
     {
         return new LtiRegistration($registration);
     }
@@ -37,7 +37,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->issuer;
     }
 
-    public function setIssuer($issuer)
+    public function setIssuer($issuer): LtiRegistration
     {
         $this->issuer = $issuer;
 
@@ -49,7 +49,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->clientId;
     }
 
-    public function setClientId($clientId)
+    public function setClientId($clientId): LtiRegistration
     {
         $this->clientId = $clientId;
 
@@ -61,7 +61,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->keySetUrl;
     }
 
-    public function setKeySetUrl($keySetUrl)
+    public function setKeySetUrl($keySetUrl): LtiRegistration
     {
         $this->keySetUrl = $keySetUrl;
 
@@ -73,7 +73,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->authTokenUrl;
     }
 
-    public function setAuthTokenUrl($authTokenUrl)
+    public function setAuthTokenUrl($authTokenUrl): LtiRegistration
     {
         $this->authTokenUrl = $authTokenUrl;
 
@@ -85,7 +85,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->authLoginUrl;
     }
 
-    public function setAuthLoginUrl($authLoginUrl)
+    public function setAuthLoginUrl($authLoginUrl): LtiRegistration
     {
         $this->authLoginUrl = $authLoginUrl;
 
@@ -97,7 +97,7 @@ class LtiRegistration implements ILtiRegistration
         return empty($this->authServer) ? $this->authTokenUrl : $this->authServer;
     }
 
-    public function setAuthServer($authServer)
+    public function setAuthServer($authServer): LtiRegistration
     {
         $this->authServer = $authServer;
 
@@ -109,7 +109,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->toolPrivateKey;
     }
 
-    public function setToolPrivateKey($toolPrivateKey)
+    public function setToolPrivateKey($toolPrivateKey): LtiRegistration
     {
         $this->toolPrivateKey = $toolPrivateKey;
 
@@ -121,7 +121,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->kid ?? hash('sha256', trim($this->issuer.$this->clientId));
     }
 
-    public function setKid($kid)
+    public function setKid($kid): LtiRegistration
     {
         $this->kid = $kid;
 

@@ -8,18 +8,11 @@ use Packback\Lti1p3\Interfaces\IServiceRequest;
 
 abstract class LtiAbstractService
 {
-    private $serviceConnector;
-    private $registration;
-    private $serviceData;
-
     public function __construct(
-        ILtiServiceConnector $serviceConnector,
-        ILtiRegistration $registration,
-        array $serviceData
+        private ILtiServiceConnector $serviceConnector,
+        private ILtiRegistration $registration,
+        private array $serviceData
     ) {
-        $this->serviceConnector = $serviceConnector;
-        $this->registration = $registration;
-        $this->serviceData = $serviceData;
     }
 
     public function getServiceData(): array

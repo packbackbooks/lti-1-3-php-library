@@ -7,18 +7,14 @@ use Packback\Lti1p3\Interfaces\ILtiRegistration;
 
 class LtiDeepLink
 {
-    private $registration;
-    private $deployment_id;
-    private $deep_link_settings;
-
-    public function __construct(ILtiRegistration $registration, string $deployment_id, array $deep_link_settings)
-    {
-        $this->registration = $registration;
-        $this->deployment_id = $deployment_id;
-        $this->deep_link_settings = $deep_link_settings;
+    public function __construct(
+        private ILtiRegistration $registration,
+        private string $deployment_id,
+        private array $deep_link_settings
+    ) {
     }
 
-    public function getResponseJwt($resources)
+    public function getResponseJwt(array $resources): string
     {
         $message_jwt = [
             'iss' => $this->registration->getClientId(),

@@ -14,7 +14,7 @@ class LtiLineitem
     private $end_date_time;
     private ?bool $grades_released;
 
-    public function __construct(?array $lineitem = null)
+    public function __construct(?array $lineitem)
     {
         $this->id = $lineitem['id'] ?? null;
         $this->score_maximum = $lineitem['scoreMaximum'] ?? null;
@@ -27,7 +27,7 @@ class LtiLineitem
         $this->grades_released = $lineitem['gradesReleased'] ?? null;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         // Additionally, includes the call back to filter out only NULL values
         return json_encode(array_filter([
@@ -46,9 +46,9 @@ class LtiLineitem
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      */
-    public static function new()
+    public static function new(?array $lineItem): LtiLineItem
     {
-        return new LtiLineitem();
+        return new LtiLineitem($lineItem);
     }
 
     public function getId()
@@ -56,7 +56,7 @@ class LtiLineitem
         return $this->id;
     }
 
-    public function setId($value)
+    public function setId($value): LtiLineItem
     {
         $this->id = $value;
 
@@ -68,7 +68,7 @@ class LtiLineitem
         return $this->label;
     }
 
-    public function setLabel($value)
+    public function setLabel($value): LtiLineItem
     {
         $this->label = $value;
 
@@ -80,7 +80,7 @@ class LtiLineitem
         return $this->score_maximum;
     }
 
-    public function setScoreMaximum($value)
+    public function setScoreMaximum($value): LtiLineItem
     {
         $this->score_maximum = $value;
 
@@ -92,7 +92,7 @@ class LtiLineitem
         return $this->resource_id;
     }
 
-    public function setResourceId($value)
+    public function setResourceId($value): LtiLineItem
     {
         $this->resource_id = $value;
 
@@ -104,7 +104,7 @@ class LtiLineitem
         return $this->resource_link_id;
     }
 
-    public function setResourceLinkId($value)
+    public function setResourceLinkId($value): LtiLineItem
     {
         $this->resource_link_id = $value;
 
@@ -116,7 +116,7 @@ class LtiLineitem
         return $this->tag;
     }
 
-    public function setTag($value)
+    public function setTag($value): LtiLineItem
     {
         $this->tag = $value;
 
@@ -128,7 +128,7 @@ class LtiLineitem
         return $this->start_date_time;
     }
 
-    public function setStartDateTime($value)
+    public function setStartDateTime($value): LtiLineItem
     {
         $this->start_date_time = $value;
 
@@ -140,7 +140,7 @@ class LtiLineitem
         return $this->end_date_time;
     }
 
-    public function setEndDateTime($value)
+    public function setEndDateTime($value): LtiLineItem
     {
         $this->end_date_time = $value;
 
@@ -152,7 +152,7 @@ class LtiLineitem
         return $this->grades_released;
     }
 
-    public function setGradesReleased(?bool $value): self
+    public function setGradesReleased(?bool $value): LtiLineItem
     {
         $this->grades_released = $value;
 

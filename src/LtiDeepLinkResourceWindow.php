@@ -4,17 +4,12 @@ namespace Packback\Lti1p3;
 
 class LtiDeepLinkResourceWindow
 {
-    private ?string $target_name;
-    private ?int $width;
-    private ?int $height;
-    private ?string $window_features;
-
-    public function __construct(?string $targetName = null, ?int $width = null, ?int $height = null, ?string $windowFeatures = null)
+    public function __construct(
+        private ?string $target_name,
+        private ?int $width,
+        private ?int $height,
+        private ?string $window_features)
     {
-        $this->target_name = $targetName ?? null;
-        $this->width = $width ?? null;
-        $this->height = $height ?? null;
-        $this->window_features = $windowFeatures ?? null;
     }
 
     public static function new(): LtiDeepLinkResourceWindow

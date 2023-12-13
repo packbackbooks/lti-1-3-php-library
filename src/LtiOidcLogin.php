@@ -14,34 +14,17 @@ class LtiOidcLogin
     public const ERROR_MSG_ISSUER = 'Could not find issuer';
     public const ERROR_MSG_LOGIN_HINT = 'Could not find login hint';
 
-    /**
-     * @todo Type these in v6
-     */
-    private $db;
-    private $cache;
-    private $cookie;
-
-    /**
-     * Constructor.
-     *
-     * @param  IDatabase  $database Instance of the Database interface used for looking up registrations and deployments
-     * @param  ICache  $cache    instance of the Cache interface used to loading and storing launches
-     * @param  ICookie  $cookie   instance of the Cookie interface used to set and read cookies
-     */
-    public function __construct(IDatabase $database, ?ICache $cache = null, ?ICookie $cookie = null)
-    {
-        /**
-         * @todo Make these arguments not nullable in v6
-         */
-        $this->db = $database;
-        $this->cache = $cache;
-        $this->cookie = $cookie;
+    public function __construct(
+        private IDatabase $database,
+        private ICache $cache,
+        private ICookie $cookie
+    ) {
     }
 
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      */
-    public static function new(IDatabase $database, ?ICache $cache = null, ?ICookie $cookie = null)
+    public static function new(IDatabase $database, ICache $cache, ICookie $cookie): LtiOidcLogin
     {
         return new LtiOidcLogin($database, $cache, $cookie);
     }
@@ -93,7 +76,7 @@ class LtiOidcLogin
         return Helpers::buildUrlWithQueryParams($registration->getAuthLoginUrl(), $authParams);
     }
 
-    public function validateOidcLogin($request)
+    public function validateOidcLogin(array $request): ILtiRegistration
     {
         // Validate Issuer.
         if (empty($request['iss'])) {

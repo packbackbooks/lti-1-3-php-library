@@ -9,8 +9,8 @@ namespace Packback\Lti1p3;
  */
 class Lti1p1Key
 {
-    private $key;
-    private $secret;
+    private ?string $key;
+    private ?string $secret;
 
     public function __construct(?array $key = null)
     {
@@ -18,24 +18,24 @@ class Lti1p1Key
         $this->secret = $key['secret'] ?? null;
     }
 
-    public function getKey()
+    public function getKey(): ?string
     {
         return $this->key;
     }
 
-    public function setKey(array $key)
+    public function setKey(string $key): self
     {
         $this->key = $key;
 
         return $this;
     }
 
-    public function getSecret()
+    public function getSecret(): ?string
     {
         return $this->secret;
     }
 
-    public function setSecret(array $secret)
+    public function setSecret(string $secret): self
     {
         $this->secret = $secret;
 

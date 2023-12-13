@@ -4,15 +4,11 @@ namespace Packback\Lti1p3;
 
 class LtiDeepLinkResourceIframe
 {
-    private ?int $width;
-    private ?int $height;
-    private ?string $src;
-
-    public function __construct(?int $width = null, ?int $height = null, ?string $src = null)
-    {
-        $this->width = $width ?? null;
-        $this->height = $height ?? null;
-        $this->src = $src ?? null;
+    public function __construct(
+        private ?int $width,
+        private ?int $height,
+        private ?string $src
+    ) {
     }
 
     public static function new(): LtiDeepLinkResourceIframe

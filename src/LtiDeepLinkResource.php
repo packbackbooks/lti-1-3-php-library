@@ -4,19 +4,19 @@ namespace Packback\Lti1p3;
 
 class LtiDeepLinkResource
 {
-    private $type = LtiConstants::DL_RESOURCE_LINK_TYPE;
-    private $title;
-    private $text;
-    private $url;
-    private $line_item;
-    private $icon;
-    private $thumbnail;
-    private $custom_params = [];
+    private ?string $type = LtiConstants::DL_RESOURCE_LINK_TYPE;
+    private ?string $title;
+    private ?string $text;
+    private ?string $url;
+    private ?LtiLineitem $line_item;
+    private ?LtiDeepLinkResourceIcon $icon;
+    private ?LtiDeepLinkResourceIcon $thumbnail;
+    private array $custom_params = [];
     private $target = 'iframe';
-    private $iframe;
-    private $window;
-    private $availability_interval;
-    private $submission_interval;
+    private ?LtiDeepLinkResourceIframe $iframe;
+    private ?LtiDeepLinkResourceWindow $window;
+    private ?LtiDeepLinkDateTimeInterval $availability_interval;
+    private ?LtiDeepLinkDateTimeInterval $submission_interval;
 
     public static function new(): LtiDeepLinkResource
     {
