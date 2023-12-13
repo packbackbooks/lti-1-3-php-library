@@ -21,7 +21,13 @@ return redirect($redirect->getRedirectUrl());
 return redirect($oidLogin->getRedirectUrl($launchUrl, $request));
 ```
 
-### Removed deprecated methods
+### Removed deprecated methods and classes
+
+The following classes have been removed:
+
+* `Packback\Lti1p3\ImsStorage\ImsCache`
+* `Packback\Lti1p3\ImsStorage\ImsCookie`
+* `Packback\Lti1p3\Redirect`
 
 The following methods have been removed:
 
@@ -38,7 +44,7 @@ All arguments and returns are now strictly typed.
 
 ### Changes to method signatures
 
-* `LtiMessageLaunch::__construct()`, `new()` and `fromCache()` now require all arguments instead of some being optional.
+* When instantiating `LtiMessageLaunch`, `LtiOidcLogin`, and `LtiServiceConnector` objects, all arguments are required now (instead of some being optional).
 * `Lti1p1Key` methods `setKey()` and `setSecret()` accept strings instead of arrays.
 * `LtiServiceConnector::setDebuggingMode()` now returns self instead of void.
 
