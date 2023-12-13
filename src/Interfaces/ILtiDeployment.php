@@ -5,7 +5,7 @@ namespace Packback\Lti1p3\Interfaces;
 /** @internal */
 interface ILtiDeployment
 {
-    public function getDeploymentId(): string;
+    public function getDeploymentId();
 
-    public function setDeploymentId(string $deployment_id): ILtiDeployment;
+    public function setDeploymentId($deployment_id): ILtiDeployment;
 }
