@@ -119,30 +119,6 @@ class LtiDeepLinkResource
         return $this;
     }
 
-    /**
-     * @deprecated This field maps the "presentation" resource property, which is non-standard.
-     * Consider using "iframe" and/or "window" instead.
-     */
-    public function getTarget(): string
-    {
-        trigger_error('Method '.__METHOD__.' is deprecated', E_USER_DEPRECATED);
-
-        return $this->target;
-    }
-
-    /**
-     * @deprecated This field maps the "presentation" resource property, which is non-standard.
-     * Consider using "iframe" and/or "window" instead.
-     */
-    public function setTarget(string $value): LtiDeepLinkResource
-    {
-        trigger_error('Method '.__METHOD__.' is deprecated', E_USER_DEPRECATED);
-
-        $this->target = $value;
-
-        return $this;
-    }
-
     public function getIframe(): ?LtiDeepLinkResourceIframe
     {
         return $this->iframe;

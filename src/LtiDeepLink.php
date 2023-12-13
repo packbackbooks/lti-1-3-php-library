@@ -42,23 +42,4 @@ class LtiDeepLink
 
         return JWT::encode($message_jwt, $this->registration->getToolPrivateKey(), 'RS256', $this->registration->getKid());
     }
-
-    /**
-     * @deprecated
-     */
-    public function outputResponseForm($resources)
-    {
-        trigger_error('Method '.__METHOD__.' is deprecated', E_USER_DEPRECATED);
-
-        $jwt = $this->getResponseJwt($resources);
-        $formActionUrl = $this->deep_link_settings['deep_link_return_url'];
-
-        echo <<<HTML
-<form id="auto_submit" action="{$formActionUrl}" method="POST">
-    <input type="hidden" name="JWT" value="{$jwt}" />
-    <input type="submit" name="Go" />
-</form>
-<script>document.getElementById('auto_submit').submit();</script>
-HTML;
-    }
 }

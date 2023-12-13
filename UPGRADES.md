@@ -1,3 +1,24 @@
+## 5.x to 6.0
+
+### Dropped support for PHP 7 and PHP-JWT 5
+
+This library now requires PHP 8 and firebase/php-jwt 6.
+
+### Removed `ImsStorage` classes
+
+Everything in the `Packback\Lti1p3\ImsStorage` namespace has been removed, specifically the `Packback\Lti1p3\ImsStorage\ImsCache` and `Packback\Lti1p3\ImsStorage\ImsCookie`. If you were using these classes, you will need to implement your own custom storage services.
+
+### Remove deprecated methods
+
+The following methods have been removed:
+
+* `Packback\Lti1p3\JwksEndpoint::outputJwks()` - use `getPublicJwks()` to build your own output
+* `Packback\Lti1p3\LtiDeepLink::outputResponseForm()` - use `getResponseJwt()` to build your own output
+* `Packback\Lti1p3\LtiDeepLinkResource::getTarget()` - consider using `getIframe()` or `getWindow()` instead
+* `Packback\Lti1p3\LtiDeepLinkResource::setTarget()` - consider using `setIframe()` or `setWindow()` instead
+* `Packback\Lti1p3\Redirect::doHybridRedirect()`
+* `Packback\Lti1p3\Redirect::getRedirectUrl()`
+
 ## 5.5 to 5.6
 
 No breaking changes were introduced. However, going forward when processing a `LtiMessageLaunch`, it is recommended to do `$message->initialize($request);` instead of the previous `$message->validate($request);` to support potential migrations.
