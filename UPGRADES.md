@@ -6,9 +6,22 @@ This library now requires PHP 8 and firebase/php-jwt 6.
 
 ### Removed `ImsStorage` classes
 
-Everything in the `Packback\Lti1p3\ImsStorage` namespace has been removed, specifically the `Packback\Lti1p3\ImsStorage\ImsCache` and `Packback\Lti1p3\ImsStorage\ImsCookie`. If you were using these classes, you will need to implement your own custom storage services.
+Everything in the `Packback\Lti1p3\ImsStorage` namespace has been removed, specifically the `Packback\Lti1p3\ImsStorage\ImsCache` and `Packback\Lti1p3\ImsStorage\ImsCookie`. If you were using these classes, you will need to implement your own custom storage services. See the [Laravel Implementation Guide](https://github.com/packbackbooks/lti-1-3-php-library/wiki/Laravel-Implementation-Guide#sample-data-store-implementations) for an example.
 
-### Remove deprecated methods
+### Changed how the OIDC Login URL is retrieved, deprecated the `Redirect` object
+
+When redirecting to the OIDC Login URL, the `Packback\Lti1p3\LtiOidcLogin::getOidcLoginUrl()` method should be used to retrieve the URL. Your application should use this to build the redirect response in whatever way is appropriate for your framework. This replaces, `Packback\Lti1p3\LtiOidcLogin::doOidcLoginRedirect()` which returned a `Redirect` object. See: https://github.com/packbackbooks/lti-1-3-php-library/pull/116
+
+```php
+// instead of doing this:
+$redirect = $oidLogin->doOidcLoginRedirect($launchUrl, $request);
+return redirect($redirect->getRedirectUrl());
+
+// you should do this:
+return redirect($oidLogin->getRedirectUrl($launchUrl, $request));
+```
+
+### Removed deprecated methods
 
 The following methods have been removed:
 
