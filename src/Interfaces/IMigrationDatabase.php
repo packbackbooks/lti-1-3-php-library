@@ -2,7 +2,6 @@
 
 namespace Packback\Lti1p3\Interfaces;
 
-use Packback\Lti1p3\LtiDeployment;
 use Packback\Lti1p3\LtiMessageLaunch;
 
 /**
@@ -31,5 +30,5 @@ interface IMigrationDatabase extends IDatabase
      * Previous to this, we validated the oauth_consumer_key_sign to ensure this migration
      * can safely occur.
      */
-    public function migrateFromLti1p1(LtiMessageLaunch $launch): ?LtiDeployment;
+    public function migrateFromLti1p1(LtiMessageLaunch $launch): ?ILtiDeployment;
 }

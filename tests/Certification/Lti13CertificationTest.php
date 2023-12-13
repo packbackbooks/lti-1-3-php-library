@@ -10,6 +10,7 @@ use Mockery;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
+use Packback\Lti1p3\Interfaces\ILtiDeployment;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IMigrationDatabase;
@@ -90,12 +91,12 @@ class TestDb implements IDatabase
         $this->deployments[$deployment->getDeploymentId()] = $deployment;
     }
 
-    public function findRegistrationByIssuer($iss, $client_id = null): ILtiRegistration
+    public function findRegistrationByIssuer($iss, $client_id = null): ?ILtiRegistration
     {
         return $this->registrations[$iss] ?? null;
     }
 
-    public function findDeployment($iss, $deployment_id, $client_id = null)
+    public function findDeployment($iss, $deployment_id, $client_id = null): ?ILtiDeployment
     {
         return $this->deployments[$iss] ?? null;
     }

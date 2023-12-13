@@ -2,7 +2,9 @@
 
 namespace Packback\Lti1p3;
 
-class LtiDeployment
+use Packback\Lti1p3\Interfaces\ILtiDeployment;
+
+class LtiDeployment implements ILtiDeployment
 {
     public function __construct(
         private string $deployment_id
