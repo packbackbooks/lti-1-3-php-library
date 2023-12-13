@@ -168,22 +168,6 @@ class LtiDeepLinkResourceTest extends TestCase
         $this->assertEquals($expected, $this->deepLinkResource->getCustomParams());
     }
 
-    public function testItGetsTarget()
-    {
-        $result = $this->deepLinkResource->getTarget();
-
-        $this->assertEquals('iframe', $result);
-    }
-
-    public function testItSetsTarget()
-    {
-        $expected = 'expected';
-
-        $this->deepLinkResource->setTarget($expected);
-
-        $this->assertEquals($expected, $this->deepLinkResource->getTarget());
-    }
-
     public function testItGetsIframe()
     {
         $result = $this->deepLinkResource->getIframe();
@@ -206,7 +190,7 @@ class LtiDeepLinkResourceTest extends TestCase
         $expected = [
             'type' => LtiConstants::DL_RESOURCE_LINK_TYPE,
             'presentation' => [
-                'documentTarget' => $this->deepLinkResource->getTarget(),
+                'documentTarget' => 'iframe',
             ],
         ];
 

@@ -6,16 +6,16 @@ use Packback\Lti1p3\Interfaces\ILtiRegistration;
 
 class LtiRegistration implements ILtiRegistration
 {
-    private string $issuer;
-    private string $clientId;
-    private string $keySetUrl;
-    private string $authTokenUrl;
-    private string $authLoginUrl;
-    private string $authServer;
+    private ?string $issuer;
+    private ?string $clientId;
+    private ?string $keySetUrl;
+    private ?string $authTokenUrl;
+    private ?string $authLoginUrl;
+    private ?string $authServer;
     private $toolPrivateKey;
-    private string $kid;
+    private ?string $kid;
 
-    public function __construct(?array $registration)
+    public function __construct(?array $registration = null)
     {
         $this->issuer = $registration['issuer'] ?? null;
         $this->clientId = $registration['clientId'] ?? null;
@@ -27,7 +27,7 @@ class LtiRegistration implements ILtiRegistration
         $this->kid = $registration['kid'] ?? null;
     }
 
-    public static function new(?array $registration): LtiRegistration
+    public static function new(?array $registration = null): LtiRegistration
     {
         return new LtiRegistration($registration);
     }

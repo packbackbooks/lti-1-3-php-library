@@ -26,5 +26,5 @@ interface ILtiServiceConnector
         string $key
     ): array;
 
-    public function setDebuggingMode(bool $enable): void;
+    public function setDebuggingMode(bool $enable): ILtiServiceConnector;
 }

@@ -6,6 +6,7 @@ use Packback\Lti1p3\Helpers\Helpers;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
+use Packback\Lti1p3\Interfaces\ILtiRegistration;
 
 class LtiOidcLogin
 {
@@ -15,7 +16,7 @@ class LtiOidcLogin
     public const ERROR_MSG_LOGIN_HINT = 'Could not find login hint';
 
     public function __construct(
-        private IDatabase $database,
+        private IDatabase $db,
         private ICache $cache,
         private ICookie $cookie
     ) {
@@ -24,9 +25,9 @@ class LtiOidcLogin
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      */
-    public static function new(IDatabase $database, ICache $cache, ICookie $cookie): LtiOidcLogin
+    public static function new(IDatabase $db, ICache $cache, ICookie $cookie): LtiOidcLogin
     {
-        return new LtiOidcLogin($database, $cache, $cookie);
+        return new LtiOidcLogin($db, $cache, $cookie);
     }
 
     /**

@@ -14,7 +14,7 @@ class LtiLineitem
     private $end_date_time;
     private ?bool $grades_released;
 
-    public function __construct(?array $lineitem)
+    public function __construct(?array $lineitem = null)
     {
         $this->id = $lineitem['id'] ?? null;
         $this->score_maximum = $lineitem['scoreMaximum'] ?? null;
@@ -46,7 +46,7 @@ class LtiLineitem
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      */
-    public static function new(?array $lineItem): LtiLineItem
+    public static function new(?array $lineItem = null): LtiLineItem
     {
         return new LtiLineitem($lineItem);
     }

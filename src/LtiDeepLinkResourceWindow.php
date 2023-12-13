@@ -5,10 +5,10 @@ namespace Packback\Lti1p3;
 class LtiDeepLinkResourceWindow
 {
     public function __construct(
-        private ?string $target_name,
-        private ?int $width,
-        private ?int $height,
-        private ?string $window_features)
+        private ?string $target_name = null,
+        private ?int $width = null,
+        private ?int $height = null,
+        private ?string $window_features = null)
     {
     }
 

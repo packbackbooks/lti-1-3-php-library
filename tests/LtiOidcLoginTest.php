@@ -6,6 +6,7 @@ use Mockery;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
+use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\LtiMessageLaunch;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\OidcException;
@@ -43,7 +44,7 @@ class LtiOidcLoginTest extends TestCase
 
     public function testItValidatesARequest()
     {
-        $expected = 'expected';
+        $expected = Mockery::mock(ILtiRegistration::class);
         $request = [
             'iss' => 'Issuer',
             'login_hint' => 'LoginHint',

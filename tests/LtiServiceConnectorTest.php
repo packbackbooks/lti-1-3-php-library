@@ -100,7 +100,7 @@ class LtiServiceConnectorTest extends TestCase
         ]);
 
         $this->cache->shouldReceive('getAccessToken')
-            ->once()->andReturn(false);
+            ->once()->andReturn();
         $this->client->shouldReceive('request')
             ->once()->andReturn($this->response);
         $this->response->shouldReceive('getBody')
@@ -111,7 +111,7 @@ class LtiServiceConnectorTest extends TestCase
 
         $result = $this->connector->getAccessToken($registration, ['scopeKey']);
 
-        $this->assertEquals($result, $this->token);
+        $this->assertEquals($this->token, $result);
     }
 
     public function testItMakesAServiceRequest()

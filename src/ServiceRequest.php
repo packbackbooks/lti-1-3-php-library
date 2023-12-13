@@ -34,9 +34,6 @@ class ServiceRequest implements IServiceRequest
 
     // NRPS
     public const TYPE_GET_MEMBERSHIPS = 'get_memberships';
-    private $method;
-    private $url;
-    private $type;
     private $body;
     private $payload;
     private $accessToken;
@@ -46,11 +43,11 @@ class ServiceRequest implements IServiceRequest
     // Other
     private $maskResponseLogs = false;
 
-    public function __construct(string $method, string $url, $type = self::UNSUPPORTED)
+    public function __construct(
+        private string $method,
+        private string $url,
+        private string $type = self::UNSUPPORTED)
     {
-        $this->method = $method;
-        $this->url = $url;
-        $this->type = $type;
     }
 
     public function getMethod(): string

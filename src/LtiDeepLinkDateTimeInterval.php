@@ -7,8 +7,8 @@ use DateTime;
 class LtiDeepLinkDateTimeInterval
 {
     public function __construct(
-        private ?DateTime $start,
-        private ?DateTime $end
+        private ?DateTime $start = null,
+        private ?DateTime $end = null
     ) {
         if (isset($start) && isset($end) && $end < $start) {
             throw new LtiException('Interval start time cannot be greater than end time');

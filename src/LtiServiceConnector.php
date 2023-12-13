@@ -11,7 +11,6 @@ use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IServiceRequest;
-use Psr\Http\Message\ResponseInterface;
 
 class LtiServiceConnector implements ILtiServiceConnector
 {
@@ -81,7 +80,7 @@ class LtiServiceConnector implements ILtiServiceConnector
         return $tokenData['access_token'];
     }
 
-    public function makeRequest(IServiceRequest $request): ResponseInterface
+    public function makeRequest(IServiceRequest $request): Response
     {
         $response = $this->client->request(
             $request->getMethod(),

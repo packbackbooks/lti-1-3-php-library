@@ -6,10 +6,12 @@ use Exception;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use GuzzleHttp\Exception\TransferException;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
+use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IMigrationDatabase;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
@@ -50,8 +52,8 @@ class LtiMessageLaunch
     public const ERR_OAUTH_KEY_SIGN_MISSING = 'Unable to upgrade from LTI 1.1 to 1.3. The oauth_consumer_key_sign was not provided.';
     private array $request;
     private array $jwt;
-    private LtiRegistration $registration;
-    private LtiDeployment $deployment;
+    private ?ILtiRegistration $registration;
+    private ?LtiDeployment $deployment;
     private string $launch_id;
 
     // See https://www.imsglobal.org/spec/security/v1p1#approved-jwt-signing-algorithms.
@@ -98,10 +100,11 @@ class LtiMessageLaunch
     public static function fromCache(
         $launch_id,
         IDatabase $db,
-        ?ICache $cache = null,
-        ?ILtiServiceConnector $serviceConnector = null
+        ICache $cache,
+        ICookie $cookie,
+        ILtiServiceConnector $serviceConnector
     ): self {
-        $new = new LtiMessageLaunch($db, $cache, $cache, $serviceConnector);
+        $new = new LtiMessageLaunch($db, $cache, $cookie, $serviceConnector);
         $new->launch_id = $launch_id;
         $new->jwt = ['body' => $new->cache->getLaunchData($launch_id)];
 
@@ -293,7 +296,7 @@ class LtiMessageLaunch
     /**
      * @throws LtiException
      */
-    private function getPublicKey(): array
+    private function getPublicKey(): Key
     {
         $request = new ServiceRequest(
             ServiceRequest::METHOD_GET,
@@ -417,7 +420,7 @@ class LtiMessageLaunch
         $issuerUrl = $this->jwt['body']['iss'];
         $this->registration = $this->db->findRegistrationByIssuer($issuerUrl, $clientId);
 
-        if (empty($this->registration)) {
+        if (!isset($this->registration)) {
             throw new LtiException($this->getMissingRegistrationErrorMsg($issuerUrl, $clientId));
         }
 

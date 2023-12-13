@@ -5,9 +5,9 @@ namespace Packback\Lti1p3;
 class LtiDeepLinkResourceIframe
 {
     public function __construct(
-        private ?int $width,
-        private ?int $height,
-        private ?string $src
+        private ?int $width = null,
+        private ?int $height = null,
+        private ?string $src = null
     ) {
     }
 
