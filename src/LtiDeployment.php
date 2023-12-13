@@ -7,7 +7,7 @@ use Packback\Lti1p3\Interfaces\ILtiDeployment;
 class LtiDeployment implements ILtiDeployment
 {
     public function __construct(
-        private string $deployment_id
+        private $deployment_id
     ) {
     }
 
@@ -16,12 +16,12 @@ class LtiDeployment implements ILtiDeployment
         return new LtiDeployment($deployment_id);
     }
 
-    public function getDeploymentId(): string
+    public function getDeploymentId()
     {
         return $this->deployment_id;
     }
 
-    public function setDeploymentId(string $deployment_id): LtiDeployment
+    public function setDeploymentId($deployment_id): LtiDeployment
     {
         $this->deployment_id = $deployment_id;
 
