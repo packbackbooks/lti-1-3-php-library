@@ -1,14 +1,18 @@
 ## 5.x to 6.0
 
-### Dropped support for PHP 7 and PHP-JWT 5
+### HIGH LIKELIHOOD OF IMPACT: Changes to `LtiMessageLaunch`
 
-This library now requires PHP 8 and firebase/php-jwt 6.
+When handling a new launch, the new `initialize()` method should be used instead of the previous `validate()` method. The validate method no longer accepts arguments, and requires that the request be set on the message launch object first (which happens in `initialize()`). This fixes some separation-of-concern issues with the `validate()` method, and allows for seamless integration of LTI 1.1 to 1.3 migrations if enabled.
 
-### Removed `ImsStorage` classes
+```php
+// instead of doing this:
+$message->validate($request);
 
-Everything in the `Packback\Lti1p3\ImsStorage` namespace has been removed, specifically the `Packback\Lti1p3\ImsStorage\ImsCache` and `Packback\Lti1p3\ImsStorage\ImsCookie`. If you were using these classes, you will need to implement your own custom storage services. See the [Laravel Implementation Guide](https://github.com/packbackbooks/lti-1-3-php-library/wiki/Laravel-Implementation-Guide#sample-data-store-implementations) for an example.
+// you should do this:
+$message->inilialize($request);
+```
 
-### Changed how the OIDC Login URL is retrieved, deprecated the `Redirect` object
+### HIGH LIKELIHOOD OF IMPACT: Changed how the OIDC Login URL is retrieved, deprecated the `Redirect` object
 
 When redirecting to the OIDC Login URL, the `Packback\Lti1p3\LtiOidcLogin::getOidcLoginUrl()` method should be used to retrieve the URL. Your application should use this to build the redirect response in whatever way is appropriate for your framework. This replaces, `Packback\Lti1p3\LtiOidcLogin::doOidcLoginRedirect()` which returned a `Redirect` object. See: https://github.com/packbackbooks/lti-1-3-php-library/pull/116
 
@@ -20,6 +24,18 @@ return redirect($redirect->getRedirectUrl());
 // you should do this:
 return redirect($oidLogin->getRedirectUrl($launchUrl, $request));
 ```
+
+### HIGH LIKELIHOOD OF IMPACT - Strict typing added
+
+All arguments and returns are now strictly typed. This includes changes to the `IDatabase` interface.
+
+### Dropped support for PHP 7 and PHP-JWT 5
+
+This library now requires PHP 8 and firebase/php-jwt 6.
+
+### Removed `ImsStorage` classes
+
+Everything in the `Packback\Lti1p3\ImsStorage` namespace has been removed, specifically the `Packback\Lti1p3\ImsStorage\ImsCache` and `Packback\Lti1p3\ImsStorage\ImsCookie`. If you were using these classes, you will need to implement your own custom storage services. See the [Laravel Implementation Guide](https://github.com/packbackbooks/lti-1-3-php-library/wiki/Laravel-Implementation-Guide#sample-data-store-implementations) for an example.
 
 ### Removed deprecated methods and classes
 
@@ -37,10 +53,6 @@ The following methods have been removed:
 * `Packback\Lti1p3\LtiDeepLinkResource::setTarget()` - consider using `setIframe()` or `setWindow()` instead
 * `Packback\Lti1p3\Redirect::doHybridRedirect()`
 * `Packback\Lti1p3\Redirect::getRedirectUrl()`
-
-### Strict typing added
-
-All arguments and returns are now strictly typed.
 
 ### Changes to method signatures
 
