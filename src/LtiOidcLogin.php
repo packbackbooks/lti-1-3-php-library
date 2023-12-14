@@ -42,7 +42,7 @@ class LtiOidcLogin
         // Validate request data
         $registration = $this->validateOidcLogin($request);
 
-        $authParams = $this->getAuthParams($launchUrl, $request, $registration->getClientId());
+        $authParams = $this->getAuthParams($launchUrl, $registration->getClientId(), $request);
 
         return Helpers::buildUrlWithQueryParams($registration->getAuthLoginUrl(), $authParams);
     }
