@@ -32,7 +32,7 @@ abstract class LtiAbstractService
     protected function validateScopes(array $scopes): void
     {
         if (empty(array_intersect($scopes, $this->getScope()))) {
-            throw new LtiException('Missing required scope', 1);
+            throw new LtiException('Missing required scope');
         }
     }
 
