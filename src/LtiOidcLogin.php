@@ -39,40 +39,10 @@ class LtiOidcLogin
      */
     public function getRedirectUrl(string $launchUrl, array $request): string
     {
-        // Validate Request Data.
+        // Validate request data
         $registration = $this->validateOidcLogin($request);
 
-        /*
-         * Build OIDC Auth Response.
-         */
-
-        // Generate State.
-        // Set cookie (short lived)
-        $state = static::secureRandomString('state-');
-        $this->cookie->setCookie(static::COOKIE_PREFIX.$state, $state, 60);
-
-        // Generate Nonce.
-        $nonce = static::secureRandomString('nonce-');
-        $this->cache->cacheNonce($nonce, $state);
-
-        // Build Response.
-        $authParams = [
-            'scope' => 'openid', // OIDC Scope.
-            'response_type' => 'id_token', // OIDC response is always an id token.
-            'response_mode' => 'form_post', // OIDC response is always a form post.
-            'prompt' => 'none', // Don't prompt user on redirect.
-            'client_id' => $registration->getClientId(), // Registered client id.
-            'redirect_uri' => $launchUrl, // URL to return to after login.
-            'state' => $state, // State to identify browser session.
-            'nonce' => $nonce, // Prevent replay attacks.
-            'login_hint' => $request['login_hint'], // Login hint to identify platform session.
-        ];
-
-        // Pass back LTI message hint if we have it.
-        if (isset($request['lti_message_hint'])) {
-            // LTI message hint to identify LTI context within the platform.
-            $authParams['lti_message_hint'] = $request['lti_message_hint'];
-        }
+        $authParams = $this->getAuthParams($launchUrl, $request, $registration->getClientId());
 
         return Helpers::buildUrlWithQueryParams($registration->getAuthLoginUrl(), $authParams);
     }
@@ -102,6 +72,39 @@ class LtiOidcLogin
 
         // Return Registration.
         return $registration;
+    }
+
+    public function getAuthParams(string $launchUrl, string $clientId, array $request): array
+    {
+        // Generate State.
+        // Set cookie (short lived)
+        $state = static::secureRandomString('state-');
+        $this->cookie->setCookie(static::COOKIE_PREFIX.$state, $state, 60);
+
+        // Generate Nonce.
+        $nonce = static::secureRandomString('nonce-');
+        $this->cache->cacheNonce($nonce, $state);
+
+        // Build Response.
+        $authParams = [
+            'scope' => 'openid', // OIDC Scope.
+            'response_type' => 'id_token', // OIDC response is always an id token.
+            'response_mode' => 'form_post', // OIDC response is always a form post.
+            'prompt' => 'none', // Don't prompt user on redirect.
+            'client_id' => $clientId, // Registered client id.
+            'redirect_uri' => $launchUrl, // URL to return to after login.
+            'state' => $state, // State to identify browser session.
+            'nonce' => $nonce, // Prevent replay attacks.
+            'login_hint' => $request['login_hint'], // Login hint to identify platform session.
+        ];
+
+        // Pass back LTI message hint if we have it.
+        if (isset($request['lti_message_hint'])) {
+            // LTI message hint to identify LTI context within the platform.
+            $authParams['lti_message_hint'] = $request['lti_message_hint'];
+        }
+
+        return $authParams;
     }
 
     public static function secureRandomString(string $prefix = ''): string
