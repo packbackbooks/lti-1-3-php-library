@@ -19,17 +19,17 @@ class DeepLinkMessageValidator extends AbstractMessageValidator
     {
         static::validateGenericMessage($jwtBody);
 
-        if (empty($jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS])) {
+        if (!isset($jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS])) {
             throw new LtiException('Missing Deep Linking Settings');
         }
         $deep_link_settings = $jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS];
-        if (empty($deep_link_settings['deep_link_return_url'])) {
+        if (!isset($deep_link_settings['deep_link_return_url'])) {
             throw new LtiException('Missing Deep Linking Return URL');
         }
-        if (empty($deep_link_settings['accept_types']) || !in_array('ltiResourceLink', $deep_link_settings['accept_types'])) {
+        if (!isset($deep_link_settings['accept_types']) || !in_array('ltiResourceLink', $deep_link_settings['accept_types'])) {
             throw new LtiException('Must support resource link placement types');
         }
-        if (empty($deep_link_settings['accept_presentation_document_targets'])) {
+        if (!isset($deep_link_settings['accept_presentation_document_targets'])) {
             throw new LtiException('Must support a presentation type');
         }
     }

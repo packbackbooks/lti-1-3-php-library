@@ -19,7 +19,7 @@ class ResourceMessageValidator extends AbstractMessageValidator
     {
         static::validateGenericMessage($jwtBody);
 
-        if (empty($jwtBody[LtiConstants::RESOURCE_LINK]['id'])) {
+        if (!isset($jwtBody[LtiConstants::RESOURCE_LINK]['id'])) {
             throw new LtiException('Missing Resource Link Id');
         }
     }

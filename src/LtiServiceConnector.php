@@ -195,7 +195,7 @@ class LtiServiceConnector implements ILtiServiceConnector
 
         $requestBody = $request->getPayload()['body'] ?? null;
 
-        if (!empty($requestBody)) {
+        if (isset($requestBody)) {
             $contextArray['request_body'] = $requestBody;
         }
 

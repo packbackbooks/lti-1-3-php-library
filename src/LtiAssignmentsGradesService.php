@@ -21,7 +21,7 @@ class LtiAssignmentsGradesService extends LtiAbstractService
     public function getResourceLaunchLineItem(): ?LtiLineitem
     {
         $serviceData = $this->getServiceData();
-        if (empty($serviceData['lineitem'])) {
+        if (!isset($serviceData['lineitem'])) {
             return null;
         }
 

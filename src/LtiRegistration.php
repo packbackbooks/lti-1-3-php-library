@@ -94,7 +94,7 @@ class LtiRegistration implements ILtiRegistration
 
     public function getAuthServer()
     {
-        return empty($this->authServer) ? $this->authTokenUrl : $this->authServer;
+        return $this->authServer ?? $this->authTokenUrl;
     }
 
     public function setAuthServer($authServer): LtiRegistration

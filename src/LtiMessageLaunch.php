@@ -173,7 +173,7 @@ class LtiMessageLaunch
      */
     public function hasNrps(): bool
     {
-        return !empty($this->jwt['body'][LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url']);
+        return isset($this->jwt['body'][LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url']);
     }
 
     /**
@@ -193,7 +193,7 @@ class LtiMessageLaunch
      */
     public function hasGs(): bool
     {
-        return !empty($this->jwt['body'][LtiConstants::GS_CLAIM_SERVICE]['context_groups_url']);
+        return isset($this->jwt['body'][LtiConstants::GS_CLAIM_SERVICE]['context_groups_url']);
     }
 
     /**
@@ -213,7 +213,7 @@ class LtiMessageLaunch
      */
     public function hasAgs(): bool
     {
-        return !empty($this->jwt['body'][LtiConstants::AGS_CLAIM_ENDPOINT]);
+        return isset($this->jwt['body'][LtiConstants::AGS_CLAIM_ENDPOINT]);
     }
 
     /**
@@ -379,14 +379,12 @@ class LtiMessageLaunch
 
     protected function validateJwtFormat(): self
     {
-        $jwt = $this->request['id_token'] ?? null;
-
-        if (empty($jwt)) {
+        if (!isset($this->request['id_token'])) {
             throw new LtiException(static::ERR_MISSING_ID_TOKEN);
         }
 
         // Get parts of JWT.
-        $jwt_parts = explode('.', $jwt);
+        $jwt_parts = explode('.', $this->request['id_token']);
 
         if (count($jwt_parts) !== 3) {
             // Invalid number of parts in JWT.
@@ -473,7 +471,7 @@ class LtiMessageLaunch
 
     protected function validateMessage(): self
     {
-        if (empty($this->jwt['body'][LtiConstants::MESSAGE_TYPE])) {
+        if (!isset($this->jwt['body'][LtiConstants::MESSAGE_TYPE])) {
             // Unable to identify message type.
             throw new LtiException(static::ERR_INVALID_MESSAGE_TYPE);
         }

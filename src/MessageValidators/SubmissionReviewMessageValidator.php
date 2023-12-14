@@ -19,10 +19,10 @@ class SubmissionReviewMessageValidator extends AbstractMessageValidator
     {
         static::validateGenericMessage($jwtBody);
 
-        if (empty($jwtBody[LtiConstants::RESOURCE_LINK]['id'])) {
+        if (!isset($jwtBody[LtiConstants::RESOURCE_LINK]['id'])) {
             throw new LtiException('Missing Resource Link Id');
         }
-        if (empty($jwtBody[LtiConstants::FOR_USER])) {
+        if (!isset($jwtBody[LtiConstants::FOR_USER])) {
             throw new LtiException('Missing For User');
         }
     }
