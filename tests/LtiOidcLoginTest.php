@@ -112,7 +112,37 @@ class LtiOidcLoginTest extends TestCase
         $this->oidcLogin->validateOidcLogin($request);
     }
 
-    /*
-     * @todo Finish testing
-     */
+    public function testGetAuthParams()
+    {
+        $this->cookie->shouldReceive('setCookie')
+            ->once();
+        $this->cache->shouldReceive('cacheNonce')
+            ->once();
+
+        $launchUrl = 'https://example.com/launch';
+        $clientId = 'ClientId';
+        $expected = [
+            'scope' => 'openid',
+            'response_type' => 'id_token',
+            'response_mode' => 'form_post',
+            'prompt' => 'none',
+            'client_id' => $clientId,
+            'redirect_uri' => $launchUrl,
+            'login_hint' => 'LoginHint',
+            'lti_message_hint' => 'LtiMessageHint',
+        ];
+        $request = [
+            'login_hint' => 'LoginHint',
+            'lti_message_hint' => 'LtiMessageHint',
+        ];
+
+        $result = $this->oidcLogin->getAuthParams($launchUrl, $clientId, $request);
+
+        // These are cryptographically random, so just assert they exist
+        $this->assertArrayHasKey('state', $result);
+        $this->assertArrayHasKey('nonce', $result);
+        // No remove them and check equality
+        unset($result['state'], $result['nonce']);
+        $this->assertEquals($expected, $result);
+    }
 }
