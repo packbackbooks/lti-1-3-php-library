@@ -91,12 +91,12 @@ class TestDb implements IDatabase
         $this->deployments[$deployment->getDeploymentId()] = $deployment;
     }
 
-    public function findRegistrationByIssuer($iss, $client_id = null): ?ILtiRegistration
+    public function findRegistrationByIssuer(string $iss, ?string $client_id = null): ?ILtiRegistration
     {
         return $this->registrations[$iss] ?? null;
     }
 
-    public function findDeployment($iss, $deployment_id, $client_id = null): ?ILtiDeployment
+    public function findDeployment(string $iss, string $deployment_id, ?string $client_id = null): ?ILtiDeployment
     {
         return $this->deployments[$iss] ?? null;
     }
@@ -276,7 +276,7 @@ class Lti13CertificationTest extends TestCase
             return \implode('.', $segments);
         }
 
-        return JWT::encode($data, $this->issuer['tool_private_key'], $alg, $this->issuer['kid']);
+        return JWT::encode($data, $this->issuer['tool_private_key'], $this->issuer['alg'], $this->issuer['kid']);
     }
 
     // tests
@@ -316,8 +316,7 @@ class Lti13CertificationTest extends TestCase
         $this->expectExceptionMessage('Invalid id_token, JWT must contain 3 parts');
 
         LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
-            ->setRequest($params)
-            ->validate();
+            ->initialize($params);
     }
 
     public function testExpAndIatFieldsInvalid()
@@ -374,9 +373,9 @@ class Lti13CertificationTest extends TestCase
 
         $db->matchingKeys = [$key];
         $db->shouldMigrate = true;
-        $db->createdDeployment = LtiDeployment::new($payload[LtiConstants::DEPLOYMENT_ID]);
+        $db->createdDeployment = new LtiDeployment($payload[LtiConstants::DEPLOYMENT_ID]);
 
-        $payload['exp'] = 3272987750; // To ensure signature matches
+        $payload['exp'] = '3272987750'; // To ensure signature matches
         $payload[LtiConstants::LTI1P1] = [
             'oauth_consumer_key' => $key->getKey(),
             'oauth_consumer_key_sign' => $key->sign(
@@ -504,7 +503,7 @@ class Lti13CertificationTest extends TestCase
             // I couldn't find a better output function
             echo PHP_EOL."--> TESTING INVALID TEST CASE: {$testCase}";
 
-            $jwt = $this->buildJWT($payload, $this->issuer, $jwtHeader);
+            $jwt = $this->buildJWT($payload, $this->issuer);
             if (isset($payload['nonce'])) {
                 $this->cache->cacheNonce($payload['nonce'], static::STATE);
             }
@@ -517,8 +516,7 @@ class Lti13CertificationTest extends TestCase
 
             try {
                 LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
-                    ->setRequest($params)
-                    ->validate();
+                    ->initialize($params);
             } catch (Exception $e) {
                 $this->assertInstanceOf(LtiException::class, $e);
             }
@@ -573,8 +571,7 @@ class Lti13CertificationTest extends TestCase
                 ->once()->andReturn(json_decode(file_get_contents(static::JWKS_FILE), true));
 
             $result = LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
-                ->setRequest($params)
-                ->validate();
+                ->initialize($params);
 
             // Assertions
             $this->assertInstanceOf(LtiMessageLaunch::class, $result);

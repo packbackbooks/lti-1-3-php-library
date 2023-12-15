@@ -11,12 +11,12 @@ class DeepLinkMessageValidatorTest extends TestCase
 {
     public function testItCanValidate()
     {
-        $this->assertTrue(DeepLinkMessageValidator::canValidate(static::validJwtBody()));
+        $this->assertTrue(DeepLinkMessageValidator::canValidate(self::validJwtBody()));
     }
 
     public function testItCannotValidate()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         $jwtBody[LtiConstants::MESSAGE_TYPE] = 'some other type';
 
         $this->assertFalse(DeepLinkMessageValidator::canValidate($jwtBody));
@@ -24,12 +24,12 @@ class DeepLinkMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsValid()
     {
-        $this->assertNull(DeepLinkMessageValidator::validate(static::validJwtBody()));
+        $this->assertNull(DeepLinkMessageValidator::validate(self::validJwtBody()));
     }
 
     public function testJwtBodyIsInvalidMissingSub()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         $jwtBody['sub'] = '';
 
         $this->expectException(LtiException::class);
@@ -39,7 +39,7 @@ class DeepLinkMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidMissingLtiVersion()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::VERSION]);
 
         $this->expectException(LtiException::class);
@@ -49,7 +49,7 @@ class DeepLinkMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidWrongLtiVersion()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         $jwtBody[LtiConstants::VERSION] = '1.2.0';
 
         $this->expectException(LtiException::class);
@@ -59,7 +59,7 @@ class DeepLinkMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidMissingRoles()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::ROLES]);
 
         $this->expectException(LtiException::class);
@@ -69,7 +69,7 @@ class DeepLinkMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidMissingDeepLinkSetting()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS]);
 
         $this->expectException(LtiException::class);
@@ -79,7 +79,7 @@ class DeepLinkMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidMissingDeepLinkReturnUrl()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS]['deep_link_return_url']);
 
         $this->expectException(LtiException::class);
@@ -89,7 +89,7 @@ class DeepLinkMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidMissingAcceptType()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS]['accept_types']);
 
         $this->expectException(LtiException::class);
@@ -99,7 +99,7 @@ class DeepLinkMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidAcceptTypeIsInvalid()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         $jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS]['accept_types'] = [];
 
         $this->expectException(LtiException::class);
@@ -109,7 +109,7 @@ class DeepLinkMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidMissingPresentation()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS]['accept_presentation_document_targets']);
 
         $this->expectException(LtiException::class);

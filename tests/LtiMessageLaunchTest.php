@@ -328,6 +328,8 @@ class LtiMessageLaunchTest extends TestCase
         $expectedMsg = $this->messageLaunch->getMissingRegistrationErrorMsg($this->issuer['issuer'], $this->issuer['client_id']);
         $this->expectExceptionMessage($expectedMsg);
 
+        $this->messageLaunch->setRequest($payload);
+
         $actual = $this->messageLaunch->validate();
     }
 
@@ -472,9 +474,9 @@ class LtiMessageLaunchTest extends TestCase
             ->once()->andReturn(json_decode(file_get_contents(static::JWKS_FILE), true));
         $this->database->shouldReceive('findDeployment')
             ->once()->andReturn(new LtiDeployment('a deployment'));
+        $this->messageLaunch->setRequest($params);
 
         $this->expectException(LtiException::class);
-        $this->messageLaunch->setRequest($params);
 
         $this->messageLaunch->validate();
     }
@@ -852,7 +854,7 @@ class LtiMessageLaunchTest extends TestCase
 
     public function tesGetLaunchDataForALaunch()
     {
-        $launch = $this->getLaunchData($this->payload);
+        $launch = $this->fakeLaunch($this->payload);
 
         $actual = $launch->getLaunchData();
 
@@ -891,6 +893,6 @@ class LtiMessageLaunchTest extends TestCase
             return \implode('.', $segments);
         }
 
-        return JWT::encode($data, $this->issuer['tool_private_key'], $alg, $this->issuer['kid']);
+        return JWT::encode($data, $this->issuer['tool_private_key'], $this->issuer['alg'], $this->issuer['kid']);
     }
 }

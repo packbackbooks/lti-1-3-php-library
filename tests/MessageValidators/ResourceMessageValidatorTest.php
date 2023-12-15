@@ -11,12 +11,12 @@ class ResourceMessageValidatorTest extends TestCase
 {
     public function testItCanValidate()
     {
-        $this->assertTrue(ResourceMessageValidator::canValidate(static::validJwtBody()));
+        $this->assertTrue(ResourceMessageValidator::canValidate(self::validJwtBody()));
     }
 
     public function testItCannotValidate()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         $jwtBody[LtiConstants::MESSAGE_TYPE] = 'some other type';
 
         $this->assertFalse(ResourceMessageValidator::canValidate($jwtBody));
@@ -24,12 +24,12 @@ class ResourceMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsValid()
     {
-        $this->assertNull(ResourceMessageValidator::validate(static::validJwtBody()));
+        $this->assertNull(ResourceMessageValidator::validate(self::validJwtBody()));
     }
 
     public function testJwtBodyIsInvalidMissingSub()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         $jwtBody['sub'] = '';
 
         $this->expectException(LtiException::class);
@@ -39,7 +39,7 @@ class ResourceMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidMissingLtiVersion()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::VERSION]);
 
         $this->expectException(LtiException::class);
@@ -49,7 +49,7 @@ class ResourceMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidWrongLtiVersion()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         $jwtBody[LtiConstants::VERSION] = '1.2.0';
 
         $this->expectException(LtiException::class);
@@ -59,7 +59,7 @@ class ResourceMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidMissingRoles()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::ROLES]);
 
         $this->expectException(LtiException::class);
@@ -69,7 +69,7 @@ class ResourceMessageValidatorTest extends TestCase
 
     public function testJwtBodyIsInvalidMissingResourceLinkId()
     {
-        $jwtBody = static::validJwtBody();
+        $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::RESOURCE_LINK]['id']);
 
         $this->expectException(LtiException::class);

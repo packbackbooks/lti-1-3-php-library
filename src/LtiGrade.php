@@ -48,7 +48,7 @@ class LtiGrade
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      */
-    public static function new(): LtiGrade
+    public static function new(): self
     {
         return new LtiGrade();
     }
@@ -58,7 +58,7 @@ class LtiGrade
         return $this->score_given;
     }
 
-    public function setScoreGiven($value): LtiGrade
+    public function setScoreGiven($value): self
     {
         $this->score_given = $value;
 
@@ -70,7 +70,7 @@ class LtiGrade
         return $this->score_maximum;
     }
 
-    public function setScoreMaximum($value): LtiGrade
+    public function setScoreMaximum($value): self
     {
         $this->score_maximum = $value;
 
@@ -82,7 +82,7 @@ class LtiGrade
         return $this->comment;
     }
 
-    public function setComment($comment): LtiGrade
+    public function setComment($comment): self
     {
         $this->comment = $comment;
 
@@ -94,7 +94,7 @@ class LtiGrade
         return $this->activity_progress;
     }
 
-    public function setActivityProgress($value): LtiGrade
+    public function setActivityProgress($value): self
     {
         $this->activity_progress = $value;
 
@@ -106,7 +106,7 @@ class LtiGrade
         return $this->grading_progress;
     }
 
-    public function setGradingProgress($value): LtiGrade
+    public function setGradingProgress($value): self
     {
         $this->grading_progress = $value;
 
@@ -118,7 +118,7 @@ class LtiGrade
         return $this->timestamp;
     }
 
-    public function setTimestamp($value): LtiGrade
+    public function setTimestamp($value): self
     {
         $this->timestamp = $value;
 
@@ -130,7 +130,7 @@ class LtiGrade
         return $this->user_id;
     }
 
-    public function setUserId($value): LtiGrade
+    public function setUserId($value): self
     {
         $this->user_id = $value;
 
@@ -142,7 +142,7 @@ class LtiGrade
         return $this->submission_review;
     }
 
-    public function setSubmissionReview($value): LtiGrade
+    public function setSubmissionReview($value): self
     {
         $this->submission_review = $value;
 
@@ -163,7 +163,7 @@ class LtiGrade
      *
      * @see https://documentation.instructure.com/doc/api/score.html
      */
-    public function setCanvasExtension($value): LtiGrade
+    public function setCanvasExtension($value): self
     {
         $this->canvas_extension = $value;
 

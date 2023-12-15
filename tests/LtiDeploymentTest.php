@@ -6,11 +6,11 @@ use Packback\Lti1p3\LtiDeployment;
 
 class LtiDeploymentTest extends TestCase
 {
-    private $name = 'a deployment';
+    private $id = 'a deployment';
 
     public function setUp(): void
     {
-        $this->deployment = new LtiDeployment($this->name);
+        $this->deployment = new LtiDeployment($this->id);
     }
 
     public function testItInstantiates()
@@ -22,7 +22,7 @@ class LtiDeploymentTest extends TestCase
     {
         $result = $this->deployment->getDeploymentId();
 
-        $this->assertEquals($this->name, $result);
+        $this->assertEquals($this->id, $result);
     }
 
     public function testItSetsDeploymentId()

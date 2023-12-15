@@ -60,6 +60,26 @@ The following methods have been removed:
 * `Lti1p1Key` methods `setKey()` and `setSecret()` accept strings instead of arrays.
 * `LtiServiceConnector::setDebuggingMode()` now returns self instead of void.
 
+## 5.6 to 5.7
+
+No breaking changes were introduced. However, going forward when processing a `LtiOidcLogin`, it is recommended to use the new `getRedirectUrl()` method:
+
+```php
+// Do this:
+$redirect = $oidcLogin->getRedirectUrl($launchUrl, $request);
+// Then do the redirect yourself (Laravel):
+return redirect($redirect);
+// Or some other method
+header('Location: '.$this->location, true, 302);
+exit;
+
+// Instead of the old method:
+$redirect = $oidcLogin->doOidcLoginRedirect($launchUrl, $request);
+$redirect->doRedirect();
+```
+
+The `LtiOidcLogin::doOidcLoginRedirect()` method and `Redirect` object will be deprecated in the next major version.
+
 ## 5.5 to 5.6
 
 No breaking changes were introduced. However, going forward when processing a `LtiMessageLaunch`, it is recommended to do `$message->initialize($request);` instead of the previous `$message->validate($request);` to support potential migrations.

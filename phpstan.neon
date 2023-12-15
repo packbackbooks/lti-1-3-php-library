@@ -1,0 +1,421 @@
+parameters:
+    level: 5
+    paths:
+        - src
+        - tests
+
+    ignoreErrors:
+        -
+            message: "#^Call to an undefined method Packback\\\\Lti1p3\\\\Interfaces\\\\IDatabase\\:\\:findLti1p1Keys\\(\\)\\.$#"
+            count: 1
+            path: src/LtiMessageLaunch.php
+
+        -
+            message: "#^Call to an undefined method Packback\\\\Lti1p3\\\\Interfaces\\\\IDatabase\\:\\:migrateFromLti1p1\\(\\)\\.$#"
+            count: 1
+            path: src/LtiMessageLaunch.php
+
+        -
+            message: "#^Call to an undefined method Packback\\\\Lti1p3\\\\Interfaces\\\\IDatabase\\:\\:shouldMigrate\\(\\)\\.$#"
+            count: 1
+            path: src/LtiMessageLaunch.php
+
+        -
+            message: "#^Access to an undefined property Certification\\\\Lti13CertificationTest\\:\\:\\$cache\\.$#"
+            count: 8
+            path: tests/Certification/Lti13CertificationTest.php
+
+        -
+            message: "#^Access to an undefined property Certification\\\\Lti13CertificationTest\\:\\:\\$cookie\\.$#"
+            count: 5
+            path: tests/Certification/Lti13CertificationTest.php
+
+        -
+            message: "#^Access to an undefined property Certification\\\\Lti13CertificationTest\\:\\:\\$serviceConnector\\.$#"
+            count: 11
+            path: tests/Certification/Lti13CertificationTest.php
+
+        -
+            message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:once\\(\\)\\.$#"
+            count: 5
+            path: tests/JwksEndpointTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$database of static method Packback\\\\Lti1p3\\\\JwksEndpoint\\:\\:fromIssuer\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\IDatabase, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/JwksEndpointTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$registration of static method Packback\\\\Lti1p3\\\\JwksEndpoint\\:\\:fromRegistration\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ILtiRegistration, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/JwksEndpointTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiAssignmentsGradesServiceTest\\:\\:\\$connector\\.$#"
+            count: 8
+            path: tests/LtiAssignmentsGradesServiceTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiAssignmentsGradesServiceTest\\:\\:\\$registration\\.$#"
+            count: 5
+            path: tests/LtiAssignmentsGradesServiceTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiCourseGroupsServiceTest\\:\\:\\$connector\\.$#"
+            count: 2
+            path: tests/LtiCourseGroupsServiceTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiCourseGroupsServiceTest\\:\\:\\$registration\\.$#"
+            count: 2
+            path: tests/LtiCourseGroupsServiceTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiDeepLinkResourceIconTest\\:\\:\\$deepLinkResourceIcon\\.$#"
+            count: 15
+            path: tests/LtiDeepLinkResourceIconTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiDeepLinkResourceIconTest\\:\\:\\$imageUrl\\.$#"
+            count: 4
+            path: tests/LtiDeepLinkResourceIconTest.php
+
+        -
+            message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:twice\\(\\)\\.$#"
+            count: 2
+            path: tests/LtiDeepLinkResourceTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$icon of method Packback\\\\Lti1p3\\\\LtiDeepLinkResource\\:\\:setIcon\\(\\) expects Packback\\\\Lti1p3\\\\LtiDeepLinkResourceIcon\\|null, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiDeepLinkResourceTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$thumbnail of method Packback\\\\Lti1p3\\\\LtiDeepLinkResource\\:\\:setThumbnail\\(\\) expects Packback\\\\Lti1p3\\\\LtiDeepLinkResourceIcon\\|null, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiDeepLinkResourceTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$value of method Packback\\\\Lti1p3\\\\LtiDeepLinkResource\\:\\:setLineItem\\(\\) expects Packback\\\\Lti1p3\\\\LtiLineitem\\|null, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 2
+            path: tests/LtiDeepLinkResourceTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$registration of class Packback\\\\Lti1p3\\\\LtiDeepLink constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ILtiRegistration, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiDeepLinkTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiDeploymentTest\\:\\:\\$deployment\\.$#"
+            count: 5
+            path: tests/LtiDeploymentTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiGradeSubmissionReviewTest\\:\\:\\$gradeReview\\.$#"
+            count: 11
+            path: tests/LtiGradeSubmissionReviewTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiGradeTest\\:\\:\\$grade\\.$#"
+            count: 21
+            path: tests/LtiGradeTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiMessageLaunchTest\\:\\:\\$deployment\\.$#"
+            count: 2
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiMessageLaunchTest\\:\\:\\$migrationDatabase\\.$#"
+            count: 22
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:once\\(\\)\\.$#"
+            count: 82
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$db of class Packback\\\\Lti1p3\\\\LtiMessageLaunch constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\IDatabase, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$db of static method Packback\\\\Lti1p3\\\\LtiMessageLaunch\\:\\:new\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\IDatabase, Mockery\\\\MockInterface given\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#2 \\$cache of class Packback\\\\Lti1p3\\\\LtiMessageLaunch constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICache, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#2 \\$cache of class Packback\\\\Lti1p3\\\\LtiMessageLaunch constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICache, Mockery\\\\MockInterface given\\.$#"
+            count: 4
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#2 \\$cache of static method Packback\\\\Lti1p3\\\\LtiMessageLaunch\\:\\:new\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICache, Mockery\\\\MockInterface given\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#2 \\$db of static method Packback\\\\Lti1p3\\\\LtiMessageLaunch\\:\\:fromCache\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\IDatabase, Mockery\\\\MockInterface given\\.$#"
+            count: 2
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#3 \\$cache of static method Packback\\\\Lti1p3\\\\LtiMessageLaunch\\:\\:fromCache\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICache, Mockery\\\\MockInterface given\\.$#"
+            count: 2
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#3 \\$cookie of class Packback\\\\Lti1p3\\\\LtiMessageLaunch constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICookie, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#3 \\$cookie of class Packback\\\\Lti1p3\\\\LtiMessageLaunch constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICookie, Mockery\\\\MockInterface given\\.$#"
+            count: 4
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#3 \\$cookie of static method Packback\\\\Lti1p3\\\\LtiMessageLaunch\\:\\:new\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICookie, Mockery\\\\MockInterface given\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#4 \\$cookie of static method Packback\\\\Lti1p3\\\\LtiMessageLaunch\\:\\:fromCache\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICookie, Mockery\\\\MockInterface given\\.$#"
+            count: 2
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#4 \\$serviceConnector of class Packback\\\\Lti1p3\\\\LtiMessageLaunch constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ILtiServiceConnector, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#4 \\$serviceConnector of class Packback\\\\Lti1p3\\\\LtiMessageLaunch constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ILtiServiceConnector, Mockery\\\\MockInterface given\\.$#"
+            count: 4
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#4 \\$serviceConnector of static method Packback\\\\Lti1p3\\\\LtiMessageLaunch\\:\\:new\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ILtiServiceConnector, Mockery\\\\MockInterface given\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Parameter \\#5 \\$serviceConnector of static method Packback\\\\Lti1p3\\\\LtiMessageLaunch\\:\\:fromCache\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ILtiServiceConnector, Mockery\\\\MockInterface given\\.$#"
+            count: 2
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Property Tests\\\\LtiMessageLaunchTest\\:\\:\\$cache \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Property Tests\\\\LtiMessageLaunchTest\\:\\:\\$cookie \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Property Tests\\\\LtiMessageLaunchTest\\:\\:\\$database \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Property Tests\\\\LtiMessageLaunchTest\\:\\:\\$registration \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Property Tests\\\\LtiMessageLaunchTest\\:\\:\\$serviceConnector \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
+            count: 1
+            path: tests/LtiMessageLaunchTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiNamesRolesProvisioningServiceTest\\:\\:\\$connector\\.$#"
+            count: 6
+            path: tests/LtiNamesRolesProvisioningServiceTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiNamesRolesProvisioningServiceTest\\:\\:\\$registration\\.$#"
+            count: 4
+            path: tests/LtiNamesRolesProvisioningServiceTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiOidcLoginTest\\:\\:\\$cache\\.$#"
+            count: 2
+            path: tests/LtiOidcLoginTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiOidcLoginTest\\:\\:\\$cookie\\.$#"
+            count: 2
+            path: tests/LtiOidcLoginTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiOidcLoginTest\\:\\:\\$database\\.$#"
+            count: 4
+            path: tests/LtiOidcLoginTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiOidcLoginTest\\:\\:\\$oidcLogin\\.$#"
+            count: 7
+            path: tests/LtiOidcLoginTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$db of class Packback\\\\Lti1p3\\\\LtiOidcLogin constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\IDatabase, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiOidcLoginTest.php
+
+        -
+            message: "#^Parameter \\#2 \\$cache of class Packback\\\\Lti1p3\\\\LtiOidcLogin constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICache, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiOidcLoginTest.php
+
+        -
+            message: "#^Parameter \\#3 \\$cookie of class Packback\\\\Lti1p3\\\\LtiOidcLogin constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICookie, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiOidcLoginTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiRegistrationTest\\:\\:\\$registration\\.$#"
+            count: 18
+            path: tests/LtiRegistrationTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$body\\.$#"
+            count: 4
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$method\\.$#"
+            count: 6
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$request\\.$#"
+            count: 31
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$requestHeaders\\.$#"
+            count: 4
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$requestPayload\\.$#"
+            count: 7
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$responseBody\\.$#"
+            count: 5
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$responseHeaders\\.$#"
+            count: 5
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$responseStatus\\.$#"
+            count: 5
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$scopes\\.$#"
+            count: 5
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$streamInterface\\.$#"
+            count: 9
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$token\\.$#"
+            count: 8
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Access to an undefined property Tests\\\\LtiServiceConnectorTest\\:\\:\\$url\\.$#"
+            count: 9
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:once\\(\\)\\.$#"
+            count: 19
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:twice\\(\\)\\.$#"
+            count: 5
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:with\\(\\)\\.$#"
+            count: 4
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$cache of class Packback\\\\Lti1p3\\\\LtiServiceConnector constructor expects Packback\\\\Lti1p3\\\\Interfaces\\\\ICache, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$registration of method Packback\\\\Lti1p3\\\\LtiServiceConnector\\:\\:getAccessToken\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ILtiRegistration, Mockery\\\\MockInterface given\\.$#"
+            count: 1
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$registration of method Packback\\\\Lti1p3\\\\LtiServiceConnector\\:\\:getAll\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ILtiRegistration, Mockery\\\\MockInterface given\\.$#"
+            count: 1
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Parameter \\#1 \\$registration of method Packback\\\\Lti1p3\\\\LtiServiceConnector\\:\\:makeServiceRequest\\(\\) expects Packback\\\\Lti1p3\\\\Interfaces\\\\ILtiRegistration, Mockery\\\\MockInterface given\\.$#"
+            count: 3
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Parameter \\#2 \\$client of class Packback\\\\Lti1p3\\\\LtiServiceConnector constructor expects GuzzleHttp\\\\Client, Mockery\\\\LegacyMockInterface given\\.$#"
+            count: 1
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Property Tests\\\\LtiServiceConnectorTest\\:\\:\\$cache \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
+            count: 1
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Property Tests\\\\LtiServiceConnectorTest\\:\\:\\$client \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
+            count: 1
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Property Tests\\\\LtiServiceConnectorTest\\:\\:\\$registration \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
+            count: 1
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Property Tests\\\\LtiServiceConnectorTest\\:\\:\\$response \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
+            count: 1
+            path: tests/LtiServiceConnectorTest.php
+
+        -
+            message: "#^Result of static method Packback\\\\Lti1p3\\\\MessageValidators\\\\DeepLinkMessageValidator\\:\\:validate\\(\\) \\(void\\) is used\\.$#"
+            count: 1
+            path: tests/MessageValidators/DeepLinkMessageValidatorTest.php
+
+        -
+            message: "#^Result of static method Packback\\\\Lti1p3\\\\MessageValidators\\\\ResourceMessageValidator\\:\\:validate\\(\\) \\(void\\) is used\\.$#"
+            count: 1
+            path: tests/MessageValidators/ResourceMessageValidatorTest.php
+
+        -
+            message: "#^Result of static method Packback\\\\Lti1p3\\\\MessageValidators\\\\SubmissionReviewMessageValidator\\:\\:validate\\(\\) \\(void\\) is used\\.$#"
+            count: 1
+            path: tests/MessageValidators/SubmissionReviewMessageValidatorTest.php

@@ -46,7 +46,7 @@ class ServiceRequest implements IServiceRequest
     public function __construct(
         private string $method,
         private string $url,
-        private string $type = self::UNSUPPORTED)
+        private string $type = self::TYPE_UNSUPPORTED)
     {
     }
 

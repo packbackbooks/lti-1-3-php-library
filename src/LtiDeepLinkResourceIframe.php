@@ -7,8 +7,8 @@ class LtiDeepLinkResourceIframe
     public function __construct(
         private ?int $width = null,
         private ?int $height = null,
-        private ?string $src = null
-    ) {
+        private ?string $src = null)
+    {
     }
 
     public static function new(): LtiDeepLinkResourceIframe

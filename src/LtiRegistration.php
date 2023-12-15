@@ -27,7 +27,7 @@ class LtiRegistration implements ILtiRegistration
         $this->kid = $registration['kid'] ?? null;
     }
 
-    public static function new(?array $registration = null): LtiRegistration
+    public static function new(?array $registration = null): self
     {
         return new LtiRegistration($registration);
     }
@@ -37,7 +37,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->issuer;
     }
 
-    public function setIssuer($issuer): LtiRegistration
+    public function setIssuer($issuer): self
     {
         $this->issuer = $issuer;
 
@@ -49,7 +49,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->clientId;
     }
 
-    public function setClientId($clientId): LtiRegistration
+    public function setClientId($clientId): self
     {
         $this->clientId = $clientId;
 
@@ -61,7 +61,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->keySetUrl;
     }
 
-    public function setKeySetUrl($keySetUrl): LtiRegistration
+    public function setKeySetUrl($keySetUrl): self
     {
         $this->keySetUrl = $keySetUrl;
 
@@ -73,7 +73,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->authTokenUrl;
     }
 
-    public function setAuthTokenUrl($authTokenUrl): LtiRegistration
+    public function setAuthTokenUrl($authTokenUrl): self
     {
         $this->authTokenUrl = $authTokenUrl;
 
@@ -85,7 +85,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->authLoginUrl;
     }
 
-    public function setAuthLoginUrl($authLoginUrl): LtiRegistration
+    public function setAuthLoginUrl($authLoginUrl): self
     {
         $this->authLoginUrl = $authLoginUrl;
 
@@ -97,7 +97,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->authServer ?? $this->authTokenUrl;
     }
 
-    public function setAuthServer($authServer): LtiRegistration
+    public function setAuthServer($authServer): self
     {
         $this->authServer = $authServer;
 
@@ -109,7 +109,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->toolPrivateKey;
     }
 
-    public function setToolPrivateKey($toolPrivateKey): LtiRegistration
+    public function setToolPrivateKey($toolPrivateKey): self
     {
         $this->toolPrivateKey = $toolPrivateKey;
 
@@ -121,7 +121,7 @@ class LtiRegistration implements ILtiRegistration
         return $this->kid ?? hash('sha256', trim($this->issuer.$this->clientId));
     }
 
-    public function setKid($kid): LtiRegistration
+    public function setKid($kid): self
     {
         $this->kid = $kid;
 

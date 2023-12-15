@@ -11,6 +11,7 @@ use GuzzleHttp\Exception\TransferException;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
+use Packback\Lti1p3\Interfaces\ILtiDeployment;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IMigrationDatabase;
@@ -53,7 +54,7 @@ class LtiMessageLaunch
     private array $request;
     private array $jwt;
     private ?ILtiRegistration $registration;
-    private ?LtiDeployment $deployment;
+    private ?ILtiDeployment $deployment;
     private string $launch_id;
 
     // See https://www.imsglobal.org/spec/security/v1p1#approved-jwt-signing-algorithms.
@@ -80,30 +81,25 @@ class LtiMessageLaunch
      */
     public static function new(
         IDatabase $db,
-        ?ICache $cache = null,
-        ?ICookie $cookie = null,
-        ?ILtiServiceConnector $serviceConnector = null
-    ): self {
+        ICache $cache,
+        ICookie $cookie,
+        ILtiServiceConnector $serviceConnector
+    ) {
         return new LtiMessageLaunch($db, $cache, $cookie, $serviceConnector);
     }
 
     /**
      * Load an LtiMessageLaunch from a Cache using a launch id.
      *
-     * @param  string  $launch_id The launch id of the LtiMessageLaunch object that is being pulled from the cache
-     * @param  IDatabase  $db  Instance of the database interface used for looking up registrations and deployments
-     * @param  ICache  $cache     Instance of the Cache interface used to loading and storing launches. If non is provided launch data will be store in $_SESSION.
-     * @return LtiMessageLaunch A populated and validated LtiMessageLaunch
-     *
      * @throws LtiException Will throw an LtiException if validation fails or launch cannot be found
      */
     public static function fromCache(
-        $launch_id,
+        string $launch_id,
         IDatabase $db,
         ICache $cache,
         ICookie $cookie,
         ILtiServiceConnector $serviceConnector
-    ): self {
+    ) {
         $new = new LtiMessageLaunch($db, $cache, $cookie, $serviceConnector);
         $new->launch_id = $launch_id;
         $new->jwt = ['body' => $new->cache->getLaunchData($launch_id)];
@@ -362,8 +358,8 @@ class LtiMessageLaunch
     {
         $jwtAlg = $this->jwt['header']['alg'];
 
-        return isset(static::$ltiSupportedAlgs[$jwtAlg]) &&
-            static::$ltiSupportedAlgs[$jwtAlg] === $key['kty'];
+        return isset(self::$ltiSupportedAlgs[$jwtAlg]) &&
+            self::$ltiSupportedAlgs[$jwtAlg] === $key['kty'];
     }
 
     protected function validateState(): self
@@ -549,7 +545,7 @@ class LtiMessageLaunch
         return false;
     }
 
-    private function oauthConsumerKeySignMatches(Lti1p1Key $key): string
+    private function oauthConsumerKeySignMatches(Lti1p1Key $key): bool
     {
         return $this->jwt['body'][LtiConstants::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key);
     }

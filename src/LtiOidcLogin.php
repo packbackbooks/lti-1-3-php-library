@@ -16,10 +16,10 @@ class LtiOidcLogin
     public const ERROR_MSG_LOGIN_HINT = 'Could not find login hint';
 
     public function __construct(
-        private IDatabase $db,
-        private ICache $cache,
-        private ICookie $cookie
-    ) {
+        public IDatabase $db,
+        public ICache $cache,
+        public ICookie $cookie)
+    {
     }
 
     /**

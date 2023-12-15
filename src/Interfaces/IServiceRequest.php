@@ -22,4 +22,8 @@ interface IServiceRequest
     public function setContentType(string $contentType): self;
 
     public function getErrorPrefix(): string;
+
+    public function getMaskResponseLogs(): bool;
+
+    public function setMaskResponseLogs(bool $maskResponseLogs): self;
 }

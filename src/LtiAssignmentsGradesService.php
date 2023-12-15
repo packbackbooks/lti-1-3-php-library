@@ -59,7 +59,7 @@ class LtiAssignmentsGradesService extends LtiAbstractService
         return null;
     }
 
-    public function updateLineitem(LtiLineItem $lineitemToUpdate): LtiLineitem
+    public function updateLineitem(LtiLineitem $lineitemToUpdate): LtiLineitem
     {
         $request = new ServiceRequest(
             ServiceRequest::METHOD_PUT,

@@ -46,7 +46,7 @@ class LtiLineitem
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
      */
-    public static function new(?array $lineItem = null): LtiLineItem
+    public static function new(?array $lineItem = null): self
     {
         return new LtiLineitem($lineItem);
     }
@@ -56,7 +56,7 @@ class LtiLineitem
         return $this->id;
     }
 
-    public function setId($value): LtiLineItem
+    public function setId($value): self
     {
         $this->id = $value;
 
@@ -68,7 +68,7 @@ class LtiLineitem
         return $this->label;
     }
 
-    public function setLabel($value): LtiLineItem
+    public function setLabel($value): self
     {
         $this->label = $value;
 
@@ -80,7 +80,7 @@ class LtiLineitem
         return $this->score_maximum;
     }
 
-    public function setScoreMaximum($value): LtiLineItem
+    public function setScoreMaximum($value): self
     {
         $this->score_maximum = $value;
 
@@ -92,7 +92,7 @@ class LtiLineitem
         return $this->resource_id;
     }
 
-    public function setResourceId($value): LtiLineItem
+    public function setResourceId($value): self
     {
         $this->resource_id = $value;
 
@@ -104,7 +104,7 @@ class LtiLineitem
         return $this->resource_link_id;
     }
 
-    public function setResourceLinkId($value): LtiLineItem
+    public function setResourceLinkId($value): self
     {
         $this->resource_link_id = $value;
 
@@ -116,7 +116,7 @@ class LtiLineitem
         return $this->tag;
     }
 
-    public function setTag($value): LtiLineItem
+    public function setTag($value): self
     {
         $this->tag = $value;
 
@@ -128,7 +128,7 @@ class LtiLineitem
         return $this->start_date_time;
     }
 
-    public function setStartDateTime($value): LtiLineItem
+    public function setStartDateTime($value): self
     {
         $this->start_date_time = $value;
 
@@ -140,7 +140,7 @@ class LtiLineitem
         return $this->end_date_time;
     }
 
-    public function setEndDateTime($value): LtiLineItem
+    public function setEndDateTime($value): self
     {
         $this->end_date_time = $value;
 
@@ -152,7 +152,7 @@ class LtiLineitem
         return $this->grades_released;
     }
 
-    public function setGradesReleased(?bool $value): LtiLineItem
+    public function setGradesReleased(?bool $value): LtiLineitem
     {
         $this->grades_released = $value;
 

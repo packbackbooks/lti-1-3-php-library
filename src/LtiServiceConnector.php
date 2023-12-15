@@ -6,11 +6,11 @@ use Exception;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Response;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IServiceRequest;
+use Psr\Http\Message\ResponseInterface;
 
 class LtiServiceConnector implements ILtiServiceConnector
 {
@@ -80,7 +80,7 @@ class LtiServiceConnector implements ILtiServiceConnector
         return $tokenData['access_token'];
     }
 
-    public function makeRequest(IServiceRequest $request): Response
+    public function makeRequest(IServiceRequest $request): ResponseInterface
     {
         $response = $this->client->request(
             $request->getMethod(),
@@ -99,7 +99,7 @@ class LtiServiceConnector implements ILtiServiceConnector
         return $response;
     }
 
-    public function getResponseHeaders(Response $response): ?array
+    public function getResponseHeaders(ResponseInterface $response): ?array
     {
         $responseHeaders = $response->getHeaders();
         array_walk($responseHeaders, function (&$value) {
@@ -109,7 +109,7 @@ class LtiServiceConnector implements ILtiServiceConnector
         return $responseHeaders;
     }
 
-    public function getResponseBody(Response $response): ?array
+    public function getResponseBody(ResponseInterface $response): ?array
     {
         $responseBody = (string) $response->getBody();
 
@@ -182,8 +182,8 @@ class LtiServiceConnector implements ILtiServiceConnector
         ?array $responseBody
     ): string {
         if ($request->getMaskResponseLogs()) {
-            $responseHeaders = static::maskValues($responseHeaders);
-            $responseBody = static::maskValues($responseBody);
+            $responseHeaders = self::maskValues($responseHeaders);
+            $responseBody = self::maskValues($responseBody);
         }
 
         $contextArray = [
@@ -211,7 +211,7 @@ class LtiServiceConnector implements ILtiServiceConnector
         array $responseHeaders,
         ?array $responseBody
     ): void {
-        error_log(static::getLogMessage($request, $responseHeaders, $responseBody));
+        error_log(self::getLogMessage($request, $responseHeaders, $responseBody));
     }
 
     private static function maskValues(?array $payload): ?array
