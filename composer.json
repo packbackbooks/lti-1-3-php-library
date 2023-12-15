@@ -27,7 +27,7 @@
         "phpseclib/phpseclib": "^3.0"
     },
     "require-dev": {
-        "jubeki/laravel-code-style": "^1.0|^2.0",
+        "jubeki/laravel-code-style": "^2.0",
         "mockery/mockery": "^1.4",
         "nesbot/carbon": "^2.43",
         "phpunit/phpunit": "^9.5"
