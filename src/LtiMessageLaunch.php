@@ -84,7 +84,7 @@ class LtiMessageLaunch
         ICache $cache,
         ICookie $cookie,
         ILtiServiceConnector $serviceConnector
-    ) {
+    ): self {
         return new LtiMessageLaunch($db, $cache, $cookie, $serviceConnector);
     }
 
@@ -99,7 +99,7 @@ class LtiMessageLaunch
         ICache $cache,
         ICookie $cookie,
         ILtiServiceConnector $serviceConnector
-    ) {
+    ): self {
         $new = new LtiMessageLaunch($db, $cache, $cookie, $serviceConnector);
         $new->launch_id = $launch_id;
         $new->jwt = ['body' => $new->cache->getLaunchData($launch_id)];

@@ -4,6 +4,7 @@
 .phpunit.result.cache
 .php_cs.cache
 .php-cs-fixer.cache
+.pint.cache
 .vscode
 
 build
@@ -14,4 +15,5 @@ tests/_support/_generated/*
 vendor
 
 # ignore the coverage folders
+**/.phpunit.cache
 **/coverage

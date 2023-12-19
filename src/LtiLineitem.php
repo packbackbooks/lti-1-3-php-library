@@ -2,8 +2,11 @@
 
 namespace Packback\Lti1p3;
 
+use Packback\Lti1p3\Concerns\JsonStringable;
+
 class LtiLineitem
 {
+    use JsonStringable;
     private $id;
     private $score_maximum;
     private $label;
@@ -27,10 +30,9 @@ class LtiLineitem
         $this->grades_released = $lineitem['gradesReleased'] ?? null;
     }
 
-    public function __toString(): string
+    public function getArray(): array
     {
-        // Additionally, includes the call back to filter out only NULL values
-        return json_encode(array_filter([
+        return [
             'id' => $this->id,
             'scoreMaximum' => $this->score_maximum,
             'label' => $this->label,
@@ -40,7 +42,7 @@ class LtiLineitem
             'startDateTime' => $this->start_date_time,
             'endDateTime' => $this->end_date_time,
             'gradesReleased' => $this->grades_released,
-        ], '\Packback\Lti1p3\Helpers\Helpers::checkIfNullValue'));
+        ];
     }
 
     /**

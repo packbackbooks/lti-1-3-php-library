@@ -1,6 +1,6 @@
 # LTI 1.3 Tool Library
 
-![Test status](https://github.com/packbackbooks/lti-1-3-php-library/actions/workflows/run_tests.yml/badge.svg?branch=master)
+![Test status](https://github.com/packbackbooks/lti-1-3-php-library/actions/workflows/run_tests.yml/badge.svg?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/16055e83ea04ad95a2f9/maintainability)](https://codeclimate.com/github/packbackbooks/lti-1-3-php-library/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/16055e83ea04ad95a2f9/test_coverage)](https://codeclimate.com/github/packbackbooks/lti-1-3-php-library/test_coverage)
 
 A library used for building IMS-certified LTI 1.3 tool providers in PHP.
 

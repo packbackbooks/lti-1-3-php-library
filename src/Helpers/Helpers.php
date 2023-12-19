@@ -4,9 +4,9 @@ namespace Packback\Lti1p3\Helpers;
 
 class Helpers
 {
-    public static function checkIfNullValue($value): bool
+    public static function filterOutNulls(array $array): array
     {
-        return !is_null($value);
+        return array_filter($array, fn ($value) => !is_null($value));
     }
 
     public static function buildUrlWithQueryParams(string $url, array $params = []): string

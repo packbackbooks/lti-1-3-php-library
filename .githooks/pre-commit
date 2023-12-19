@@ -92,16 +92,16 @@ function lint_php {
     return 0 # There's nothing to lint.
   fi
 
-  phpcsfixer="vendor/bin/php-cs-fixer"
+  pint="vendor/bin/pint"
 
-  if ! [ -x "$phpcsfixer" ]; then
-    echo -e "${C_RED}PHP-CS-Fixer is not installed. Install it with \`composer install\`.${NO_FORMAT}" && return 1
+  if ! [ -x "$pint" ]; then
+    echo -e "${C_RED}Pint is not installed. Install it with \`composer install\`.${NO_FORMAT}" && return 1
   fi
 
   php_files_arg=$(echo "$php_files" | tr '\n' ' ')
 
-  echo -e "${C_CYAN}Linting PHP-CS-Fixer...${NO_FORMAT}"
-  $phpcsfixer fix -q || return 1
+  echo -e "${C_CYAN}Linting Pint...${NO_FORMAT}"
+  $pint || return 1
 
   git add $php_files_arg
 }

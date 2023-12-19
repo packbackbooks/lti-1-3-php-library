@@ -1,10 +1,13 @@
-name: Tests & style checks
+name: Tests & Style Checks
 on:
-  # Trigger on any PR being opened, or on a merge to master (to update the badge)
+  # Trigger on any PR being opened
   pull_request:
+  # Or weekly and on a merge to master (to update the badge)
   push:
     branches:
       - master
+  schedule:
+    - cron: 0 0 * * 0
 jobs:
   lint:
     name: Lint
@@ -34,3 +37,19 @@ jobs:
           composer-options: "${{ matrix.composer-options }}"
       - name: Run tests
         run: composer test
+
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: latest
+          coverage: xdebug
+      - uses: "ramsey/composer-install@v2"
+      - uses: paambaati/codeclimate-action@v5.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: composer test

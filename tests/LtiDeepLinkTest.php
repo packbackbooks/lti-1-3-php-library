@@ -5,10 +5,10 @@ namespace Tests;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Mockery;
+use Packback\Lti1p3\DeepLinkResources\Resource;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeepLink;
-use Packback\Lti1p3\LtiDeepLinkResource;
 
 class LtiDeepLinkTest extends TestCase
 {
@@ -17,12 +17,12 @@ class LtiDeepLinkTest extends TestCase
     public const DEPLOYMENT_ID = 'deployment-id';
     public const LTI_RESOURCE_ARRAY = ['resource'];
     private $registrationMock;
-    private $ltiResourceMock;
+    private $resourceMock;
 
     protected function setUp(): void
     {
         $this->registrationMock = Mockery::mock(ILtiRegistration::class);
-        $this->ltiResourceMock = Mockery::mock(LtiDeepLinkResource::class);
+        $this->resourceMock = Mockery::mock(Resource::class);
     }
 
     public function testItInstantiates()
@@ -40,7 +40,7 @@ class LtiDeepLinkTest extends TestCase
 
         $deepLink = new LtiDeepLink($this->registrationMock, self::DEPLOYMENT_ID, []);
 
-        $result = $deepLink->getResponseJwt([$this->ltiResourceMock]);
+        $result = $deepLink->getResponseJwt([$this->resourceMock]);
 
         $publicKey = new Key(file_get_contents(__DIR__.'/data/public.key'), 'RS256');
         $resultPayload = JWT::decode($result, $publicKey);
@@ -61,7 +61,7 @@ class LtiDeepLinkTest extends TestCase
 
         $deepLink = new LtiDeepLink($this->registrationMock, self::DEPLOYMENT_ID, []);
 
-        $result = $deepLink->getResponseJwt([$this->ltiResourceMock]);
+        $result = $deepLink->getResponseJwt([$this->resourceMock]);
 
         $publicKey = new Key(file_get_contents(__DIR__.'/data/public.key'), 'RS256');
         $resultPayload = JWT::decode($result, $publicKey);
@@ -79,7 +79,7 @@ class LtiDeepLinkTest extends TestCase
             'data' => $dataValue,
         ]);
 
-        $result = $deepLink->getResponseJwt([$this->ltiResourceMock]);
+        $result = $deepLink->getResponseJwt([$this->resourceMock]);
 
         $publicKey = new Key(file_get_contents(__DIR__.'/data/public.key'), 'RS256');
         $resultPayload = JWT::decode($result, $publicKey);
@@ -106,7 +106,7 @@ class LtiDeepLinkTest extends TestCase
             ->once()
             ->andReturn('kid');
 
-        $this->ltiResourceMock
+        $this->resourceMock
             ->shouldReceive('toArray')
             ->once()
             ->andReturn(self::LTI_RESOURCE_ARRAY);

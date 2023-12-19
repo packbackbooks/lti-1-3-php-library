@@ -21,7 +21,7 @@ class LtiDeployment implements ILtiDeployment
         return $this->deployment_id;
     }
 
-    public function setDeploymentId($deployment_id): LtiDeployment
+    public function setDeploymentId($deployment_id): self
     {
         $this->deployment_id = $deployment_id;
 
