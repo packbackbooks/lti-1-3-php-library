@@ -13,19 +13,19 @@ interface ILtiRegistration
 
     public function setClientId(string $clientId): ILtiRegistration;
 
-    public function getKeySetUrl();
+    public function getKeySetUrl(): ?string;
 
     public function setKeySetUrl(string $keySetUrl): ILtiRegistration;
 
-    public function getAuthTokenUrl();
+    public function getAuthTokenUrl(): ?string;
 
-    public function setAuthTokenUrl(string $authTokenUrl): ILtiRegistration;
+    public function setAuthTokenUrl(?string $authTokenUrl): ILtiRegistration;
 
-    public function getAuthLoginUrl();
+    public function getAuthLoginUrl(): ?string;
 
     public function setAuthLoginUrl(string $authLoginUrl): ILtiRegistration;
 
-    public function getAuthServer();
+    public function getAuthServer(): ?string;
 
     public function setAuthServer(string $authServer): ILtiRegistration;
 

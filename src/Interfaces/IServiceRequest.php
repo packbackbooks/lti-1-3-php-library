@@ -17,6 +17,8 @@ interface IServiceRequest
 
     public function setBody(string $body): IServiceRequest;
 
+    public function setPayload(array $payload): IServiceRequest;
+
     public function setAccept(string $accept): IServiceRequest;
 
     public function setContentType(string $contentType): IServiceRequest;

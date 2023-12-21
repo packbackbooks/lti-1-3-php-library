@@ -2,16 +2,18 @@
 
 namespace Packback\Lti1p3\Interfaces;
 
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 /** @internal */
 interface ILtiServiceConnector
 {
-    public function getAccessToken(ILtiRegistration $registration, array $scopes);
+    public function getAccessToken(ILtiRegistration $registration, array $scopes): string;
 
-    public function makeRequest(IServiceRequest $request);
+    public function makeRequest(IServiceRequest $request): ResponseInterface;
 
-    public function getResponseBody(Response $request): ?array;
+    public function getResponseBody(ResponseInterface $response): ?array;
+
+    public function getResponseHeaders(ResponseInterface $response): ?array;
 
     public function makeServiceRequest(
         ILtiRegistration $registration,

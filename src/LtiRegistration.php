@@ -56,48 +56,48 @@ class LtiRegistration implements ILtiRegistration
         return $this;
     }
 
-    public function getKeySetUrl()
+    public function getKeySetUrl(): ?string
     {
         return $this->keySetUrl;
     }
 
-    public function setKeySetUrl(string $keySetUrl): self
+    public function setKeySetUrl(?string $keySetUrl): self
     {
         $this->keySetUrl = $keySetUrl;
 
         return $this;
     }
 
-    public function getAuthTokenUrl()
+    public function getAuthTokenUrl(): ?string
     {
         return $this->authTokenUrl;
     }
 
-    public function setAuthTokenUrl(string $authTokenUrl): self
+    public function setAuthTokenUrl(?string $authTokenUrl): self
     {
         $this->authTokenUrl = $authTokenUrl;
 
         return $this;
     }
 
-    public function getAuthLoginUrl()
+    public function getAuthLoginUrl(): ?string
     {
         return $this->authLoginUrl;
     }
 
-    public function setAuthLoginUrl(string $authLoginUrl): self
+    public function setAuthLoginUrl(?string $authLoginUrl): self
     {
         $this->authLoginUrl = $authLoginUrl;
 
         return $this;
     }
 
-    public function getAuthServer()
+    public function getAuthServer(): ?string
     {
         return $this->authServer ?? $this->authTokenUrl;
     }
 
-    public function setAuthServer(string $authServer): self
+    public function setAuthServer(?string $authServer): self
     {
         $this->authServer = $authServer;
 

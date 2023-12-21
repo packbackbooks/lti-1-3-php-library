@@ -30,6 +30,14 @@ class LtiLineitem
         $this->grades_released = $lineitem['gradesReleased'] ?? null;
     }
 
+    /**
+     * Static function to allow for method chaining without having to assign to a variable first.
+     */
+    public static function new(?array $lineItem = null): self
+    {
+        return new LtiLineitem($lineItem);
+    }
+
     public function getArray(): array
     {
         return [
@@ -43,14 +51,6 @@ class LtiLineitem
             'endDateTime' => $this->end_date_time,
             'gradesReleased' => $this->grades_released,
         ];
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(?array $lineItem = null): self
-    {
-        return new LtiLineitem($lineItem);
     }
 
     public function getId()

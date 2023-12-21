@@ -11,7 +11,7 @@ class LtiDeployment implements ILtiDeployment
     ) {
     }
 
-    public static function new($deployment_id): LtiDeployment
+    public static function new($deployment_id): self
     {
         return new LtiDeployment($deployment_id);
     }
