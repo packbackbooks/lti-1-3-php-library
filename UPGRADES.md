@@ -9,7 +9,7 @@ When handling a new launch, the new `initialize()` method should be used instead
 $message->validate($request);
 
 // you should do this:
-$message->inilialize($request);
+$message->initialize($request);
 ```
 
 ### HIGH LIKELIHOOD OF IMPACT: Changed how the OIDC Login URL is retrieved, deprecated the `Redirect` object
@@ -94,7 +94,7 @@ The following methods have been removed:
 
 ### Changes to method signatures
 
-* When instantiating `LtiMessageLaunch`, `LtiOidcLogin`, and `LtiServiceConnector` objects, all arguments are required now (instead of some being optional).
+* When instantiating `LtiMessageLaunch`, `LtiOidcLogin`, `LtiDeployment` and `LtiServiceConnector` objects, all arguments are required now (instead of some being optional).
 * `Lti1p1Key` methods `setKey()` and `setSecret()` accept strings instead of arrays.
 * `LtiServiceConnector::setDebuggingMode()` now returns self instead of void.
 
