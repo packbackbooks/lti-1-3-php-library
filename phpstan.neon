@@ -21,11 +21,6 @@ parameters:
                 - tests/*
 
         -
-            message: "# \\(Mockery\\\\MockInterface\\) does not accept Mockery\\\\LegacyMockInterface\\.$#"
-            paths:
-                - tests/*
-
-        -
             message: "#^Result of static method Packback\\\\Lti1p3\\\\MessageValidators\\\\[A-Za-z]+MessageValidator\\:\\:validate\\(\\) \\(void\\) is used\\.$#"
             path: tests/MessageValidators/*
 
