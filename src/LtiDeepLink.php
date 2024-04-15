@@ -38,4 +38,9 @@ class LtiDeepLink
 
         return JWT::encode($message_jwt, $this->registration->getToolPrivateKey(), 'RS256', $this->registration->getKid());
     }
+
+    public function returnUrl(): string
+    {
+        return $this->deep_link_settings['deep_link_return_url'];
+    }
 }

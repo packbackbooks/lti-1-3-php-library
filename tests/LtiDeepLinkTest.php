@@ -55,6 +55,15 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals([self::LTI_RESOURCE_ARRAY], $resultPayload->{LtiConstants::DL_CONTENT_ITEMS});
     }
 
+    public function testReturnUrl()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+        $returnUrl = 'https://google.com';
+        $deepLink = new LtiDeepLink($registration, 'test', ['deep_link_return_url' => $returnUrl]);
+
+        $this->assertEquals($returnUrl, $deepLink->returnUrl());
+    }
+
     public function testJwtResponseDoesNotContainDataPropertyWhenNotSet()
     {
         $this->setupMocksExpectations();
