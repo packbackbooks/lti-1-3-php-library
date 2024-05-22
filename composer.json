@@ -46,7 +46,7 @@
         "test": "phpunit",
         "lint": [
             "pint --test",
-            "phpstan analyse"
+            "phpstan analyse --memory-limit 512M"
         ],
         "lint-fix": "pint -v"
     }
