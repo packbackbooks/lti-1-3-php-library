@@ -276,6 +276,8 @@ class ResourceTest extends TestCase
             'lineItem' => [
                 'scoreMaximum' => 80,
                 'label' => 'lineitem_label',
+                'resourceId' => 'lineitem_resourceId',
+                'tag' => 'lineitem_tag',
             ],
             'iframe' => $Iframe->toArray(),
             'window' => $window->toArray(),
@@ -288,6 +290,10 @@ class ResourceTest extends TestCase
             ->twice()->andReturn($expected['lineItem']['scoreMaximum']);
         $lineitem->shouldReceive('getLabel')
             ->twice()->andReturn($expected['lineItem']['label']);
+        $lineitem->shouldReceive('getResourceId')
+            ->twice()->andReturn($expected['lineItem']['resourceId']);
+        $lineitem->shouldReceive('getTag')
+            ->twice()->andReturn($expected['lineItem']['tag']);
 
         $this->resource->setTitle($expected['title']);
         $this->resource->setText($expected['text']);
