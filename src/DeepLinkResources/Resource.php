@@ -51,6 +51,8 @@ class Resource
             $resource['lineItem'] = [
                 'scoreMaximum' => $this->line_item->getScoreMaximum(),
                 'label' => $this->line_item->getLabel(),
+                'resourceId' => $this->line_item->getResourceId(),
+                'tag' => $this->line_item->getTag(),
             ];
         }
 
