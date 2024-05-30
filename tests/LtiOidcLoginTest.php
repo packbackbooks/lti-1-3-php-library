@@ -106,7 +106,6 @@ class LtiOidcLoginTest extends TestCase
 
         // Use an alias to mock LtiMessageLaunch::getMissingRegistrationErrorMsg()
         $expectedError = 'Registration not found!';
-        // @phpstan-ignore-next-line
         Mockery::mock('alias:'.LtiMessageLaunch::class)
             ->shouldReceive('getMissingRegistrationErrorMsg')
             ->andReturn($expectedError);
