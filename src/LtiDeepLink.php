@@ -43,4 +43,9 @@ class LtiDeepLink
     {
         return $this->deep_link_settings['deep_link_return_url'];
     }
+
+    public function accepts(): array
+    {
+        return $this->deep_link_settings['accepts'];
+    }
 }
