@@ -46,6 +46,6 @@ class LtiDeepLink
 
     public function accepts(): array
     {
-        return $this->deep_link_settings['accepts'];
+        return $this->deep_link_settings['accept_types'];
     }
 }
