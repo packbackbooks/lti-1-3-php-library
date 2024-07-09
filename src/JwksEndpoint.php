@@ -8,9 +8,7 @@ use phpseclib3\Crypt\RSA;
 
 class JwksEndpoint
 {
-    public function __construct(private array $keys)
-    {
-    }
+    public function __construct(private array $keys) {}
 
     public static function new(array $keys): self
     {
