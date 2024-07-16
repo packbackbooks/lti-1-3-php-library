@@ -11,8 +11,7 @@ class LtiDeepLink
         private ILtiRegistration $registration,
         private string $deployment_id,
         private array $deep_link_settings
-    ) {
-    }
+    ) {}
 
     public function getResponseJwt(array $resources): string
     {
