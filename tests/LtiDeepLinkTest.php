@@ -18,6 +18,18 @@ class LtiDeepLinkTest extends TestCase
     public const LTI_RESOURCE_ARRAY = ['resource'];
     private $registrationMock;
     private $resourceMock;
+    private $settings = [
+        'accept_types' => ['link', 'file', 'html', 'ltiResourceLink', 'image'],
+        'accept_media_types' => 'image/:::asterisk:::,text/html',
+        'accept_presentation_document_targets' => ['iframe', 'window', 'embed'],
+        'accept_multiple' => true,
+        'accept_lineitem' => true,
+        'auto_create' => true,
+        'title' => 'This is the default title',
+        'text' => 'This is the default text',
+        'data' => 'Some random opaque data that MUST be sent back',
+        'deep_link_return_url' => 'https://platform.example/deep_links',
+    ];
 
     protected function setUp(): void
     {
@@ -29,7 +41,7 @@ class LtiDeepLinkTest extends TestCase
     {
         $registration = Mockery::mock(ILtiRegistration::class);
 
-        $deepLink = new LtiDeepLink($registration, 'test', []);
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', []);
 
         $this->assertInstanceOf(LtiDeepLink::class, $deepLink);
     }
@@ -89,41 +101,119 @@ class LtiDeepLinkTest extends TestCase
 
     public function testSettings()
     {
-        $expected = ['foo' => 'bar'];
         $registration = Mockery::mock(ILtiRegistration::class);
-        $deepLink = new LtiDeepLink($registration, 'test', $expected);
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
 
-        $this->assertEquals($expected, $deepLink->settings());
+        $this->assertEquals($this->settings, $deepLink->settings());
     }
 
     public function testReturnUrl()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $returnUrl = 'https://google.com';
-        $deepLink = new LtiDeepLink($registration, 'test', ['deep_link_return_url' => $returnUrl]);
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
 
-        $this->assertEquals($returnUrl, $deepLink->returnUrl());
+        $this->assertEquals($this->settings['deep_link_return_url'], $deepLink->returnUrl());
     }
 
-    public function testAccepts()
+    public function testAcceptTypes()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
-        $expected = ['link', 'file', 'html', 'ltiResourceLink', 'image'];
-        $deepLink = new LtiDeepLink($registration, 'test', ['accept_types' => $expected]);
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
 
-        $this->assertEquals($expected, $deepLink->accepts());
+        $this->assertEquals($this->settings['accept_types'], $deepLink->acceptTypes());
     }
 
-    public function testCanAccept()
+    public function testCanAcceptType()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
-        $expected = ['link', 'file', 'html', 'ltiResourceLink', 'image'];
-        $deepLink = new LtiDeepLink($registration, 'test', ['accept_types' => $expected]);
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
 
-        $this->assertFalse($deepLink->canAccept('foo'));
-        foreach ($expected as $type) {
-            $this->assertTrue($deepLink->canAccept($type));
+        $this->assertFalse($deepLink->canAcceptType('foo'));
+        foreach ($this->settings['accept_types'] as $type) {
+            $this->assertTrue($deepLink->canAcceptType($type));
         }
+    }
+
+    public function testAcceptPresentationDocumentTargets()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
+
+        $this->assertEquals($this->settings['accept_presentation_document_targets'], $deepLink->acceptPresentationDocumentTargets());
+    }
+
+    public function testCanAcceptPresentationDocumentTarget()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
+
+        $this->assertFalse($deepLink->canAcceptPresentationDocumentTarget('foo'));
+        foreach ($this->settings['accept_presentation_document_targets'] as $type) {
+            $this->assertTrue($deepLink->canAcceptPresentationDocumentTarget($type));
+        }
+    }
+
+    public function testAcceptMediaTypes()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
+
+        $this->assertEquals($this->settings['accept_media_types'], $deepLink->acceptMediaTypes());
+    }
+
+    public function testCanAcceptMultiple()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
+        $this->assertTrue($deepLink->canAcceptMultiple());
+
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', []);
+        $this->assertFalse($deepLink->canAcceptMultiple());
+    }
+
+    public function testCanAcceptLineitem()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
+        $this->assertTrue($deepLink->canAcceptLineitem());
+
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', []);
+        $this->assertFalse($deepLink->canAcceptLineitem());
+    }
+
+    public function testCanAutoCreate()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
+        $this->assertTrue($deepLink->canAutoCreate());
+
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', []);
+        $this->assertFalse($deepLink->canAutoCreate());
+    }
+
+    public function testTitle()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
+        $this->assertEquals($this->settings['title'], $deepLink->title());
+
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', []);
+        $this->assertNull($deepLink->title());
+    }
+
+    public function testText()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
+        $this->assertEquals($this->settings['text'], $deepLink->text());
+
+        $deepLink = new LtiDeepLink($registration, 'deployment_id', []);
+        $this->assertNull($deepLink->text());
     }
 
     private function setupMocksExpectations(): void

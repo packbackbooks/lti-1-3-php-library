@@ -53,7 +53,7 @@ class LtiDeepLink
         return $this->settings()['accept_types'];
     }
 
-    public function canAccept(string $acceptType): bool
+    public function canAcceptType(string $acceptType): bool
     {
         return in_array($acceptType, $this->acceptTypes());
     }
@@ -63,12 +63,12 @@ class LtiDeepLink
         return $this->settings()['accept_presentation_document_targets'];
     }
 
-    public function canAcceptPresentationDocumentTargets(): array
+    public function canAcceptPresentationDocumentTarget(string $target): bool
     {
-        return $this->settings()['accept_presentation_document_targets'];
+        return in_array($target, $this->acceptPresentationDocumentTargets());
     }
 
-    public function acceptMediaTypes(): array
+    public function acceptMediaTypes(): ?string
     {
         return $this->settings()['accept_media_types'] ?? null;
     }
@@ -90,12 +90,12 @@ class LtiDeepLink
 
     public function title(): ?string
     {
-        return $this->settings()['title'];
+        return $this->settings()['title'] ?? null;
     }
 
     public function text(): ?string
     {
-        return $this->settings()['text'];
+        return $this->settings()['text'] ?? null;
     }
 
 }
