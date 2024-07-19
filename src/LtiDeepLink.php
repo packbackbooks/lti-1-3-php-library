@@ -48,13 +48,23 @@ class LtiDeepLink
         return $this->settings()['deep_link_return_url'];
     }
 
+    /**
+     * @deprecated
+     */
     public function accepts(): array
+    {
+        trigger_error('Method '.__METHOD__.' is deprecated. Use acceptTypes() instead.', E_USER_DEPRECATED);
+
+        return $this->acceptTypes();
+    }
+
+    public function acceptTypes(): array
     {
         return $this->settings()['accept_types'];
     }
 
     public function canAccept(string $acceptType): bool
     {
-        return in_array($acceptType, $this->accepts());
+        return in_array($acceptType, $this->acceptTypes());
     }
 }
