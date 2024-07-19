@@ -31,20 +31,30 @@ class LtiDeepLink
 
         // https://www.imsglobal.org/spec/lti-dl/v2p0/#deep-linking-request-message
         // 'data' is an optional property which, if it exists, must be returned by the tool
-        if (isset($this->deep_link_settings['data'])) {
-            $message_jwt[LtiConstants::DL_DATA] = $this->deep_link_settings['data'];
+        if (isset($this->settings()['data'])) {
+            $message_jwt[LtiConstants::DL_DATA] = $this->settings()['data'];
         }
 
         return JWT::encode($message_jwt, $this->registration->getToolPrivateKey(), 'RS256', $this->registration->getKid());
     }
 
+    public function settings(): array
+    {
+        return $this->deep_link_settings;
+    }
+
     public function returnUrl(): string
     {
-        return $this->deep_link_settings['deep_link_return_url'];
+        return $this->settings()['deep_link_return_url'];
     }
 
     public function accepts(): array
     {
-        return $this->deep_link_settings['accept_types'];
+        return $this->settings()['accept_types'];
+    }
+
+    public function canAccept(string $acceptType): bool
+    {
+        return in_array($acceptType, $this->accepts());
     }
 }

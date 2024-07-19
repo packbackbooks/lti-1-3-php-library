@@ -55,15 +55,6 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals([self::LTI_RESOURCE_ARRAY], $resultPayload->{LtiConstants::DL_CONTENT_ITEMS});
     }
 
-    public function testReturnUrl()
-    {
-        $registration = Mockery::mock(ILtiRegistration::class);
-        $returnUrl = 'https://google.com';
-        $deepLink = new LtiDeepLink($registration, 'test', ['deep_link_return_url' => $returnUrl]);
-
-        $this->assertEquals($returnUrl, $deepLink->returnUrl());
-    }
-
     public function testJwtResponseDoesNotContainDataPropertyWhenNotSet()
     {
         $this->setupMocksExpectations();
@@ -94,6 +85,45 @@ class LtiDeepLinkTest extends TestCase
         $resultPayload = JWT::decode($result, $publicKey);
 
         $this->assertEquals($dataValue, $resultPayload->{LtiConstants::DL_DATA});
+    }
+
+    public function testSettings()
+    {
+        $expected = ['foo' => 'bar'];
+        $registration = Mockery::mock(ILtiRegistration::class);
+        $deepLink = new LtiDeepLink($registration, 'test', $expected);
+
+        $this->assertEquals($expected, $deepLink->settings());
+    }
+
+    public function testReturnUrl()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+        $returnUrl = 'https://google.com';
+        $deepLink = new LtiDeepLink($registration, 'test', ['deep_link_return_url' => $returnUrl]);
+
+        $this->assertEquals($returnUrl, $deepLink->returnUrl());
+    }
+
+    public function testAccepts()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+        $expected = ['link', 'file', 'html', 'ltiResourceLink', 'image'];
+        $deepLink = new LtiDeepLink($registration, 'test', ['accept_types' => $expected]);
+
+        $this->assertEquals($expected, $deepLink->accepts());
+    }
+
+    public function testCanAccept()
+    {
+        $registration = Mockery::mock(ILtiRegistration::class);
+        $expected = ['link', 'file', 'html', 'ltiResourceLink', 'image'];
+        $deepLink = new LtiDeepLink($registration, 'test', ['accept_types' => $expected]);
+
+        $this->assertFalse($deepLink->canAccept('foo'));
+        foreach ($expected as $type) {
+            $this->assertTrue($deepLink->canAccept($type));
+        }
     }
 
     private function setupMocksExpectations(): void
