@@ -48,16 +48,6 @@ class LtiDeepLink
         return $this->settings()['deep_link_return_url'];
     }
 
-    /**
-     * @deprecated
-     */
-    public function accepts(): array
-    {
-        trigger_error('Method '.__METHOD__.' is deprecated. Use acceptTypes() instead.', E_USER_DEPRECATED);
-
-        return $this->acceptTypes();
-    }
-
     public function acceptTypes(): array
     {
         return $this->settings()['accept_types'];
@@ -67,4 +57,45 @@ class LtiDeepLink
     {
         return in_array($acceptType, $this->acceptTypes());
     }
+
+    public function acceptPresentationDocumentTargets(): array
+    {
+        return $this->settings()['accept_presentation_document_targets'];
+    }
+
+    public function canAcceptPresentationDocumentTargets(): array
+    {
+        return $this->settings()['accept_presentation_document_targets'];
+    }
+
+    public function acceptMediaTypes(): array
+    {
+        return $this->settings()['accept_media_types'] ?? null;
+    }
+
+    public function canAcceptMultiple(): bool
+    {
+        return $this->settings()['accept_multiple'] ?? false;
+    }
+
+    public function canAcceptLineitem(): bool
+    {
+        return $this->settings()['accept_lineitem'] ?? false;
+    }
+
+    public function canAutoCreate(): bool
+    {
+        return $this->settings()['auto_create'] ?? false;
+    }
+
+    public function title(): ?string
+    {
+        return $this->settings()['title'];
+    }
+
+    public function text(): ?string
+    {
+        return $this->settings()['text'];
+    }
+
 }
