@@ -304,7 +304,7 @@ class LtiMessageLaunch
         try {
             $response = $this->serviceConnector->makeRequest($request);
         } catch (TransferException $e) {
-            throw new LtiException(static::ERR_NO_PUBLIC_KEY);
+            throw new LtiException(static::ERR_NO_PUBLIC_KEY, previous: $e);
         }
         $publicKeySet = $this->serviceConnector->getResponseBody($response);
 
@@ -442,7 +442,7 @@ class LtiMessageLaunch
             JWT::decode($this->request['id_token'], $public_key, $headers);
         } catch (ExpiredException $e) {
             // Error validating signature.
-            throw new LtiException(static::ERR_INVALID_SIGNATURE);
+            throw new LtiException(static::ERR_INVALID_SIGNATURE, previous: $e);
         }
 
         return $this;
