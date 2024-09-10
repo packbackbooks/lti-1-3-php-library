@@ -70,7 +70,7 @@ class JwksEndpointTest extends TestCase
             'alg' => 'RS256',
             'use' => 'sig',
             'e' => 'AQAB',
-            'n' => '6DzRJzrx0KThi0piO3wdNA3e7-xXly5WJo00CqlKDodtyX6wRT76E4cD57yrr_ZWuaA-6idSFPaEQXw9tCqqTIrS4STIYrlvC0CeEA7m0s2PbI2ffaxv2kofxdmOaUI8YW8NIqNyHMl6Acz1lQOOZ5xSreG5JAqtZpy7AwDdpJo7up9937AD9ZV77qlty6xRKVqOGP1-cH97zMvlQo0EUWUhRAzDlTlCXnbeSjVypET3l93WPT9gnIywt1xX0L6rIJd-4fyU6faaToGN9z4_Q6ay2xFSEJnoNBW9wI886W75vLcVLnT95YKJJwZoKEa9yoV_ZPiTBJcFv1HFPf4ibQ==',
+            'n' => '6DzRJzrx0KThi0piO3wdNA3e7-xXly5WJo00CqlKDodtyX6wRT76E4cD57yrr_ZWuaA-6idSFPaEQXw9tCqqTIrS4STIYrlvC0CeEA7m0s2PbI2ffaxv2kofxdmOaUI8YW8NIqNyHMl6Acz1lQOOZ5xSreG5JAqtZpy7AwDdpJo7up9937AD9ZV77qlty6xRKVqOGP1-cH97zMvlQo0EUWUhRAzDlTlCXnbeSjVypET3l93WPT9gnIywt1xX0L6rIJd-4fyU6faaToGN9z4_Q6ay2xFSEJnoNBW9wI886W75vLcVLnT95YKJJwZoKEa9yoV_ZPiTBJcFv1HFPf4ibQ',
             'kid' => 'kid',
         ]]], $result);
     }

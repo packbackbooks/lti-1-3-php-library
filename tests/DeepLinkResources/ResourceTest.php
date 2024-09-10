@@ -18,7 +18,7 @@ class ResourceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->resource = new Resource();
+        $this->resource = new Resource;
     }
 
     public function testItInstantiates()
@@ -178,7 +178,7 @@ class ResourceTest extends TestCase
 
     public function testItSetsIframe()
     {
-        $expected = new Iframe();
+        $expected = new Iframe;
 
         $result = $this->resource->setIframe($expected);
 
@@ -195,7 +195,7 @@ class ResourceTest extends TestCase
 
     public function testItSetsWindow()
     {
-        $expected = new Window();
+        $expected = new Window;
 
         $result = $this->resource->setWindow($expected);
 
@@ -212,7 +212,7 @@ class ResourceTest extends TestCase
 
     public function testItSetsAvailabilityInterval()
     {
-        $expected = new DateTimeInterval();
+        $expected = new DateTimeInterval;
 
         $result = $this->resource->setAvailabilityInterval($expected);
 
@@ -229,7 +229,7 @@ class ResourceTest extends TestCase
 
     public function testItSetsSubmissionInterval()
     {
-        $expected = new DateTimeInterval();
+        $expected = new DateTimeInterval;
 
         $result = $this->resource->setSubmissionInterval($expected);
 
@@ -254,8 +254,8 @@ class ResourceTest extends TestCase
     public function testItCreatesArrayWithDefinedOptionalProperties()
     {
         $icon = Icon::new('https://example.com/image.png', 100, 200);
-        $Iframe = new Iframe();
-        $window = new Window();
+        $Iframe = new Iframe;
+        $window = new Window;
         $dateTimeInterval = new DateTimeInterval(date_create());
 
         $expected = [

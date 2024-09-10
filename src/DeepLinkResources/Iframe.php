@@ -16,7 +16,7 @@ class Iframe
 
     public static function new(): self
     {
-        return new Iframe();
+        return new Iframe;
     }
 
     public function getArray(): array

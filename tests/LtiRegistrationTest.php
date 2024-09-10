@@ -10,7 +10,7 @@ class LtiRegistrationTest extends TestCase
 
     public function setUp(): void
     {
-        $this->registration = new LtiRegistration();
+        $this->registration = new LtiRegistration;
     }
 
     public function testItInstantiates()
