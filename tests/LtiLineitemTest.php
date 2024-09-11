@@ -10,7 +10,7 @@ class LtiLineitemTest extends TestCase
 
     public function setUp(): void
     {
-        $this->lineItem = new LtiLineitem();
+        $this->lineItem = new LtiLineitem;
     }
 
     public function testItInstantiates()
@@ -198,7 +198,7 @@ class LtiLineitemTest extends TestCase
 
     public function testGradesReleasedConstructedNullable(): void
     {
-        $grade = new LtiLineitem();
+        $grade = new LtiLineitem;
 
         $result = $grade->getGradesReleased();
 

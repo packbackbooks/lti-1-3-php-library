@@ -438,7 +438,7 @@ class LtiMessageLaunch
 
         // Validate JWT signature
         try {
-            $headers = new \stdClass();
+            $headers = new \stdClass;
             JWT::decode($this->request['id_token'], $public_key, $headers);
         } catch (ExpiredException $e) {
             // Error validating signature.

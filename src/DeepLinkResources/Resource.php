@@ -25,7 +25,7 @@ class Resource
 
     public static function new(): self
     {
-        return new Resource();
+        return new Resource;
     }
 
     public function getArray(): array

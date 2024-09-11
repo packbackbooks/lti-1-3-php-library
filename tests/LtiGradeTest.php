@@ -9,7 +9,7 @@ class LtiGradeTest extends TestCase
     private $grade;
     public function setUp(): void
     {
-        $this->grade = new LtiGrade();
+        $this->grade = new LtiGrade;
     }
 
     public function testItInstantiates()

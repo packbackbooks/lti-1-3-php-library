@@ -10,7 +10,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
 
     public function setUp(): void
     {
-        $this->gradeReview = new LtiGradeSubmissionReview();
+        $this->gradeReview = new LtiGradeSubmissionReview;
     }
 
     public function testItInstantiates()

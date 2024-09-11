@@ -17,7 +17,7 @@ class Window
 
     public static function new(): self
     {
-        return new Window();
+        return new Window;
     }
 
     public function getArray(): array

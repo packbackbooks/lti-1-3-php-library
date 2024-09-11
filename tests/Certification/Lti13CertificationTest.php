@@ -250,8 +250,8 @@ class Lti13CertificationTest extends TestCase
             ]),
             new LtiDeployment(static::ISSUER_URL)
         );
-        $this->cache = new TestCache();
-        $this->cookie = new TestCookie();
+        $this->cache = new TestCache;
+        $this->cookie = new TestCookie;
         $this->cookie->setCookie(
             LtiOidcLogin::COOKIE_PREFIX.static::STATE,
             static::STATE
