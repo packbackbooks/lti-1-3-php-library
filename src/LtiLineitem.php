@@ -16,6 +16,7 @@ class LtiLineitem
     private $start_date_time;
     private $end_date_time;
     private ?bool $grades_released;
+    private $canvas_extension;
 
     public function __construct(?array $lineitem = null)
     {
@@ -28,6 +29,7 @@ class LtiLineitem
         $this->start_date_time = $lineitem['startDateTime'] ?? null;
         $this->end_date_time = $lineitem['endDateTime'] ?? null;
         $this->grades_released = $lineitem['gradesReleased'] ?? null;
+        $this->canvas_extension = $grade['https://canvas.instructure.com/lti/submission_type'] ?? null;
     }
 
     /**
@@ -50,6 +52,7 @@ class LtiLineitem
             'startDateTime' => $this->start_date_time,
             'endDateTime' => $this->end_date_time,
             'gradesReleased' => $this->grades_released,
+            'https://canvas.instructure.com/lti/submission_type' => $this->canvas_extension,
         ];
     }
 
@@ -157,6 +160,25 @@ class LtiLineitem
     public function setGradesReleased(?bool $value): self
     {
         $this->grades_released = $value;
+
+        return $this;
+    }
+
+    public function getCanvasExtension()
+    {
+        return $this->canvas_extension;
+    }
+
+    /**
+     * Add custom extensions for Canvas.
+     *
+     * Disclaimer: You should only set this if your LMS is Canvas.
+     *             Some LMS (e.g. Schoology) include validation logic that will throw if there
+     *             is unexpected data. And, the type of LMS cannot simply be inferred by their URL.
+     */
+    public function setCanvasExtension($value): self
+    {
+        $this->canvas_extension = $value;
 
         return $this;
     }
