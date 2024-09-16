@@ -220,7 +220,7 @@ class LtiGrade
         ];
         $progressGroup = $progresses[$name];
 
-        if (in_array($value, $progressGroup)) {
+        if (!in_array($value, $progressGroup)) {
             $message = `Invalid $name progress: $value. Must be one of: `.implode(', ', $progressGroup);
             throw new \UnexpectedValueException($message);
         }
