@@ -7,6 +7,16 @@ use Packback\Lti1p3\Concerns\JsonStringable;
 class LtiGrade
 {
     use JsonStringable;
+    public const ACTIVITY_PROGRESS_INITIALIZED = 'Initialized';
+    public const ACTIVITY_PROGRESS_STARTED = 'Started';
+    public const ACTIVITY_PROGRESS_IN_PROGRESS = 'InProgress';
+    public const ACTIVITY_PROGRESS_SUBMITTED = 'Submitted';
+    public const ACTIVITY_PROGRESS_COMPLETED = 'Completed';
+    public const GRADING_PROGRESS_NOT_READY = 'NotReady';
+    public const GRADING_PROGRESS_FAILED = 'Failed';
+    public const GRADING_PROGRESS_PENDING = 'Pending';
+    public const GRADING_PROGRESS_PENDING_MANUAL = 'PendingManual';
+    public const GRADING_PROGRESS_FULLY_GRADED = 'FullyGraded';
     private $score_given;
     private $score_maximum;
     private $comment;
@@ -89,25 +99,29 @@ class LtiGrade
         return $this;
     }
 
-    public function getActivityProgress()
+    public function getActivityProgress(): string
     {
         return $this->activity_progress;
     }
 
     public function setActivityProgress($value): self
     {
+        self::validateProgress($value, 'activity');
+
         $this->activity_progress = $value;
 
         return $this;
     }
 
-    public function getGradingProgress()
+    public function getGradingProgress(): string
     {
         return $this->grading_progress;
     }
 
     public function setGradingProgress($value): self
     {
+        self::validateProgress($value, 'grading');
+
         $this->grading_progress = $value;
 
         return $this;
@@ -168,5 +182,31 @@ class LtiGrade
         $this->canvas_extension = $value;
 
         return $this;
+    }
+
+    private static function validateProgress(string $value, string $name): void
+    {
+        $progresses = [
+            'activity' => [
+                self::ACTIVITY_PROGRESS_INITIALIZED,
+                self::ACTIVITY_PROGRESS_STARTED,
+                self::ACTIVITY_PROGRESS_IN_PROGRESS,
+                self::ACTIVITY_PROGRESS_SUBMITTED,
+                self::ACTIVITY_PROGRESS_COMPLETED,
+            ],
+            'grading' => [
+                self::GRADING_PROGRESS_NOT_READY,
+                self::GRADING_PROGRESS_FAILED,
+                self::GRADING_PROGRESS_PENDING,
+                self::GRADING_PROGRESS_PENDING_MANUAL,
+                self::GRADING_PROGRESS_FULLY_GRADED,
+            ],
+        ];
+        $progressGroup = $progresses[$name];
+
+        if (in_array($value, $progressGroup)) {
+            $message = `Invalid $name progress: $value. Must be one of: `.implode(', ', $progressGroup);
+            throw new \UnexpectedValueException($message);
+        }
     }
 }
