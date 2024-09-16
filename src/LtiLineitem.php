@@ -7,6 +7,7 @@ use Packback\Lti1p3\Concerns\JsonStringable;
 class LtiLineitem
 {
     use JsonStringable;
+    private const CANVAS_EXTENSION = 'https://canvas.instructure.com/lti/submission_type';
     private $id;
     private $score_maximum;
     private $label;
@@ -15,6 +16,7 @@ class LtiLineitem
     private $tag;
     private $start_date_time;
     private $end_date_time;
+    private $canvas_extension;
     private ?bool $grades_released;
 
     public function __construct(?array $lineitem = null)
@@ -28,6 +30,7 @@ class LtiLineitem
         $this->start_date_time = $lineitem['startDateTime'] ?? null;
         $this->end_date_time = $lineitem['endDateTime'] ?? null;
         $this->grades_released = $lineitem['gradesReleased'] ?? null;
+        $this->canvas_extension = $lineitem[self::CANVAS_EXTENSION] ?? null;
     }
 
     /**
@@ -50,6 +53,7 @@ class LtiLineitem
             'startDateTime' => $this->start_date_time,
             'endDateTime' => $this->end_date_time,
             'gradesReleased' => $this->grades_released,
+            self::CANVAS_EXTENSION => $this->canvas_extension,
         ];
     }
 
@@ -157,6 +161,27 @@ class LtiLineitem
     public function setGradesReleased(?bool $value): self
     {
         $this->grades_released = $value;
+
+        return $this;
+    }
+
+    public function getCanvasExtension()
+    {
+        return $this->canvas_extension;
+    }
+
+    /**
+     * Add custom extensions for Canvas.
+     *
+     * Disclaimer: You should only set this if your LMS is Canvas.
+     *             Some LMS (e.g. Schoology) include validation logic that will throw if there
+     *             is unexpected data. And, the type of LMS cannot simply be inferred by their URL.
+     *
+     * @see https://canvas.instructure.com/doc/api/line_items.html
+     */
+    public function setCanvasExtension($value): self
+    {
+        $this->canvas_extension = $value;
 
         return $this;
     }

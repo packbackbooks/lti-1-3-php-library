@@ -17,6 +17,7 @@ class LtiGrade
     public const GRADING_PROGRESS_PENDING = 'Pending';
     public const GRADING_PROGRESS_PENDING_MANUAL = 'PendingManual';
     public const GRADING_PROGRESS_FULLY_GRADED = 'FullyGraded';
+    private const CANVAS_EXTENSION = 'https://canvas.instructure.com/lti/submission';
     private $score_given;
     private $score_maximum;
     private $comment;
@@ -39,7 +40,7 @@ class LtiGrade
         $this->user_id = $grade['userId'] ?? null;
         $this->submission_review = $grade['submissionReview'] ?? null;
         $this->submission = $grade['submission'] ?? null;
-        $this->canvas_extension = $grade['https://canvas.instructure.com/lti/submission'] ?? null;
+        $this->canvas_extension = $grade[self::CANVAS_EXTENSION] ?? null;
     }
 
     public function getArray(): array
@@ -53,7 +54,8 @@ class LtiGrade
             'timestamp' => $this->timestamp,
             'userId' => $this->user_id,
             'submissionReview' => $this->submission_review,
-            'https://canvas.instructure.com/lti/submission' => $this->canvas_extension,
+            'submission' => $this->submission,
+            self::CANVAS_EXTENSION => $this->canvas_extension,
         ];
     }
 
