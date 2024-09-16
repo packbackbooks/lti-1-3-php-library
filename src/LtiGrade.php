@@ -25,6 +25,7 @@ class LtiGrade
     private $timestamp;
     private $user_id;
     private $submission_review;
+    private $submission;
     private $canvas_extension;
 
     public function __construct(?array $grade = null)
@@ -37,6 +38,7 @@ class LtiGrade
         $this->timestamp = $grade['timestamp'] ?? null;
         $this->user_id = $grade['userId'] ?? null;
         $this->submission_review = $grade['submissionReview'] ?? null;
+        $this->submission = $grade['submission'] ?? null;
         $this->canvas_extension = $grade['https://canvas.instructure.com/lti/submission'] ?? null;
     }
 
@@ -159,6 +161,18 @@ class LtiGrade
     public function setSubmissionReview($value): self
     {
         $this->submission_review = $value;
+
+        return $this;
+    }
+
+    public function getSubmission()
+    {
+        return $this->submission;
+    }
+
+    public function setSubmission($value): self
+    {
+        $this->submission = $value;
 
         return $this;
     }
