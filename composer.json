@@ -30,7 +30,7 @@
         "mockery/mockery": "^1.4",
         "nesbot/carbon": "^2.43 || ^3.0",
         "laravel/pint": "^1.0",
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^1.10 || ^2.0",
         "phpunit/phpunit": "^9.0|^10.0"
     },
     "autoload": {
