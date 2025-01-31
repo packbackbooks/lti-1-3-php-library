@@ -7,6 +7,7 @@ use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use phpseclib3\Crypt\RSA;
 
+/** @phpstan-consistent-constructor */
 class JwksEndpoint
 {
     use NewChainable;

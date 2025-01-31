@@ -8,6 +8,8 @@ use Packback\Lti1p3\Concerns\NewChainable;
 
 /**
  * @TODO Next major version, move this into the AGS namespace
+ *
+ * @phpstan-consistent-constructor
  */
 class LtiGrade
 {

@@ -7,6 +7,7 @@ use Packback\Lti1p3\Concerns\Arrayable;
 use Packback\Lti1p3\Concerns\NewChainable;
 use Packback\Lti1p3\LtiException;
 
+/** @phpstan-consistent-constructor */
 class DateTimeInterval
 {
     use Arrayable;

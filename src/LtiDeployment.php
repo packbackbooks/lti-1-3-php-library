@@ -5,6 +5,7 @@ namespace Packback\Lti1p3;
 use Packback\Lti1p3\Concerns\NewChainable;
 use Packback\Lti1p3\Interfaces\ILtiDeployment;
 
+/** @phpstan-consistent-constructor */
 class LtiDeployment implements ILtiDeployment
 {
     use NewChainable;

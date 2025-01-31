@@ -9,6 +9,7 @@ use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 
+/** @phpstan-consistent-constructor */
 class LtiOidcLogin
 {
     use NewChainable;

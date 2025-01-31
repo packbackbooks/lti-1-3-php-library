@@ -25,6 +25,20 @@ class Resource
     private ?DateTimeInterval $availability_interval = null;
     private ?DateTimeInterval $submission_interval = null;
 
+    public function __construct(?array $resource = null)
+    {
+        $this->type = $resource['type'] ?? null;
+        $this->title = $resource['title'] ?? null;
+        $this->text = $resource['text'] ?? null;
+        $this->url = $resource['url'] ?? null;
+        // 'icon' => $this->icon?->toArray(),
+        // 'thumbnail' => $this->thumbnail?->toArray(),
+        // 'iframe' => $this->iframe?->toArray(),
+        // 'window' => $this->window?->toArray(),
+        // 'available' => $this->availability_interval?->toArray(),
+        // 'submission' => $this->submission_interval?->toArray(),
+    }
+
     public function getArray(): array
     {
         $resource = [

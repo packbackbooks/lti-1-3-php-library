@@ -5,7 +5,11 @@ namespace Packback\Lti1p3\AssignmentGradeServices;
 use Packback\Lti1p3\Concerns\JsonStringable;
 use Packback\Lti1p3\Concerns\NewChainable;
 
-/** @internal */
+/**
+ * @internal
+ *
+ * @phpstan-consistent-constructor
+ **/
 class LtiGradeSubmission
 {
     use JsonStringable;

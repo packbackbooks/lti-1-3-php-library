@@ -20,6 +20,7 @@ use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
 
+/** @phpstan-consistent-constructor */
 class LtiMessageLaunch
 {
     use NewChainable;
