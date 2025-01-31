@@ -2,11 +2,14 @@
 
 namespace Packback\Lti1p3;
 
+use Packback\Lti1p3\AssignmentGradeServices\LtiGradeSubmission;
 use Packback\Lti1p3\Concerns\JsonStringable;
+use Packback\Lti1p3\Concerns\NewChainable;
 
 class LtiGrade
 {
     use JsonStringable;
+    use NewChainable;
     private $score_given;
     private $score_maximum;
     private $comment;
@@ -14,6 +17,7 @@ class LtiGrade
     private $grading_progress;
     private $timestamp;
     private $user_id;
+    private ?LtiGradeSubmission $submission = null;
     private $submission_review;
     private $canvas_extension;
 
@@ -28,6 +32,10 @@ class LtiGrade
         $this->user_id = $grade['userId'] ?? null;
         $this->submission_review = $grade['submissionReview'] ?? null;
         $this->canvas_extension = $grade['https://canvas.instructure.com/lti/submission'] ?? null;
+
+        if (isset($grade['submission'])) {
+            $this->setSubmission($this->submission = $grade['submission']);
+        }
     }
 
     public function getArray(): array
@@ -40,17 +48,10 @@ class LtiGrade
             'gradingProgress' => $this->grading_progress,
             'timestamp' => $this->timestamp,
             'userId' => $this->user_id,
+            'submission' => $this->submission?->toArray(),
             'submissionReview' => $this->submission_review,
             'https://canvas.instructure.com/lti/submission' => $this->canvas_extension,
         ];
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(): self
-    {
-        return new LtiGrade;
     }
 
     public function getScoreGiven()
@@ -133,6 +134,18 @@ class LtiGrade
     public function setUserId($value): self
     {
         $this->user_id = $value;
+
+        return $this;
+    }
+
+    public function getSubmission()
+    {
+        return $this->submission->toArray();
+    }
+
+    public function setSubmission(array $value): self
+    {
+        $this->submission = LtiGradeSubmission::new($value);
 
         return $this;
     }

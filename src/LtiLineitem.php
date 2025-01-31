@@ -3,10 +3,12 @@
 namespace Packback\Lti1p3;
 
 use Packback\Lti1p3\Concerns\JsonStringable;
+use Packback\Lti1p3\Concerns\NewChainable;
 
 class LtiLineitem
 {
     use JsonStringable;
+    use NewChainable;
     private $id;
     private $score_maximum;
     private $label;
@@ -28,14 +30,6 @@ class LtiLineitem
         $this->start_date_time = $lineitem['startDateTime'] ?? null;
         $this->end_date_time = $lineitem['endDateTime'] ?? null;
         $this->grades_released = $lineitem['gradesReleased'] ?? null;
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(?array $lineItem = null): self
-    {
-        return new LtiLineitem($lineItem);
     }
 
     public function getArray(): array

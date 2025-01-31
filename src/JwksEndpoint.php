@@ -2,18 +2,16 @@
 
 namespace Packback\Lti1p3;
 
+use Packback\Lti1p3\Concerns\NewChainable;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use phpseclib3\Crypt\RSA;
 
 class JwksEndpoint
 {
-    public function __construct(private array $keys) {}
+    use NewChainable;
 
-    public static function new(array $keys): self
-    {
-        return new JwksEndpoint($keys);
-    }
+    public function __construct(private array $keys) {}
 
     public static function fromIssuer(IDatabase $database, string $issuer): self
     {

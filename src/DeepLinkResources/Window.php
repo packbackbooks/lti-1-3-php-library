@@ -3,10 +3,13 @@
 namespace Packback\Lti1p3\DeepLinkResources;
 
 use Packback\Lti1p3\Concerns\Arrayable;
+use Packback\Lti1p3\Concerns\NewChainable;
 
 class Window
 {
-    use Arrayable, HasDimensions;
+    use Arrayable;
+    use HasDimensions;
+    use NewChainable;
 
     public function __construct(
         private ?string $target_name = null,
@@ -14,11 +17,6 @@ class Window
         private ?int $height = null,
         private ?string $window_features = null
     ) {}
-
-    public static function new(): self
-    {
-        return new Window;
-    }
 
     public function getArray(): array
     {

@@ -3,21 +3,19 @@
 namespace Packback\Lti1p3\DeepLinkResources;
 
 use Packback\Lti1p3\Concerns\Arrayable;
+use Packback\Lti1p3\Concerns\NewChainable;
 
 class Icon
 {
-    use Arrayable, HasDimensions;
+    use Arrayable;
+    use HasDimensions;
+    use NewChainable;
 
     public function __construct(
         private string $url,
         private int $width,
         private int $height
     ) {}
-
-    public static function new(string $url, int $width, int $height): self
-    {
-        return new Icon($url, $width, $height);
-    }
 
     public function getArray(): array
     {

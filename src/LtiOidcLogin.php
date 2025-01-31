@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3;
 
+use Packback\Lti1p3\Concerns\NewChainable;
 use Packback\Lti1p3\Helpers\Helpers;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
@@ -10,6 +11,7 @@ use Packback\Lti1p3\Interfaces\ILtiRegistration;
 
 class LtiOidcLogin
 {
+    use NewChainable;
     public const COOKIE_PREFIX = 'lti1p3_';
     public const ERROR_MSG_LAUNCH_URL = 'No launch URL configured';
     public const ERROR_MSG_ISSUER = 'Could not find issuer';
@@ -20,14 +22,6 @@ class LtiOidcLogin
         public ICache $cache,
         public ICookie $cookie
     ) {}
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(IDatabase $db, ICache $cache, ICookie $cookie): self
-    {
-        return new LtiOidcLogin($db, $cache, $cookie);
-    }
 
     /**
      * Calculate the redirect location to return to based on an OIDC third party initiated login request.

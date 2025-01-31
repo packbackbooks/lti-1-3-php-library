@@ -3,12 +3,14 @@
 namespace Packback\Lti1p3\DeepLinkResources;
 
 use Packback\Lti1p3\Concerns\Arrayable;
+use Packback\Lti1p3\Concerns\NewChainable;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiLineitem;
 
 class Resource
 {
     use Arrayable;
+    use NewChainable;
     private string $type = LtiConstants::DL_RESOURCE_LINK_TYPE;
     private ?string $title = null;
     private ?string $text = null;
@@ -22,11 +24,6 @@ class Resource
     private ?Window $window = null;
     private ?DateTimeInterval $availability_interval = null;
     private ?DateTimeInterval $submission_interval = null;
-
-    public static function new(): self
-    {
-        return new Resource;
-    }
 
     public function getArray(): array
     {

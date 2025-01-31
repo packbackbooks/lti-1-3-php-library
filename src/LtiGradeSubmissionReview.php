@@ -3,10 +3,12 @@
 namespace Packback\Lti1p3;
 
 use Packback\Lti1p3\Concerns\JsonStringable;
+use Packback\Lti1p3\Concerns\NewChainable;
 
 class LtiGradeSubmissionReview
 {
     use JsonStringable;
+    use NewChainable;
     private $reviewable_status;
     private $label;
     private $url;
@@ -28,14 +30,6 @@ class LtiGradeSubmissionReview
             'url' => $this->url,
             'custom' => $this->custom,
         ];
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(): self
-    {
-        return new LtiGradeSubmissionReview;
     }
 
     public function getReviewableStatus()

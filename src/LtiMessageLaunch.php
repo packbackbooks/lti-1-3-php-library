@@ -8,6 +8,7 @@ use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use GuzzleHttp\Exception\TransferException;
+use Packback\Lti1p3\Concerns\NewChainable;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -21,6 +22,7 @@ use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
 
 class LtiMessageLaunch
 {
+    use NewChainable;
     public const TYPE_DEEPLINK = 'LtiDeepLinkingRequest';
     public const TYPE_SUBMISSIONREVIEW = 'LtiSubmissionReviewRequest';
     public const TYPE_RESOURCELINK = 'LtiResourceLinkRequest';
@@ -74,18 +76,6 @@ class LtiMessageLaunch
         private ILtiServiceConnector $serviceConnector
     ) {
         $this->launch_id = uniqid('lti1p3_launch_', true);
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(
-        IDatabase $db,
-        ICache $cache,
-        ICookie $cookie,
-        ILtiServiceConnector $serviceConnector
-    ): self {
-        return new LtiMessageLaunch($db, $cache, $cookie, $serviceConnector);
     }
 
     /**

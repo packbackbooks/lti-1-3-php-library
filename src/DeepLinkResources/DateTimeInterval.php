@@ -4,11 +4,13 @@ namespace Packback\Lti1p3\DeepLinkResources;
 
 use DateTime;
 use Packback\Lti1p3\Concerns\Arrayable;
+use Packback\Lti1p3\Concerns\NewChainable;
 use Packback\Lti1p3\LtiException;
 
 class DateTimeInterval
 {
     use Arrayable;
+    use NewChainable;
     public const ERROR_NO_START_OR_END = 'Either a start or end time must be specified.';
     public const ERROR_START_GT_END = 'The start time cannot be greater than end time.';
 
@@ -17,11 +19,6 @@ class DateTimeInterval
         private ?DateTime $end = null
     ) {
         $this->validateStartAndEnd();
-    }
-
-    public static function new(): self
-    {
-        return new DateTimeInterval;
     }
 
     public function getArray(): array

@@ -2,18 +2,15 @@
 
 namespace Packback\Lti1p3;
 
+use Packback\Lti1p3\Concerns\NewChainable;
 use Packback\Lti1p3\Interfaces\ILtiDeployment;
 
 class LtiDeployment implements ILtiDeployment
 {
+    use NewChainable;
     public function __construct(
         private $deployment_id
     ) {}
-
-    public static function new($deployment_id): self
-    {
-        return new LtiDeployment($deployment_id);
-    }
 
     public function getDeploymentId()
     {
