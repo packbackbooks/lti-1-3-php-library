@@ -3,7 +3,9 @@
 namespace Packback\Lti1p3\AssignmentGradeServices;
 
 use Packback\Lti1p3\Concerns\JsonStringable;
+use Packback\Lti1p3\Concerns\NewChainable;
 
+/** @internal */
 class LtiGradeSubmission
 {
     use JsonStringable;
