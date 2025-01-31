@@ -6,6 +6,9 @@ use Packback\Lti1p3\AssignmentGradeServices\LtiGradeSubmission;
 use Packback\Lti1p3\Concerns\JsonStringable;
 use Packback\Lti1p3\Concerns\NewChainable;
 
+/**
+ * @TODO Next major version, move this into the AGS namespace
+ */
 class LtiGrade
 {
     use JsonStringable;

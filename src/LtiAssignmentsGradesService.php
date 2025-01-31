@@ -2,6 +2,9 @@
 
 namespace Packback\Lti1p3;
 
+/**
+ * @TODO Next major version, move this into the AGS namespace
+ */
 class LtiAssignmentsGradesService extends LtiAbstractService
 {
     public const CONTENTTYPE_SCORE = 'application/vnd.ims.lis.v1.score+json';
