@@ -22,5 +22,9 @@ class ResourceMessageValidator extends AbstractMessageValidator
         if (empty($jwtBody[LtiConstants::RESOURCE_LINK]['id'])) {
             throw new LtiException('Missing Resource Link Id');
         }
+        
+        if (empty($jwtBody[LtiConstants::TARGET_LINK_URI])) {
+            throw new LtiException('Missing Target Link URI');
+        }
     }
 }

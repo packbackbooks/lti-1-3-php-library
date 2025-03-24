@@ -76,6 +76,16 @@ class ResourceMessageValidatorTest extends TestCase
 
         ResourceMessageValidator::validate($jwtBody);
     }
+    
+    public function testJwtBodyIsInvalidMissingTargetLinkUri()
+    {
+        $jwtBody = self::validJwtBody();
+        unset($jwtBody[LtiConstants::TARGET_LINK_URI]);
+
+        $this->expectException(LtiException::class);
+
+        ResourceMessageValidator::validate($jwtBody);
+    }
 
     private static function validJwtBody()
     {
@@ -87,6 +97,7 @@ class ResourceMessageValidatorTest extends TestCase
             LtiConstants::RESOURCE_LINK => [
                 'id' => 'unique-id',
             ],
+            LtiConstants::TARGET_LINK_URI => 'https://example.com/launch',
         ];
     }
 }

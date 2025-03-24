@@ -14,6 +14,7 @@ class LtiOidcLogin
     public const ERROR_MSG_LAUNCH_URL = 'No launch URL configured';
     public const ERROR_MSG_ISSUER = 'Could not find issuer';
     public const ERROR_MSG_LOGIN_HINT = 'Could not find login hint';
+    public const ERROR_MSG_TARGET_LINK = 'Could not find target link';
 
     public function __construct(
         public IDatabase $db,
@@ -51,6 +52,10 @@ class LtiOidcLogin
 
         if (!isset($request['login_hint'])) {
             throw new OidcException(static::ERROR_MSG_LOGIN_HINT);
+        }
+
+        if (!isset($request['target_link_uri'])) {
+            throw new OidcException(static::ERROR_MSG_TARGET_LINK);
         }
 
         // Fetch registration
