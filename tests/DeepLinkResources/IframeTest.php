@@ -12,7 +12,7 @@ class IframeTest extends TestCase
     public const INITIAL_HEIGHT = 2;
     private Iframe $iframe;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->iframe = new Iframe(
             self::INITIAL_SRC,
@@ -21,26 +21,26 @@ class IframeTest extends TestCase
         );
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(Iframe::class, $this->iframe);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $DeepLinkResources = Iframe::new();
 
         $this->assertInstanceOf(Iframe::class, $DeepLinkResources);
     }
 
-    public function testItGetsWidth()
+    public function test_it_gets_width()
     {
         $result = $this->iframe->getWidth();
 
         $this->assertEquals(self::INITIAL_WIDTH, $result);
     }
 
-    public function testItSetsWidth()
+    public function test_it_sets_width()
     {
         $expected = 300;
 
@@ -50,14 +50,14 @@ class IframeTest extends TestCase
         $this->assertEquals($expected, $this->iframe->getWidth());
     }
 
-    public function testItGetsHeight()
+    public function test_it_gets_height()
     {
         $result = $this->iframe->getHeight();
 
         $this->assertEquals(self::INITIAL_HEIGHT, $result);
     }
 
-    public function testItSetsHeight()
+    public function test_it_sets_height()
     {
         $expected = 400;
 
@@ -67,14 +67,14 @@ class IframeTest extends TestCase
         $this->assertEquals($expected, $this->iframe->getHeight());
     }
 
-    public function testItGetsSrc()
+    public function test_it_gets_src()
     {
         $result = $this->iframe->getSrc();
 
         $this->assertEquals(self::INITIAL_SRC, $result);
     }
 
-    public function testItSetsSrc()
+    public function test_it_sets_src()
     {
         $expected = 'https://example.com/foo/bar';
 
@@ -84,7 +84,7 @@ class IframeTest extends TestCase
         $this->assertEquals($expected, $this->iframe->getSrc());
     }
 
-    public function testItCreatesArrayWithoutOptionalProperties()
+    public function test_it_creates_array_without_optional_properties()
     {
         $this->iframe->setWidth(null);
         $this->iframe->setHeight(null);
@@ -95,7 +95,7 @@ class IframeTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testItCreatesArrayWithDefinedOptionalProperties()
+    public function test_it_creates_array_with_defined_optional_properties()
     {
         $expected = [
             'width' => 100,

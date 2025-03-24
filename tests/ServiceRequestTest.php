@@ -11,24 +11,24 @@ class ServiceRequestTest extends TestCase
     private $type = ServiceRequest::TYPE_AUTH;
     private $request;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->request = new ServiceRequest($this->method, $this->url, $this->type);
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(ServiceRequest::class, $this->request);
     }
 
-    public function testItGetsUrl()
+    public function test_it_gets_url()
     {
         $result = $this->request->getUrl();
 
         $this->assertEquals($this->url, $result);
     }
 
-    public function testItSetsUrl()
+    public function test_it_sets_url()
     {
         $expected = 'http://example.com/foo/bar';
 
@@ -37,7 +37,7 @@ class ServiceRequestTest extends TestCase
         $this->assertEquals($expected, $this->request->getUrl());
     }
 
-    public function testItGetsPayload()
+    public function test_it_gets_payload()
     {
         $expected = [
             'headers' => [
@@ -48,7 +48,7 @@ class ServiceRequestTest extends TestCase
         $this->assertEquals($expected, $this->request->getPayload());
     }
 
-    public function testItSetsAccessToken()
+    public function test_it_sets_access_token()
     {
         $expected = [
             'headers' => [
@@ -62,7 +62,7 @@ class ServiceRequestTest extends TestCase
         $this->assertEquals($expected, $this->request->getPayload());
     }
 
-    public function testItSetsContentType()
+    public function test_it_sets_content_type()
     {
         $expected = [
             'headers' => [
@@ -77,7 +77,7 @@ class ServiceRequestTest extends TestCase
         $this->assertEquals($expected, $request->getPayload());
     }
 
-    public function testItSetsBody()
+    public function test_it_sets_body()
     {
         $expected = [
             'headers' => [
@@ -91,19 +91,19 @@ class ServiceRequestTest extends TestCase
         $this->assertEquals($expected, $this->request->getPayload());
     }
 
-    public function testItGetsMaskResponseLogs()
+    public function test_it_gets_mask_response_logs()
     {
         $this->assertFalse($this->request->getMaskResponseLogs());
     }
 
-    public function testItSetsMaskResponseLogs()
+    public function test_it_sets_mask_response_logs()
     {
         $this->request->setMaskResponseLogs(true);
 
         $this->assertTrue($this->request->getMaskResponseLogs());
     }
 
-    public function testItGetsErrorPrefix()
+    public function test_it_gets_error_prefix()
     {
         $this->assertEquals('Authenticating:', $this->request->getErrorPrefix());
     }

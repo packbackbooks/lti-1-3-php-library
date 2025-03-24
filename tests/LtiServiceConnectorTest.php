@@ -53,7 +53,7 @@ class LtiServiceConnectorTest extends TestCase
     private $scopes;
     private $streamInterface;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->registration = Mockery::mock(ILtiRegistration::class);
         $this->request = Mockery::mock(IServiceRequest::class);
@@ -86,12 +86,12 @@ class LtiServiceConnectorTest extends TestCase
         $this->connector = new LtiServiceConnector($this->cache, $this->client);
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(LtiServiceConnector::class, $this->connector);
     }
 
-    public function testItGetsCachedAccessToken()
+    public function test_it_gets_cached_access_token()
     {
         $this->mockCacheHasAccessToken();
 
@@ -100,7 +100,7 @@ class LtiServiceConnectorTest extends TestCase
         $this->assertEquals($result, $this->token);
     }
 
-    public function testItGetsNewAccessToken()
+    public function test_it_gets_new_access_token()
     {
         $registration = new LtiRegistration([
             'clientId' => 'client_id',
@@ -126,7 +126,7 @@ class LtiServiceConnectorTest extends TestCase
         $this->assertEquals($this->token, $result);
     }
 
-    public function testItMakesAServiceRequest()
+    public function test_it_makes_a_service_request()
     {
         $expected = [
             'headers' => [
@@ -159,7 +159,7 @@ class LtiServiceConnectorTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItRetriesServiceRequestOn401Error()
+    public function test_it_retries_service_request_on401_error()
     {
         $this->method = ServiceRequest::METHOD_POST;
         $this->url = 'https://example.com';
@@ -229,7 +229,7 @@ class LtiServiceConnectorTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItThrowsOnRepeated401Errors()
+    public function test_it_throws_on_repeated401_errors()
     {
         $this->method = ServiceRequest::METHOD_POST;
         $this->url = 'https://example.com';
@@ -286,7 +286,7 @@ class LtiServiceConnectorTest extends TestCase
         $this->connector->makeServiceRequest($this->registration, $this->scopes, $this->request);
     }
 
-    public function testItGetsAll()
+    public function test_it_gets_all()
     {
         $method = ServiceRequest::METHOD_GET;
         $key = 'lineitems';
@@ -342,7 +342,7 @@ class LtiServiceConnectorTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItBuildsLogMessage()
+    public function test_it_builds_log_message()
     {
         $this->mockMakeRequest();
         $this->request->shouldReceive('getErrorPrefix')
@@ -357,7 +357,7 @@ class LtiServiceConnectorTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItMasksSensitiveDataInLogMessage()
+    public function test_it_masks_sensitive_data_in_log_message()
     {
         $this->mockMakeRequest();
         $this->request->shouldReceive('getErrorPrefix')

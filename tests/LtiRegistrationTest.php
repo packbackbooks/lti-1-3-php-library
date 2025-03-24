@@ -8,24 +8,24 @@ class LtiRegistrationTest extends TestCase
 {
     private $registration;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->registration = new LtiRegistration;
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(LtiRegistration::class, $this->registration);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $registration = LtiRegistration::new();
 
         $this->assertInstanceOf(LtiRegistration::class, $registration);
     }
 
-    public function testItGetsIssuer()
+    public function test_it_gets_issuer()
     {
         $expected = 'expected';
         $registration = new LtiRegistration(['issuer' => $expected]);
@@ -35,7 +35,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsIssuer()
+    public function test_it_sets_issuer()
     {
         $expected = 'expected';
 
@@ -44,7 +44,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $this->registration->getIssuer());
     }
 
-    public function testItGetsClientId()
+    public function test_it_gets_client_id()
     {
         $expected = 'expected';
         $registration = new LtiRegistration(['clientId' => $expected]);
@@ -54,7 +54,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsClientId()
+    public function test_it_sets_client_id()
     {
         $expected = 'expected';
 
@@ -63,7 +63,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $this->registration->getClientId());
     }
 
-    public function testItGetsKeySetUrl()
+    public function test_it_gets_key_set_url()
     {
         $expected = 'expected';
         $registration = new LtiRegistration(['keySetUrl' => $expected]);
@@ -73,7 +73,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsKeySetUrl()
+    public function test_it_sets_key_set_url()
     {
         $expected = 'expected';
 
@@ -82,7 +82,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $this->registration->getKeySetUrl());
     }
 
-    public function testItGetsAuthTokenUrl()
+    public function test_it_gets_auth_token_url()
     {
         $expected = 'expected';
         $registration = new LtiRegistration(['authTokenUrl' => $expected]);
@@ -92,7 +92,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsAuthTokenUrl()
+    public function test_it_sets_auth_token_url()
     {
         $expected = 'expected';
 
@@ -101,7 +101,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $this->registration->getAuthTokenUrl());
     }
 
-    public function testItGetsAuthLoginUrl()
+    public function test_it_gets_auth_login_url()
     {
         $expected = 'expected';
         $registration = new LtiRegistration(['authLoginUrl' => $expected]);
@@ -111,7 +111,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsAuthLoginUrl()
+    public function test_it_sets_auth_login_url()
     {
         $expected = 'expected';
 
@@ -120,7 +120,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $this->registration->getAuthLoginUrl());
     }
 
-    public function testItGetsAuthServer()
+    public function test_it_gets_auth_server()
     {
         $expected = 'expected';
         $registration = new LtiRegistration(['authServer' => $expected]);
@@ -130,7 +130,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsAuthServer()
+    public function test_it_sets_auth_server()
     {
         $expected = 'expected';
 
@@ -139,7 +139,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $this->registration->getAuthServer());
     }
 
-    public function testItGetsToolPrivateKey()
+    public function test_it_gets_tool_private_key()
     {
         $expected = 'expected';
         $registration = new LtiRegistration(['toolPrivateKey' => $expected]);
@@ -149,7 +149,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsToolPrivateKey()
+    public function test_it_sets_tool_private_key()
     {
         $expected = 'expected';
 
@@ -158,7 +158,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $this->registration->getToolPrivateKey());
     }
 
-    public function testItGetsKid()
+    public function test_it_gets_kid()
     {
         $expected = 'expected';
         $registration = new LtiRegistration(['kid' => $expected]);
@@ -168,7 +168,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItGetsKidFromIssuerAndClientId()
+    public function test_it_gets_kid_from_issuer_and_client_id()
     {
         $expected = '39e02c46a08382b7b352b4f1a9d38698b8fe7c8eb74ead609c804b25eeb1db52';
         $registration = new LtiRegistration([
@@ -181,7 +181,7 @@ class LtiRegistrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsKid()
+    public function test_it_sets_kid()
     {
         $expected = 'expected';
 

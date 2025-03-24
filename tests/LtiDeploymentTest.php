@@ -8,31 +8,31 @@ class LtiDeploymentTest extends TestCase
 {
     private $id = 'a deployment';
     private $deployment;
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->deployment = new LtiDeployment($this->id);
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(LtiDeployment::class, $this->deployment);
     }
 
-    public function testCreatesANewInstance()
+    public function test_creates_a_new_instance()
     {
         $deployment = LtiDeployment::new($this->id);
 
         $this->assertInstanceOf(LtiDeployment::class, $deployment);
     }
 
-    public function testItGetsDeploymentId()
+    public function test_it_gets_deployment_id()
     {
         $result = $this->deployment->getDeploymentId();
 
         $this->assertEquals($this->id, $result);
     }
 
-    public function testItSetsDeploymentId()
+    public function test_it_sets_deployment_id()
     {
         $expected = 'expected';
 

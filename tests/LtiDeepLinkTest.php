@@ -37,7 +37,7 @@ class LtiDeepLinkTest extends TestCase
         $this->resourceMock = Mockery::mock(Resource::class);
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
 
@@ -46,7 +46,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertInstanceOf(LtiDeepLink::class, $deepLink);
     }
 
-    public function testItGetsJwtResponse()
+    public function test_it_gets_jwt_response()
     {
         $this->setupMocksExpectations();
 
@@ -67,7 +67,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals([self::LTI_RESOURCE_ARRAY], $resultPayload->{LtiConstants::DL_CONTENT_ITEMS});
     }
 
-    public function testJwtResponseDoesNotContainDataPropertyWhenNotSet()
+    public function test_jwt_response_does_not_contain_data_property_when_not_set()
     {
         $this->setupMocksExpectations();
 
@@ -81,7 +81,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertArrayNotHasKey(LtiConstants::DL_DATA, get_object_vars($resultPayload));
     }
 
-    public function testJwtResponseContainsDataPropertyWhenSet()
+    public function test_jwt_response_contains_data_property_when_set()
     {
         $this->setupMocksExpectations();
 
@@ -99,7 +99,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals($dataValue, $resultPayload->{LtiConstants::DL_DATA});
     }
 
-    public function testSettings()
+    public function test_settings()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
@@ -107,7 +107,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals($this->settings, $deepLink->settings());
     }
 
-    public function testReturnUrl()
+    public function test_return_url()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $returnUrl = 'https://google.com';
@@ -116,7 +116,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals($this->settings['deep_link_return_url'], $deepLink->returnUrl());
     }
 
-    public function testAcceptTypes()
+    public function test_accept_types()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
@@ -124,7 +124,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals($this->settings['accept_types'], $deepLink->acceptTypes());
     }
 
-    public function testCanAcceptType()
+    public function test_can_accept_type()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
@@ -135,7 +135,7 @@ class LtiDeepLinkTest extends TestCase
         }
     }
 
-    public function testAcceptPresentationDocumentTargets()
+    public function test_accept_presentation_document_targets()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
@@ -143,7 +143,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals($this->settings['accept_presentation_document_targets'], $deepLink->acceptPresentationDocumentTargets());
     }
 
-    public function testCanAcceptPresentationDocumentTarget()
+    public function test_can_accept_presentation_document_target()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
@@ -154,7 +154,7 @@ class LtiDeepLinkTest extends TestCase
         }
     }
 
-    public function testAcceptMediaTypes()
+    public function test_accept_media_types()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
@@ -162,7 +162,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals($this->settings['accept_media_types'], $deepLink->acceptMediaTypes());
     }
 
-    public function testCanAcceptMultiple()
+    public function test_can_accept_multiple()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $deepLink = new LtiDeepLink($registration, 'deployment_id', $this->settings);
@@ -172,7 +172,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertFalse($deepLink->canAcceptMultiple());
     }
 
-    public function testCanAcceptLineitem()
+    public function test_can_accept_lineitem()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
 
@@ -183,7 +183,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertFalse($deepLink->canAcceptLineitem());
     }
 
-    public function testCanAutoCreate()
+    public function test_can_auto_create()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
 
@@ -194,7 +194,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertFalse($deepLink->canAutoCreate());
     }
 
-    public function testTitle()
+    public function test_title()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
 
@@ -205,7 +205,7 @@ class LtiDeepLinkTest extends TestCase
         $this->assertNull($deepLink->title());
     }
 
-    public function testText()
+    public function test_text()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
 

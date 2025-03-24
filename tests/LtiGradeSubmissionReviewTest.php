@@ -8,24 +8,24 @@ class LtiGradeSubmissionReviewTest extends TestCase
 {
     private $gradeReview;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->gradeReview = new LtiGradeSubmissionReview;
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(LtiGradeSubmissionReview::class, $this->gradeReview);
     }
 
-    public function testCreatesANewInstance()
+    public function test_creates_a_new_instance()
     {
         $review = LtiGradeSubmissionReview::new();
 
         $this->assertInstanceOf(LtiGradeSubmissionReview::class, $review);
     }
 
-    public function testItGetsReviewableStatus()
+    public function test_it_gets_reviewable_status()
     {
         $expected = 'ReviewableStatus';
         $gradeReview = new LtiGradeSubmissionReview(['reviewableStatus' => 'ReviewableStatus']);
@@ -35,7 +35,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsReviewableStatus()
+    public function test_it_sets_reviewable_status()
     {
         $expected = 'expected';
 
@@ -44,7 +44,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
         $this->assertEquals($expected, $this->gradeReview->getReviewableStatus());
     }
 
-    public function testItGetsLabel()
+    public function test_it_gets_label()
     {
         $expected = 'Label';
         $gradeReview = new LtiGradeSubmissionReview(['label' => 'Label']);
@@ -54,7 +54,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsLabel()
+    public function test_it_sets_label()
     {
         $expected = 'expected';
 
@@ -63,7 +63,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
         $this->assertEquals($expected, $this->gradeReview->getLabel());
     }
 
-    public function testItGetsUrl()
+    public function test_it_gets_url()
     {
         $expected = 'Url';
         $gradeReview = new LtiGradeSubmissionReview(['url' => 'Url']);
@@ -73,7 +73,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsUrl()
+    public function test_it_sets_url()
     {
         $expected = 'expected';
 
@@ -82,7 +82,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
         $this->assertEquals($expected, $this->gradeReview->getUrl());
     }
 
-    public function testItGetsCustom()
+    public function test_it_gets_custom()
     {
         $expected = 'Custom';
         $gradeReview = new LtiGradeSubmissionReview(['custom' => 'Custom']);
@@ -92,7 +92,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsCustom()
+    public function test_it_sets_custom()
     {
         $expected = 'expected';
 
@@ -101,7 +101,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
         $this->assertEquals($expected, $this->gradeReview->getCustom());
     }
 
-    public function testItCastsFullObjectToString()
+    public function test_it_casts_full_object_to_string()
     {
         $expected = [
             'reviewableStatus' => 'ReviewableStatus',
@@ -115,7 +115,7 @@ class LtiGradeSubmissionReviewTest extends TestCase
         $this->assertEquals(json_encode($expected), (string) $gradeReview);
     }
 
-    public function testItCastsEmptyObjectToString()
+    public function test_it_casts_empty_object_to_string()
     {
         $this->assertEquals('[]', (string) $this->gradeReview);
     }

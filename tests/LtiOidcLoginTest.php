@@ -17,7 +17,7 @@ class LtiOidcLoginTest extends TestCase
     private $cookie;
     private $database;
     private $oidcLogin;
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->cache = Mockery::mock(ICache::class);
         $this->cookie = Mockery::mock(ICookie::class);
@@ -30,12 +30,12 @@ class LtiOidcLoginTest extends TestCase
         );
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(LtiOidcLogin::class, $this->oidcLogin);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $oidcLogin = LtiOidcLogin::new(
             $this->database,
@@ -46,13 +46,14 @@ class LtiOidcLoginTest extends TestCase
         $this->assertInstanceOf(LtiOidcLogin::class, $this->oidcLogin);
     }
 
-    public function testItValidatesARequest()
+    public function test_it_validates_a_request()
     {
         $expected = Mockery::mock(ILtiRegistration::class);
         $request = [
             'iss' => 'Issuer',
             'login_hint' => 'LoginHint',
             'client_id' => 'ClientId',
+            'target_link_uri' => 'https://example.com/launch',
         ];
 
         $this->database->shouldReceive('findRegistrationByIssuer')
@@ -64,7 +65,7 @@ class LtiOidcLoginTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testValidatesFailsIfIssuerIsNotSet()
+    public function test_validates_fails_if_issuer_is_not_set()
     {
         $request = [
             'login_hint' => 'LoginHint',
@@ -77,15 +78,30 @@ class LtiOidcLoginTest extends TestCase
         $this->oidcLogin->validateOidcLogin($request);
     }
 
-    public function testValidatesFailsIfLoginHintIsNotSet()
+    public function test_validates_fails_if_login_hint_is_not_set()
     {
         $request = [
             'iss' => 'Issuer',
             'client_id' => 'ClientId',
+            'target_link_uri' => 'https://example.com/launch',
         ];
 
         $this->expectException(OidcException::class);
         $this->expectExceptionMessage(LtiOidcLogin::ERROR_MSG_LOGIN_HINT);
+
+        $this->oidcLogin->validateOidcLogin($request);
+    }
+
+    public function test_validates_fails_if_target_link_uri_is_not_set()
+    {
+        $request = [
+            'iss' => 'Issuer',
+            'login_hint' => 'LoginHint',
+            'client_id' => 'ClientId',
+        ];
+
+        $this->expectException(OidcException::class);
+        $this->expectExceptionMessage(LtiOidcLogin::ERROR_MSG_TARGET_LINK);
 
         $this->oidcLogin->validateOidcLogin($request);
     }
@@ -95,11 +111,12 @@ class LtiOidcLoginTest extends TestCase
      *
      * @preserveGlobalState disabled
      */
-    public function testValidatesFailsIfRegistrationNotFound()
+    public function test_validates_fails_if_registration_not_found()
     {
         $request = [
             'iss' => 'Issuer',
             'login_hint' => 'LoginHint',
+            'target_link_uri' => 'https://example.com/launch',
         ];
         $this->database->shouldReceive('findRegistrationByIssuer')
             ->once()->andReturn(null);
@@ -116,7 +133,7 @@ class LtiOidcLoginTest extends TestCase
         $this->oidcLogin->validateOidcLogin($request);
     }
 
-    public function testGetAuthParams()
+    public function test_get_auth_params()
     {
         $this->cookie->shouldReceive('setCookie')
             ->once();
