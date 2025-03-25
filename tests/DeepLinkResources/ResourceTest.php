@@ -16,31 +16,31 @@ class ResourceTest extends TestCase
 {
     private Resource $resource;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->resource = new Resource;
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(Resource::class, $this->resource);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $resource = Resource::new();
 
         $this->assertInstanceOf(Resource::class, $resource);
     }
 
-    public function testItGetsType()
+    public function test_it_gets_type()
     {
         $result = $this->resource->getType();
 
         $this->assertEquals('ltiResourceLink', $result);
     }
 
-    public function testItSetsType()
+    public function test_it_sets_type()
     {
         $expected = 'expected';
 
@@ -50,14 +50,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getType());
     }
 
-    public function testItGetsTitle()
+    public function test_it_gets_title()
     {
         $result = $this->resource->getTitle();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsTitle()
+    public function test_it_sets_title()
     {
         $expected = 'expected';
 
@@ -67,14 +67,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getTitle());
     }
 
-    public function testItGetsText()
+    public function test_it_gets_text()
     {
         $result = $this->resource->getText();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsText()
+    public function test_it_sets_text()
     {
         $expected = 'expected';
 
@@ -84,14 +84,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getText());
     }
 
-    public function testItGetsUrl()
+    public function test_it_gets_url()
     {
         $result = $this->resource->getUrl();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsUrl()
+    public function test_it_sets_url()
     {
         $expected = 'expected';
 
@@ -101,14 +101,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getUrl());
     }
 
-    public function testItGetsLineitem()
+    public function test_it_gets_lineitem()
     {
         $result = $this->resource->getLineItem();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsLineitem()
+    public function test_it_sets_lineitem()
     {
         $expected = Mockery::mock(LtiLineitem::class);
 
@@ -118,14 +118,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getLineItem());
     }
 
-    public function testItGetsIcon()
+    public function test_it_gets_icon()
     {
         $result = $this->resource->getIcon();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsIcon()
+    public function test_it_sets_icon()
     {
         $expected = Mockery::mock(Icon::class);
 
@@ -135,14 +135,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getIcon());
     }
 
-    public function testItGetsThumbnail()
+    public function test_it_gets_thumbnail()
     {
         $result = $this->resource->getThumbnail();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsThumbnail()
+    public function test_it_sets_thumbnail()
     {
         $expected = Mockery::mock(Icon::class);
 
@@ -152,14 +152,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getThumbnail());
     }
 
-    public function testItGetsCustomParams()
+    public function test_it_gets_custom_params()
     {
         $result = $this->resource->getCustomParams();
 
         $this->assertEquals([], $result);
     }
 
-    public function testItSetsCustomParams()
+    public function test_it_sets_custom_params()
     {
         $expected = ['a_key' => 'a_value'];
 
@@ -169,14 +169,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getCustomParams());
     }
 
-    public function testItGetsIframe()
+    public function test_it_gets_iframe()
     {
         $result = $this->resource->getIframe();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsIframe()
+    public function test_it_sets_iframe()
     {
         $expected = new Iframe;
 
@@ -186,14 +186,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getIframe());
     }
 
-    public function testItGetsWindow()
+    public function test_it_gets_window()
     {
         $result = $this->resource->getWindow();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsWindow()
+    public function test_it_sets_window()
     {
         $expected = new Window;
 
@@ -203,14 +203,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getWindow());
     }
 
-    public function testItGetsAvailabilityInterval()
+    public function test_it_gets_availability_interval()
     {
         $result = $this->resource->getAvailabilityInterval();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsAvailabilityInterval()
+    public function test_it_sets_availability_interval()
     {
         $expected = new DateTimeInterval;
 
@@ -220,14 +220,14 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getAvailabilityInterval());
     }
 
-    public function testItGetsSubmissionInterval()
+    public function test_it_gets_submission_interval()
     {
         $result = $this->resource->getSubmissionInterval();
 
         $this->assertNull($result);
     }
 
-    public function testItSetsSubmissionInterval()
+    public function test_it_sets_submission_interval()
     {
         $expected = new DateTimeInterval;
 
@@ -237,7 +237,7 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getSubmissionInterval());
     }
 
-    public function testItCreatesArrayWithoutOptionalProperties()
+    public function test_it_creates_array_without_optional_properties()
     {
         $expected = [
             'type' => LtiConstants::DL_RESOURCE_LINK_TYPE,
@@ -251,7 +251,7 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItCreatesArrayWithDefinedOptionalProperties()
+    public function test_it_creates_array_with_defined_optional_properties()
     {
         $icon = Icon::new('https://example.com/image.png', 100, 200);
         $Iframe = new Iframe;

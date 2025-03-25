@@ -9,21 +9,21 @@ use Packback\Lti1p3\JwksEndpoint;
 
 class JwksEndpointTest extends TestCase
 {
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $jwks = new JwksEndpoint([]);
 
         $this->assertInstanceOf(JwksEndpoint::class, $jwks);
     }
 
-    public function testCreatesANewInstance()
+    public function test_creates_a_new_instance()
     {
         $jwks = JwksEndpoint::new([]);
 
         $this->assertInstanceOf(JwksEndpoint::class, $jwks);
     }
 
-    public function testCreatesANewInstanceFromIssuer()
+    public function test_creates_a_new_instance_from_issuer()
     {
         $database = Mockery::mock(IDatabase::class);
         $registration = Mockery::mock(ILtiRegistration::class);
@@ -42,7 +42,7 @@ class JwksEndpointTest extends TestCase
         $this->assertInstanceOf(JwksEndpoint::class, $jwks);
     }
 
-    public function testCreatesANewInstanceFromRegistration()
+    public function test_creates_a_new_instance_from_registration()
     {
         $registration = Mockery::mock(ILtiRegistration::class);
         $registration->shouldReceive('getKid')
@@ -57,7 +57,7 @@ class JwksEndpointTest extends TestCase
         $this->assertInstanceOf(JwksEndpoint::class, $jwks);
     }
 
-    public function testItGetsJwksForTheProvidedKeys()
+    public function test_it_gets_jwks_for_the_provided_keys()
     {
         $jwks = new JwksEndpoint([
             'kid' => file_get_contents(__DIR__.'/data/private.key'),

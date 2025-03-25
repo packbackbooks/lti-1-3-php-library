@@ -43,7 +43,7 @@ class LtiMessageLaunchTest extends TestCase
     private $migrationDatabase;
     private $deployment;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->cache = Mockery::mock(ICache::class);
         $this->cookie = Mockery::mock(ICookie::class);
@@ -148,12 +148,12 @@ class LtiMessageLaunchTest extends TestCase
         ];
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(LtiMessageLaunch::class, $this->messageLaunch);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $messageLaunch = LtiMessageLaunch::new(
             $this->database,
@@ -165,7 +165,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertInstanceOf(LtiMessageLaunch::class, $messageLaunch);
     }
 
-    public function testItGetsALaunchFromTheCache()
+    public function test_it_gets_a_launch_from_the_cache()
     {
         $this->cache->shouldReceive('getLaunchData')
             ->once()->andReturn($this->payload);
@@ -181,7 +181,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertInstanceOf(LtiMessageLaunch::class, $actual);
     }
 
-    public function testItValidatesALaunch()
+    public function test_it_validates_a_launch()
     {
         $params = [
             'utf8' => '✓',
@@ -213,7 +213,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertInstanceOf(LtiMessageLaunch::class, $actual);
     }
 
-    public function testALaunchFailsIfCookiesAreDisabled()
+    public function test_a_launch_fails_if_cookies_are_disabled()
     {
         $payload = [
             'utf8' => '✓',
@@ -231,7 +231,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfIdTokenIsMissing()
+    public function test_a_launch_fails_if_id_token_is_missing()
     {
         $payload = [
             'utf8' => '✓',
@@ -248,7 +248,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfJwtIsInvalid()
+    public function test_a_launch_fails_if_jwt_is_invalid()
     {
         $payload = [
             'utf8' => '✓',
@@ -266,7 +266,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfNonceIsMissing()
+    public function test_a_launch_fails_if_nonce_is_missing()
     {
         $jwtPayload = $this->payload;
         unset($jwtPayload['nonce']);
@@ -286,7 +286,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfNonceIsInvalid()
+    public function test_a_launch_fails_if_nonce_is_invalid()
     {
         $jwtPayload = $this->payload;
         $jwtPayload['nonce'] = 'schmonze';
@@ -308,7 +308,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfMissingRegistration()
+    public function test_a_launch_fails_if_missing_registration()
     {
         $payload = [
             'utf8' => '✓',
@@ -331,7 +331,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfRegistrationClientIdIsWrong()
+    public function test_a_launch_fails_if_registration_client_id_is_wrong()
     {
         $payload = [
             'utf8' => '✓',
@@ -355,7 +355,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfKIDIsMissing()
+    public function test_a_launch_fails_if_kid_is_missing()
     {
         $jwtHeader = $this->issuer;
         unset($jwtHeader['kid']);
@@ -381,7 +381,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfNoPublicKeysAreReturned()
+    public function test_a_launch_fails_if_no_public_keys_are_returned()
     {
         $params = [
             'utf8' => '✓',
@@ -412,7 +412,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfNoPublicKeysMatch()
+    public function test_a_launch_fails_if_no_public_keys_match()
     {
         $params = [
             'utf8' => '✓',
@@ -447,7 +447,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfKeyAlgorithmDoesntMatch()
+    public function test_a_launch_fails_if_key_algorithm_doesnt_match()
     {
         $params = [
             'utf8' => '✓',
@@ -483,7 +483,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfDeploymentIdIsMissing()
+    public function test_a_launch_fails_if_deployment_id_is_missing()
     {
         $jwtPayload = $this->payload;
         unset($jwtPayload[LtiConstants::DEPLOYMENT_ID]);
@@ -515,7 +515,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfNoDeployment()
+    public function test_a_launch_fails_if_no_deployment()
     {
         $jwtPayload = $this->payload;
         $payload = [
@@ -548,7 +548,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $this->messageLaunch->validate();
     }
 
-    public function testALaunchFailsIfThePayloadIsInvalid()
+    public function test_a_launch_fails_if_the_payload_is_invalid()
     {
         $payload = $this->payload;
         unset($payload[LtiConstants::MESSAGE_TYPE]);
@@ -581,7 +581,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->messageLaunch->validate();
     }
 
-    public function testItInitializesALaunch()
+    public function test_it_initializes_a_launch()
     {
         $messageLaunch = new LtiMessageLaunch(
             $this->migrationDatabase,
@@ -633,7 +633,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertInstanceOf(LtiMessageLaunch::class, $actual);
     }
 
-    public function testItFailsToInitializeIfOauthConsumerKeySignIsMissing()
+    public function test_it_fails_to_initialize_if_oauth_consumer_key_sign_is_missing()
     {
         $messageLaunch = new LtiMessageLaunch(
             $this->migrationDatabase,
@@ -675,7 +675,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $messageLaunch->initialize($params);
     }
 
-    public function testItFailsToInitializeIfNoMatchingKeyIsFound()
+    public function test_it_fails_to_initialize_if_no_matching_key_is_found()
     {
         $messageLaunch = new LtiMessageLaunch(
             $this->migrationDatabase,
@@ -724,7 +724,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $messageLaunch->initialize($params);
     }
 
-    public function testItFailsToInitializeIfDeploymentIsNotReturned()
+    public function test_it_fails_to_initialize_if_deployment_is_not_returned()
     {
         $messageLaunch = new LtiMessageLaunch(
             $this->migrationDatabase,
@@ -775,7 +775,7 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $messageLaunch->initialize($params);
     }
 
-    public function testALaunchHasNrps()
+    public function test_a_launch_has_nrps()
     {
         $payload = $this->payload;
         $payload[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url'] = 'https://example.com';
@@ -786,7 +786,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testALaunchDoesNotHaveNrps()
+    public function test_a_launch_does_not_have_nrps()
     {
         $payload = $this->payload;
         unset($payload[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url']);
@@ -797,7 +797,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertFalse($actual);
     }
 
-    public function testGetNrpsForALaunch()
+    public function test_get_nrps_for_a_launch()
     {
         $payload = $this->payload;
         $payload[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url'] = 'https://example.com';
@@ -808,7 +808,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertInstanceOf(LtiNamesRolesProvisioningService::class, $actual);
     }
 
-    public function testALaunchHasGs()
+    public function test_a_launch_has_gs()
     {
         $payload = $this->payload;
         $payload[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url'] = 'https://example.com';
@@ -819,7 +819,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testALaunchDoesNotHaveGs()
+    public function test_a_launch_does_not_have_gs()
     {
         $payload = $this->payload;
         unset($payload[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url']);
@@ -830,7 +830,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertFalse($actual);
     }
 
-    public function testGetGsForALaunch()
+    public function test_get_gs_for_a_launch()
     {
         $payload = $this->payload;
         $payload[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url'] = 'https://example.com';
@@ -841,7 +841,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertInstanceOf(LtiCourseGroupsService::class, $actual);
     }
 
-    public function testALaunchHasAgs()
+    public function test_a_launch_has_ags()
     {
         $payload = $this->payload;
         $payload[LtiConstants::AGS_CLAIM_ENDPOINT] = ['https://example.com'];
@@ -852,7 +852,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testALaunchDoesNotHaveAgs()
+    public function test_a_launch_does_not_have_ags()
     {
         $payload = $this->payload;
         unset($payload[LtiConstants::AGS_CLAIM_ENDPOINT]);
@@ -863,7 +863,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertFalse($actual);
     }
 
-    public function testGetAgsForALaunch()
+    public function test_get_ags_for_a_launch()
     {
         $payload = $this->payload;
         $payload[LtiConstants::AGS_CLAIM_ENDPOINT] = ['https://example.com'];
@@ -874,7 +874,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertInstanceOf(LtiAssignmentsGradesService::class, $actual);
     }
 
-    public function testALaunchIsADeepLink()
+    public function test_a_launch_is_a_deep_link()
     {
         $payload = $this->payload;
         $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
@@ -885,7 +885,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testALaunchIsNotADeepLink()
+    public function test_a_launch_is_not_a_deep_link()
     {
         $payload = $this->payload;
         $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
@@ -896,7 +896,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertFalse($actual);
     }
 
-    public function testGetDeepLinkForALaunch()
+    public function test_get_deep_link_for_a_launch()
     {
         $payload = $this->payload;
         $payload[LtiConstants::DEPLOYMENT_ID] = 'deployment_id';
@@ -908,7 +908,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertInstanceOf(LtiDeepLink::class, $actual);
     }
 
-    public function testALaunchIsASubmissionReview()
+    public function test_a_launch_is_a_submission_review()
     {
         $payload = $this->payload;
         $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
@@ -919,7 +919,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testALaunchIsNotASubmissionReview()
+    public function test_a_launch_is_not_a_submission_review()
     {
         $payload = $this->payload;
         $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
@@ -930,7 +930,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertFalse($actual);
     }
 
-    public function testALaunchIsAResourceLink()
+    public function test_a_launch_is_a_resource_link()
     {
         $payload = $this->payload;
         $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_RESOURCELINK;
@@ -941,7 +941,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testALaunchIsNotAResource()
+    public function test_a_launch_is_not_a_resource()
     {
         $payload = $this->payload;
         $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
@@ -952,7 +952,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertFalse($actual);
     }
 
-    public function testGetLaunchData()
+    public function test_get_launch_data()
     {
         $payload = $this->payload;
         $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
@@ -963,7 +963,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->assertEquals($payload, $actual);
     }
 
-    public function testGetLaunchId()
+    public function test_get_launch_id()
     {
         $expected = 'launch_id';
 

@@ -8,24 +8,24 @@ class LtiLineitemTest extends TestCase
 {
     private LtiLineitem $lineItem;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->lineItem = new LtiLineitem;
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(LtiLineitem::class, $this->lineItem);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $grade = LtiLineitem::new();
 
         $this->assertInstanceOf(LtiLineitem::class, $grade);
     }
 
-    public function testItGetsId()
+    public function test_it_gets_id()
     {
         $expected = 'expected';
         $grade = new LtiLineitem(['id' => $expected]);
@@ -35,7 +35,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsId()
+    public function test_it_sets_id()
     {
         $expected = 'expected';
 
@@ -44,7 +44,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $this->lineItem->getId());
     }
 
-    public function testItGetsScoreMaximum()
+    public function test_it_gets_score_maximum()
     {
         $expected = 'expected';
         $grade = new LtiLineitem(['scoreMaximum' => $expected]);
@@ -54,7 +54,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsScoreMaximum()
+    public function test_it_sets_score_maximum()
     {
         $expected = 'expected';
 
@@ -63,7 +63,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $this->lineItem->getScoreMaximum());
     }
 
-    public function testItGetsLabel()
+    public function test_it_gets_label()
     {
         $expected = 'expected';
         $grade = new LtiLineitem(['label' => $expected]);
@@ -73,7 +73,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsLabel()
+    public function test_it_sets_label()
     {
         $expected = 'expected';
 
@@ -82,7 +82,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $this->lineItem->getLabel());
     }
 
-    public function testItGetsResourceId()
+    public function test_it_gets_resource_id()
     {
         $expected = 'expected';
         $grade = new LtiLineitem(['resourceId' => $expected]);
@@ -92,7 +92,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsResourceId()
+    public function test_it_sets_resource_id()
     {
         $expected = 'expected';
 
@@ -101,7 +101,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $this->lineItem->getResourceId());
     }
 
-    public function testItGetsResourceLinkId()
+    public function test_it_gets_resource_link_id()
     {
         $expected = 'expected';
         $grade = new LtiLineitem(['resourceLinkId' => $expected]);
@@ -111,7 +111,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsResourceLinkId()
+    public function test_it_sets_resource_link_id()
     {
         $expected = 'expected';
 
@@ -120,7 +120,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $this->lineItem->getResourceLinkId());
     }
 
-    public function testItGetsTag()
+    public function test_it_gets_tag()
     {
         $expected = 'expected';
         $grade = new LtiLineitem(['tag' => $expected]);
@@ -130,7 +130,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsTag()
+    public function test_it_sets_tag()
     {
         $expected = 'expected';
 
@@ -139,7 +139,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $this->lineItem->getTag());
     }
 
-    public function testItGetsStartDateTime()
+    public function test_it_gets_start_date_time()
     {
         $expected = 'expected';
         $grade = new LtiLineitem(['startDateTime' => $expected]);
@@ -149,7 +149,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsStartDateTime()
+    public function test_it_sets_start_date_time()
     {
         $expected = 'expected';
 
@@ -158,7 +158,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $this->lineItem->getStartDateTime());
     }
 
-    public function testItGetsEndDateTime()
+    public function test_it_gets_end_date_time()
     {
         $expected = 'expected';
         $grade = new LtiLineitem(['endDateTime' => $expected]);
@@ -168,7 +168,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsEndDateTime()
+    public function test_it_sets_end_date_time()
     {
         $expected = 'expected';
 
@@ -177,7 +177,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $this->lineItem->getEndDateTime());
     }
 
-    public function testItGetsGradesReleased(): void
+    public function test_it_gets_grades_released(): void
     {
         $expected = true;
         $grade = new LtiLineitem(['gradesReleased' => $expected]);
@@ -187,7 +187,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsGradesReleased(): void
+    public function test_it_sets_grades_released(): void
     {
         $expected = false;
 
@@ -196,7 +196,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals($expected, $this->lineItem->getGradesReleased());
     }
 
-    public function testGradesReleasedConstructedNullable(): void
+    public function test_grades_released_constructed_nullable(): void
     {
         $grade = new LtiLineitem;
 
@@ -205,14 +205,14 @@ class LtiLineitemTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testGradesReleasedSetNullable(): void
+    public function test_grades_released_set_nullable(): void
     {
         $this->lineItem->setGradesReleased(null);
 
         $this->assertNull($this->lineItem->getGradesReleased());
     }
 
-    public function testItCastsFullObjectToString()
+    public function test_it_casts_full_object_to_string()
     {
         $expected = [
             'id' => 'Id',
@@ -231,7 +231,7 @@ class LtiLineitemTest extends TestCase
         $this->assertEquals(json_encode($expected), (string) $lineItem);
     }
 
-    public function testItCastsEmptyObjectToString()
+    public function test_it_casts_empty_object_to_string()
     {
         $this->assertEquals('[]', (string) $this->lineItem);
     }

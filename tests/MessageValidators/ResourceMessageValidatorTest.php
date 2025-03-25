@@ -9,12 +9,12 @@ use Tests\TestCase;
 
 class ResourceMessageValidatorTest extends TestCase
 {
-    public function testItCanValidate()
+    public function test_it_can_validate()
     {
         $this->assertTrue(ResourceMessageValidator::canValidate(self::validJwtBody()));
     }
 
-    public function testItCannotValidate()
+    public function test_it_cannot_validate()
     {
         $jwtBody = self::validJwtBody();
         $jwtBody[LtiConstants::MESSAGE_TYPE] = 'some other type';
@@ -22,12 +22,12 @@ class ResourceMessageValidatorTest extends TestCase
         $this->assertFalse(ResourceMessageValidator::canValidate($jwtBody));
     }
 
-    public function testJwtBodyIsValid()
+    public function test_jwt_body_is_valid()
     {
         $this->assertNull(ResourceMessageValidator::validate(self::validJwtBody()));
     }
 
-    public function testJwtBodyIsInvalidMissingSub()
+    public function test_jwt_body_is_invalid_missing_sub()
     {
         $jwtBody = self::validJwtBody();
         $jwtBody['sub'] = '';
@@ -37,7 +37,7 @@ class ResourceMessageValidatorTest extends TestCase
         ResourceMessageValidator::validate($jwtBody);
     }
 
-    public function testJwtBodyIsInvalidMissingLtiVersion()
+    public function test_jwt_body_is_invalid_missing_lti_version()
     {
         $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::VERSION]);
@@ -47,7 +47,7 @@ class ResourceMessageValidatorTest extends TestCase
         ResourceMessageValidator::validate($jwtBody);
     }
 
-    public function testJwtBodyIsInvalidWrongLtiVersion()
+    public function test_jwt_body_is_invalid_wrong_lti_version()
     {
         $jwtBody = self::validJwtBody();
         $jwtBody[LtiConstants::VERSION] = '1.2.0';
@@ -57,7 +57,7 @@ class ResourceMessageValidatorTest extends TestCase
         ResourceMessageValidator::validate($jwtBody);
     }
 
-    public function testJwtBodyIsInvalidMissingRoles()
+    public function test_jwt_body_is_invalid_missing_roles()
     {
         $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::ROLES]);
@@ -67,10 +67,20 @@ class ResourceMessageValidatorTest extends TestCase
         ResourceMessageValidator::validate($jwtBody);
     }
 
-    public function testJwtBodyIsInvalidMissingResourceLinkId()
+    public function test_jwt_body_is_invalid_missing_resource_link_id()
     {
         $jwtBody = self::validJwtBody();
         unset($jwtBody[LtiConstants::RESOURCE_LINK]['id']);
+
+        $this->expectException(LtiException::class);
+
+        ResourceMessageValidator::validate($jwtBody);
+    }
+
+    public function test_jwt_body_is_invalid_missing_target_link_uri()
+    {
+        $jwtBody = self::validJwtBody();
+        unset($jwtBody[LtiConstants::TARGET_LINK_URI]);
 
         $this->expectException(LtiException::class);
 
@@ -87,6 +97,7 @@ class ResourceMessageValidatorTest extends TestCase
             LtiConstants::RESOURCE_LINK => [
                 'id' => 'unique-id',
             ],
+            LtiConstants::TARGET_LINK_URI => 'https://example.com/launch',
         ];
     }
 }

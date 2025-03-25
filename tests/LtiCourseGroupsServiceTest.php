@@ -11,20 +11,20 @@ class LtiCourseGroupsServiceTest extends TestCase
 {
     private $connector;
     private $registration;
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->connector = Mockery::mock(ILtiServiceConnector::class);
         $this->registration = Mockery::mock(ILtiRegistration::class);
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $service = new LtiCourseGroupsService($this->connector, $this->registration, []);
 
         $this->assertInstanceOf(LtiCourseGroupsService::class, $service);
     }
 
-    public function testItGetsScope()
+    public function test_it_gets_scope()
     {
         $serviceData = [
             'scope' => ['asdf'],
@@ -37,7 +37,7 @@ class LtiCourseGroupsServiceTest extends TestCase
         $this->assertEquals($serviceData['scope'], $result);
     }
 
-    public function testItGetsGroups()
+    public function test_it_gets_groups()
     {
         $serviceData = [
             'context_groups_url' => 'https://example.com',
@@ -58,7 +58,7 @@ class LtiCourseGroupsServiceTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItGetsSets()
+    public function test_it_gets_sets()
     {
         $serviceData = [
             'context_group_sets_url' => 'https://example.com',
@@ -79,7 +79,7 @@ class LtiCourseGroupsServiceTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItGetGroupsBySet()
+    public function test_it_get_groups_by_set()
     {
         $serviceData = [
             'context_groups_url' => 'https://example.com',
@@ -159,7 +159,7 @@ class LtiCourseGroupsServiceTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItGetsNoSetsForNoUrl()
+    public function test_it_gets_no_sets_for_no_url()
     {
         $service = new LtiCourseGroupsService($this->connector, $this->registration, []);
 

@@ -13,32 +13,32 @@ class WindowTest extends TestCase
     public const INITIAL_WINDOW_FEATURES = 'example-feature=value';
     private Window $window;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->window = new Window(self::INITIAL_TARGET_NAME,
             self::INITIAL_WIDTH, self::INITIAL_HEIGHT, self::INITIAL_WINDOW_FEATURES);
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(Window::class, $this->window);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $DeepLinkResources = Window::new();
 
         $this->assertInstanceOf(Window::class, $DeepLinkResources);
     }
 
-    public function testItGetsTargetName()
+    public function test_it_gets_target_name()
     {
         $result = $this->window->getTargetName();
 
         $this->assertEquals(self::INITIAL_TARGET_NAME, $result);
     }
 
-    public function testItSetsTargetName()
+    public function test_it_sets_target_name()
     {
         $expected = 'expected';
 
@@ -48,14 +48,14 @@ class WindowTest extends TestCase
         $this->assertEquals($expected, $this->window->getTargetName());
     }
 
-    public function testItGetsWidth()
+    public function test_it_gets_width()
     {
         $result = $this->window->getWidth();
 
         $this->assertEquals(self::INITIAL_WIDTH, $result);
     }
 
-    public function testItSetsWidth()
+    public function test_it_sets_width()
     {
         $expected = 300;
 
@@ -65,14 +65,14 @@ class WindowTest extends TestCase
         $this->assertEquals($expected, $this->window->getWidth());
     }
 
-    public function testItGetsHeight()
+    public function test_it_gets_height()
     {
         $result = $this->window->getHeight();
 
         $this->assertEquals(self::INITIAL_HEIGHT, $result);
     }
 
-    public function testItSetsHeight()
+    public function test_it_sets_height()
     {
         $expected = 400;
 
@@ -82,14 +82,14 @@ class WindowTest extends TestCase
         $this->assertEquals($expected, $this->window->getHeight());
     }
 
-    public function testItGetsWindowFeatures()
+    public function test_it_gets_window_features()
     {
         $result = $this->window->getWindowFeatures();
 
         $this->assertEquals(self::INITIAL_WINDOW_FEATURES, $result);
     }
 
-    public function testItSetsWindowFeatures()
+    public function test_it_sets_window_features()
     {
         $expected = 'first-feature=value,second-feature';
 
@@ -99,7 +99,7 @@ class WindowTest extends TestCase
         $this->assertEquals($expected, $this->window->getWindowFeatures());
     }
 
-    public function testItCreatesArray()
+    public function test_it_creates_array()
     {
         $expected = [
             'targetName' => 'target-name',
