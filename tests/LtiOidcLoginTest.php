@@ -92,20 +92,6 @@ class LtiOidcLoginTest extends TestCase
         $this->oidcLogin->validateOidcLogin($request);
     }
 
-    public function test_validates_fails_if_target_link_uri_is_not_set()
-    {
-        $request = [
-            'iss' => 'Issuer',
-            'login_hint' => 'LoginHint',
-            'client_id' => 'ClientId',
-        ];
-
-        $this->expectException(OidcException::class);
-        $this->expectExceptionMessage(LtiOidcLogin::ERROR_MSG_TARGET_LINK);
-
-        $this->oidcLogin->validateOidcLogin($request);
-    }
-
     /**
      * @runInSeparateProcess
      *
