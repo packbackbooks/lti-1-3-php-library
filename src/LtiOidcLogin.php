@@ -54,10 +54,6 @@ class LtiOidcLogin
             throw new OidcException(static::ERROR_MSG_LOGIN_HINT);
         }
 
-        if (!isset($request['target_link_uri'])) {
-            throw new OidcException(static::ERROR_MSG_TARGET_LINK);
-        }
-
         // Fetch registration
         $clientId = $request['client_id'] ?? null;
         $registration = $this->db->findRegistrationByIssuer($request['iss'], $clientId);
