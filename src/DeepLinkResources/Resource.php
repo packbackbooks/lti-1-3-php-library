@@ -56,13 +56,6 @@ class Resource
             ];
         }
 
-        // Kept for backwards compatibility
-        if (!isset($this->iframe) && !isset($this->window)) {
-            $resource['presentation'] = [
-                'documentTarget' => $this->target,
-            ];
-        }
-
         return $resource;
     }
 
