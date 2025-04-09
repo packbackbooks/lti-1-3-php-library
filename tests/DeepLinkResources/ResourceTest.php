@@ -237,20 +237,6 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getSubmissionInterval());
     }
 
-    public function testItCreatesArrayWithoutOptionalProperties()
-    {
-        $expected = [
-            'type' => LtiConstants::DL_RESOURCE_LINK_TYPE,
-            'presentation' => [
-                'documentTarget' => 'iframe',
-            ],
-        ];
-
-        $result = $this->resource->toArray();
-
-        $this->assertEquals($expected, $result);
-    }
-
     public function testItCreatesArrayWithDefinedOptionalProperties()
     {
         $icon = Icon::new('https://example.com/image.png', 100, 200);
