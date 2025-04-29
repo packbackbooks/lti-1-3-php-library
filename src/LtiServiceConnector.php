@@ -45,7 +45,7 @@ class LtiServiceConnector implements ILtiServiceConnector
         $jwtClaim = [
             'iss' => $clientId,
             'sub' => $clientId,
-            'aud' => $registration->getAuthServer(),
+            'aud' => [$registration->getAuthTokenUrl()],
             'iat' => time() - 5,
             'exp' => time() + 60,
             'jti' => 'lti-service-token'.hash('sha256', random_bytes(64)),
