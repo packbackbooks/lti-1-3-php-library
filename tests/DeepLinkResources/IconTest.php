@@ -9,32 +9,32 @@ class IconTest extends TestCase
 {
     private $imageUrl;
     private $icon;
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->imageUrl = 'https://example.com/image.png';
         $this->icon = new Icon($this->imageUrl, 1, 2);
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(Icon::class, $this->icon);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $DeepLinkResources = Icon::new($this->imageUrl, 100, 200);
 
         $this->assertInstanceOf(Icon::class, $DeepLinkResources);
     }
 
-    public function testItGetsUrl()
+    public function test_it_gets_url()
     {
         $result = $this->icon->getUrl();
 
         $this->assertEquals($this->imageUrl, $result);
     }
 
-    public function testItSetsUrl()
+    public function test_it_sets_url()
     {
         $expected = 'expected';
 
@@ -43,14 +43,14 @@ class IconTest extends TestCase
         $this->assertEquals($expected, $this->icon->getUrl());
     }
 
-    public function testItGetsWidth()
+    public function test_it_gets_width()
     {
         $result = $this->icon->getWidth();
 
         $this->assertEquals(1, $result);
     }
 
-    public function testItSetsWidth()
+    public function test_it_sets_width()
     {
         $expected = 300;
 
@@ -59,14 +59,14 @@ class IconTest extends TestCase
         $this->assertEquals($expected, $this->icon->getWidth());
     }
 
-    public function testItGetsHeight()
+    public function test_it_gets_height()
     {
         $result = $this->icon->getHeight();
 
         $this->assertEquals(2, $result);
     }
 
-    public function testItSetsHeight()
+    public function test_it_sets_height()
     {
         $expected = 400;
 
@@ -75,7 +75,7 @@ class IconTest extends TestCase
         $this->assertEquals($expected, $this->icon->getHeight());
     }
 
-    public function testItCreatesArray()
+    public function test_it_creates_array()
     {
         $expected = [
             'url' => $this->imageUrl,

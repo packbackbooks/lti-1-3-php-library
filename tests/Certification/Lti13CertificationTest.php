@@ -145,7 +145,7 @@ class Lti13CertificationTest extends TestCase
     private $cookie;
     private $serviceConnector;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->issuer = [
             'id' => 'issuer_id',
@@ -283,7 +283,7 @@ class Lti13CertificationTest extends TestCase
     }
 
     // tests
-    public function testLtiVersionPassedIsNot13()
+    public function test_lti_version_passed_is_not13()
     {
         $payload = $this->payload;
         $payload[LtiConstants::VERSION] = 'not-1.3';
@@ -293,7 +293,7 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload);
     }
 
-    public function testNoLtiVersionPassedIsInJwt()
+    public function test_no_lti_version_passed_is_in_jwt()
     {
         $payload = $this->payload;
         unset($payload[LtiConstants::VERSION]);
@@ -303,7 +303,7 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload);
     }
 
-    public function testJwtPassedIsNotLti13Jwt()
+    public function test_jwt_passed_is_not_lti13_jwt()
     {
         $jwt = $this->buildJWT([], $this->issuer);
         $jwt_r = explode('.', $jwt);
@@ -322,7 +322,7 @@ class Lti13CertificationTest extends TestCase
             ->initialize($params);
     }
 
-    public function testExpAndIatFieldsInvalid()
+    public function test_exp_and_iat_fields_invalid()
     {
         $payload = $this->payload;
         $payload['exp'] = Carbon::now()->subYear()->timestamp;
@@ -333,7 +333,7 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload);
     }
 
-    public function testMessageTypeClaimMissing()
+    public function test_message_type_claim_missing()
     {
         $payload = $this->payload;
         unset($payload[LtiConstants::MESSAGE_TYPE]);
@@ -343,7 +343,7 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload);
     }
 
-    public function testRoleClaimMissing()
+    public function test_role_claim_missing()
     {
         $payload = $this->payload;
         unset($payload[LtiConstants::ROLES]);
@@ -353,7 +353,7 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload);
     }
 
-    public function testDeploymentIdClaimMissing()
+    public function test_deployment_id_claim_missing()
     {
         $payload = $this->payload;
         unset($payload[LtiConstants::DEPLOYMENT_ID]);
@@ -363,7 +363,7 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload);
     }
 
-    public function testLti1p1MigrationSuccessfullyMakesDeployment()
+    public function test_lti1p1_migration_successfully_makes_deployment()
     {
         $payload = $this->payload;
         $db = $this->migrateDb;
@@ -394,7 +394,7 @@ class Lti13CertificationTest extends TestCase
         $this->assertInstanceOf(LtiMessageLaunch::class, $launch);
     }
 
-    public function testDoesNotMigrate1p1IfMissingOauthKeySign()
+    public function test_does_not_migrate1p1_if_missing_oauth_key_sign()
     {
         $payload = $this->payload;
         $db = $this->migrateDb;
@@ -417,7 +417,7 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload, $db);
     }
 
-    public function testDoesNotMigrate1p1IfOauthKeySignDoesntMatch()
+    public function test_does_not_migrate1p1_if_oauth_key_sign_doesnt_match()
     {
         $payload = $this->payload;
         $db = $this->migrateDb;
@@ -441,7 +441,7 @@ class Lti13CertificationTest extends TestCase
         $ltiMessageLaunch = $this->launch($payload, $db);
     }
 
-    public function testLaunchWithMissingResourceLinkId()
+    public function test_launch_with_missing_resource_link_id()
     {
         $payload = $this->payload;
         unset($payload['sub']);
@@ -451,7 +451,7 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload);
     }
 
-    public function testInvalidCertificationCases()
+    public function test_invalid_certification_cases()
     {
         $testCasesDir = static::CERT_DATA_DIR.'invalid';
 
@@ -530,7 +530,7 @@ class Lti13CertificationTest extends TestCase
         $this->assertEquals($casesCount, $testedCases);
     }
 
-    public function testValidCertificationCases()
+    public function test_valid_certification_cases()
     {
         $testCasesDir = static::CERT_DATA_DIR.'valid';
 

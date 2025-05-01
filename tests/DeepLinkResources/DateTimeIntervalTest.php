@@ -13,33 +13,33 @@ class DateTimeIntervalTest extends TestCase
     private DateTime $initialEnd;
     private DateTimeInterval $dateTimeInterval;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->initialStart = date_create();
         $this->initialEnd = date_create();
         $this->dateTimeInterval = new DateTimeInterval($this->initialStart, $this->initialEnd);
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(DateTimeInterval::class, $this->dateTimeInterval);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $DeepLinkResources = DateTimeInterval::new();
 
         $this->assertInstanceOf(DateTimeInterval::class, $DeepLinkResources);
     }
 
-    public function testItGetsStart()
+    public function test_it_gets_start()
     {
         $result = $this->dateTimeInterval->getStart();
 
         $this->assertEquals($this->initialStart, $result);
     }
 
-    public function testItSetsStart()
+    public function test_it_sets_start()
     {
         $expected = date_create('+1 day');
 
@@ -49,14 +49,14 @@ class DateTimeIntervalTest extends TestCase
         $this->assertEquals($expected, $this->dateTimeInterval->getStart());
     }
 
-    public function testItGetsEnd()
+    public function test_it_gets_end()
     {
         $result = $this->dateTimeInterval->getEnd();
 
         $this->assertEquals($this->initialEnd, $result);
     }
 
-    public function testItSetsEnd()
+    public function test_it_sets_end()
     {
         $expected = date_create('+1 day');
 
@@ -66,7 +66,7 @@ class DateTimeIntervalTest extends TestCase
         $this->assertEquals($expected, $this->dateTimeInterval->getEnd());
     }
 
-    public function testItThrowsExceptionWhenCreatingArrayWithBothPropertiesNull()
+    public function test_it_throws_exception_when_creating_array_with_both_properties_null()
     {
         $this->dateTimeInterval->setStart(null);
         $this->dateTimeInterval->setEnd(null);
@@ -77,7 +77,7 @@ class DateTimeIntervalTest extends TestCase
         $this->dateTimeInterval->toArray();
     }
 
-    public function testItThrowsExceptionWhenCreatingArrayWithInvalidTimeInterval()
+    public function test_it_throws_exception_when_creating_array_with_invalid_time_interval()
     {
         $this->dateTimeInterval->setStart(date_create());
         $this->dateTimeInterval->setEnd(date_create('-1 day'));
@@ -88,7 +88,7 @@ class DateTimeIntervalTest extends TestCase
         $this->dateTimeInterval->toArray();
     }
 
-    public function testItCreatesArrayWithDefinedOptionalProperties()
+    public function test_it_creates_array_with_defined_optional_properties()
     {
         $expectedStart = date_create('+1 day');
         $expectedEnd = date_create('+2 days');

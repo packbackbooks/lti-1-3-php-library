@@ -7,24 +7,24 @@ use Packback\Lti1p3\LtiGrade;
 class LtiGradeTest extends TestCase
 {
     private $grade;
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->grade = new LtiGrade;
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $this->assertInstanceOf(LtiGrade::class, $this->grade);
     }
 
-    public function testItCreatesANewInstance()
+    public function test_it_creates_a_new_instance()
     {
         $grade = LtiGrade::new();
 
         $this->assertInstanceOf(LtiGrade::class, $grade);
     }
 
-    public function testItGetsScoreGiven()
+    public function test_it_gets_score_given()
     {
         $expected = 'expected';
         $grade = new LtiGrade(['scoreGiven' => $expected]);
@@ -34,7 +34,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsScoreGiven()
+    public function test_it_sets_score_given()
     {
         $expected = 'expected';
 
@@ -43,7 +43,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getScoreGiven());
     }
 
-    public function testItGetsScoreMaximum()
+    public function test_it_gets_score_maximum()
     {
         $expected = 'expected';
         $grade = new LtiGrade(['scoreMaximum' => $expected]);
@@ -53,7 +53,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsScoreMaximum()
+    public function test_it_sets_score_maximum()
     {
         $expected = 'expected';
 
@@ -62,7 +62,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getScoreMaximum());
     }
 
-    public function testItGetsComment()
+    public function test_it_gets_comment()
     {
         $expected = 'expected';
         $grade = new LtiGrade(['comment' => $expected]);
@@ -72,7 +72,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsComment()
+    public function test_it_sets_comment()
     {
         $expected = 'expected';
 
@@ -81,7 +81,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getComment());
     }
 
-    public function testItGetsActivityProgress()
+    public function test_it_gets_activity_progress()
     {
         $expected = 'expected';
         $grade = new LtiGrade(['activityProgress' => $expected]);
@@ -91,7 +91,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsActivityProgress()
+    public function test_it_sets_activity_progress()
     {
         $expected = 'expected';
 
@@ -100,7 +100,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getActivityProgress());
     }
 
-    public function testItGetsGradingProgress()
+    public function test_it_gets_grading_progress()
     {
         $expected = 'expected';
         $grade = new LtiGrade(['gradingProgress' => $expected]);
@@ -110,7 +110,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsGradingProgress()
+    public function test_it_sets_grading_progress()
     {
         $expected = 'expected';
 
@@ -119,7 +119,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getGradingProgress());
     }
 
-    public function testItGetsTimestamp()
+    public function test_it_gets_timestamp()
     {
         $expected = 'expected';
         $grade = new LtiGrade(['timestamp' => $expected]);
@@ -129,7 +129,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsTimestamp()
+    public function test_it_sets_timestamp()
     {
         $expected = 'expected';
 
@@ -138,7 +138,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getTimestamp());
     }
 
-    public function testItGetsUserId()
+    public function test_it_gets_user_id()
     {
         $expected = 'expected';
         $grade = new LtiGrade(['userId' => $expected]);
@@ -148,7 +148,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsUserId()
+    public function test_it_sets_user_id()
     {
         $expected = 'expected';
 
@@ -157,7 +157,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getUserId());
     }
 
-    public function testItGetsSubmissionReview()
+    public function test_it_gets_submission_review()
     {
         $expected = 'expected';
         $grade = new LtiGrade(['submissionReview' => $expected]);
@@ -167,7 +167,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsSubmissionReview()
+    public function test_it_sets_submission_review()
     {
         $expected = 'expected';
 
@@ -176,7 +176,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getSubmissionReview());
     }
 
-    public function testItGetsCanvasExtension()
+    public function test_it_gets_canvas_extension()
     {
         $expected = 'expected';
         $grade = new LtiGrade(['https://canvas.instructure.com/lti/submission' => $expected]);
@@ -186,7 +186,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItSetsCanvasExtension()
+    public function test_it_sets_canvas_extension()
     {
         $expected = 'expected';
 
@@ -195,7 +195,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getCanvasExtension());
     }
 
-    public function testItCastsFullObjectToString()
+    public function test_it_casts_full_object_to_string()
     {
         $expected = [
             'scoreGiven' => 5,
@@ -214,7 +214,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals(json_encode($expected), (string) $grade);
     }
 
-    public function testItCastsFullObjectToStringWith0Grade()
+    public function test_it_casts_full_object_to_string_with0_grade()
     {
         $expected = [
             'scoreGiven' => 0,
@@ -233,7 +233,7 @@ class LtiGradeTest extends TestCase
         $this->assertEquals(json_encode($expected), (string) $grade);
     }
 
-    public function testItCastsEmptyObjectToString()
+    public function test_it_casts_empty_object_to_string()
     {
         $this->assertEquals('[]', (string) $this->grade);
     }

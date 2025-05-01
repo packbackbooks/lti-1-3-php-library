@@ -11,20 +11,20 @@ class LtiNamesRolesProvisioningServiceTest extends TestCase
 {
     private $connector;
     private $registration;
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->connector = Mockery::mock(ILtiServiceConnector::class);
         $this->registration = Mockery::mock(ILtiRegistration::class);
     }
 
-    public function testItInstantiates()
+    public function test_it_instantiates()
     {
         $nrps = new LtiNamesRolesProvisioningService($this->connector, $this->registration, []);
 
         $this->assertInstanceOf(LtiNamesRolesProvisioningService::class, $nrps);
     }
 
-    public function testItGetsMembers()
+    public function test_it_gets_members()
     {
         $expected = ['members'];
 
@@ -39,7 +39,7 @@ class LtiNamesRolesProvisioningServiceTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testItGetsMembersForResourceLink()
+    public function test_it_gets_members_for_resource_link()
     {
         $expected = ['members'];
 
