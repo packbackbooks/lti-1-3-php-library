@@ -33,7 +33,7 @@ class LtiAssignmentsGradesService extends LtiAbstractService
         $this->validateScopes([LtiConstants::AGS_SCOPE_SCORE]);
 
         $lineitem = $this->ensureLineItemExists($lineitem);
-        $scoreUrl = $this->appendLineItemPath($lineitem, '/scores');
+        $scoreUrl = static::appendLineItemPath($lineitem, '/scores');
 
         $request = new ServiceRequest(
             ServiceRequest::METHOD_POST,
@@ -107,10 +107,16 @@ class LtiAssignmentsGradesService extends LtiAbstractService
         return $this->findLineItem($newLineItem) ?? $this->createLineitem($newLineItem);
     }
 
-    public function getGrades(?LtiLineitem $lineitem = null)
+    public function getGrades(?LtiLineitem $lineitem = null, ?string $userId = null)
     {
         $lineitem = $this->ensureLineItemExists($lineitem);
-        $resultsUrl = $this->appendLineItemPath($lineitem, '/results');
+        $resultsUrl = static::appendLineItemPath($lineitem, '/results');
+
+        if (isset($userId)) {
+            $resultsUrl = static::appendQueryParams($resultsUrl, [
+                'user_id' => $userId,
+            ]);
+        }
 
         $request = new ServiceRequest(
             ServiceRequest::METHOD_GET,
@@ -190,17 +196,31 @@ class LtiAssignmentsGradesService extends LtiAbstractService
             $newLineItem->getResourceLinkId() == ($lineitem['resourceLinkId'] ?? null);
     }
 
-    private function appendLineItemPath(LtiLineitem $lineItem, string $suffix): string
+    public static function appendLineItemPath(LtiLineitem $lineItem, string $suffix): string
     {
         $url = $lineItem->getId();
-        $pos = strpos($url, '?');
 
-        if ($pos === false) {
-            $url = $url.$suffix;
+        $path = implode('', [
+            parse_url($url, PHP_URL_HOST),
+            parse_url($url, PHP_URL_PORT) ? ':'.parse_url($url, PHP_URL_PORT) : '',
+            parse_url($url, PHP_URL_PATH),
+        ]);
+
+        return str_replace($path, $path.$suffix, $url);
+    }
+
+    public static function appendQueryParams(string $url, array $params): string
+    {
+        $existingQueryString = parse_url($url, PHP_URL_QUERY);
+        if ($existingQueryString) {
+            parse_str($existingQueryString, $existingQueryParams);
+            $queryString = http_build_query(array_merge($existingQueryParams, $params));
+
+            return str_replace($existingQueryString, $queryString, $url);
         } else {
-            $url = substr_replace($url, $suffix, $pos, 0);
-        }
+            $queryString = http_build_query($params);
 
-        return $url;
+            return $url.'?'.$queryString;
+        }
     }
 }
