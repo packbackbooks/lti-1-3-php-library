@@ -480,4 +480,38 @@ class LtiAssignmentsGradesServiceTest extends TestCase
 
         $this->assertEquals($expected, $result);
     }
+
+    public function test_it_appends_path()
+    {
+        // A simple example
+        $lineItem = new LtiLineitem(['id' => 'https://example.com']);
+
+        $result = LtiAssignmentsGradesService::appendLineItemPath($lineItem, '/bat');
+
+        $this->assertEquals('https://example.com/bat', $result);
+
+        // A complicated example
+        $lineItem = new LtiLineitem(['id' => 'https://example.com:443/foo?bar=baz']);
+
+        $result = LtiAssignmentsGradesService::appendLineItemPath($lineItem, '/bat');
+
+        $this->assertEquals('https://example.com:443/foo/bat?bar=baz', $result);
+    }
+
+    public function test_it_query_params()
+    {
+        // A simple example
+        $url = 'https://example.com';
+
+        $result = LtiAssignmentsGradesService::appendQueryParams($url, ['user_id' => 'foo']);
+
+        $this->assertEquals('https://example.com?user_id=foo', $result);
+
+        // A complicated example
+        $url = 'https://example.com:443/foo?bar=baz';
+
+        $result = LtiAssignmentsGradesService::appendQueryParams($url, ['user_id' => 'foo']);
+
+        $this->assertEquals('https://example.com:443/foo?bar=baz&user_id=foo', $result);
+    }
 }
