@@ -17,3 +17,5 @@ vendor
 # ignore the coverage folders
 **/.phpunit.cache
 **/coverage
+
+**/.claude/settings.local.json
