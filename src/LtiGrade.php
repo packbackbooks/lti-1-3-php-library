@@ -174,9 +174,7 @@ class LtiGrade
     }
 
     /**
-     * Get the submission data according to the standard IMS AGS v2.0 specification.
-     *
-     * @return array|null The submission data or null if not set
+     * @return array{startedAt?: ?string, submittedAt?: ?string}|null
      */
     public function getSubmission()
     {
@@ -184,16 +182,7 @@ class LtiGrade
     }
 
     /**
-     * Set the submission data according to the standard IMS AGS v2.0 specification.
-     * This can include startedAt and submittedAt timestamps.
-     *
-     * Example usage:
-     * $grade->setSubmission([
-     *     'startedAt' => '2023-01-15T12:30:45Z',
-     *     'submittedAt' => '2023-01-15T13:15:22Z'
-     * ]);
-     *
-     * @param  array  $value  The submission data containing startedAt and/or submittedAt timestamps
+     * @param  array{startedAt?: ?string, submittedAt?: ?string}  $value
      *
      * @see https://www.imsglobal.org/spec/lti-ags/v2p0
      */
