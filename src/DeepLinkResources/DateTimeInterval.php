@@ -26,10 +26,6 @@ class DateTimeInterval
 
     public function getArray(): array
     {
-        // if (!isset($this->start) && !isset($this->end)) {
-        //     throw new LtiException(self::ERROR_NO_START_OR_END);
-        // }
-
         $this->validateStartAndEnd();
 
         return [
