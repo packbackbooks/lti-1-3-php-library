@@ -229,7 +229,7 @@ class LtiMessageLaunch
      */
     public function hasPns(): bool
     {
-        return isset($this->jwt['body'][LtiConstants::PNS_CLAIM_ENDPOINT]);
+        return isset($this->jwt['body'][LtiConstants::PLATFORM_NOTIFICATION_SERVICE]);
     }
 
     /**
