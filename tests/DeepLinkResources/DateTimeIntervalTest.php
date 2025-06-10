@@ -32,6 +32,35 @@ class DateTimeIntervalTest extends TestCase
         $this->assertInstanceOf(DateTimeInterval::class, $DeepLinkResources);
     }
 
+    public function test_it_instantiates_with_null_start_end_values()
+    {
+        $dateTimeInterval = new DateTimeInterval(null, null);
+
+        $this->assertInstanceOf(DateTimeInterval::class, $dateTimeInterval);
+        $this->assertNull($dateTimeInterval->getStart());
+        $this->assertNull($dateTimeInterval->getEnd());
+    }
+
+    public function test_it_instantiates_with_null_start()
+    {
+        $end = date_create('+1 day');
+        $dateTimeInterval = new DateTimeInterval(null, $end);
+
+        $this->assertInstanceOf(DateTimeInterval::class, $dateTimeInterval);
+        $this->assertNull($dateTimeInterval->getStart());
+        $this->assertEquals($end, $dateTimeInterval->getEnd());
+    }
+
+    public function test_it_instantiates_with_null_end()
+    {
+        $start = date_create();
+        $dateTimeInterval = new DateTimeInterval($start, null);
+
+        $this->assertInstanceOf(DateTimeInterval::class, $dateTimeInterval);
+        $this->assertEquals($start, $dateTimeInterval->getStart());
+        $this->assertNull($dateTimeInterval->getEnd());
+    }
+
     public function test_it_gets_start()
     {
         $result = $this->dateTimeInterval->getStart();
@@ -66,15 +95,62 @@ class DateTimeIntervalTest extends TestCase
         $this->assertEquals($expected, $this->dateTimeInterval->getEnd());
     }
 
-    public function test_it_throws_exception_when_creating_array_with_both_properties_null()
+    public function test_it_sets_start_to_null()
     {
+        $result = $this->dateTimeInterval->setStart(null);
+
+        $this->assertSame($this->dateTimeInterval, $result);
+        $this->assertNull($this->dateTimeInterval->getStart());
+    }
+
+    public function test_it_sets_end_to_null()
+    {
+        $result = $this->dateTimeInterval->setEnd(null);
+
+        $this->assertSame($this->dateTimeInterval, $result);
+        $this->assertNull($this->dateTimeInterval->getEnd());
+    }
+
+    public function test_it_creates_array_with_null_start()
+    {
+        $expectedEnd = date_create('+1 day');
+        $expected = [
+            'endDateTime' => $expectedEnd->format(DateTime::ATOM),
+        ];
+
+        $this->dateTimeInterval->setStart(null);
+        $this->dateTimeInterval->setEnd($expectedEnd);
+
+        $result = $this->dateTimeInterval->toArray();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_creates_array_with_null_end()
+    {
+        $expectedStart = date_create('+1 day');
+        $expected = [
+            'startDateTime' => $expectedStart->format(DateTime::ATOM),
+        ];
+
+        $this->dateTimeInterval->setStart($expectedStart);
+        $this->dateTimeInterval->setEnd(null);
+
+        $result = $this->dateTimeInterval->toArray();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_creates_array_with_both_null()
+    {
+        $expected = [];
+
         $this->dateTimeInterval->setStart(null);
         $this->dateTimeInterval->setEnd(null);
 
-        $this->expectException(LtiException::class);
-        $this->expectExceptionMessage(DateTimeInterval::ERROR_NO_START_OR_END);
+        $result = $this->dateTimeInterval->toArray();
 
-        $this->dateTimeInterval->toArray();
+        $this->assertEquals($expected, $result);
     }
 
     public function test_it_throws_exception_when_creating_array_with_invalid_time_interval()
