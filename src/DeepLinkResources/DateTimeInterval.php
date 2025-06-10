@@ -67,7 +67,7 @@ class DateTimeInterval
      */
     private function validateStartAndEnd(): void
     {
-        if ($this->start > $this->end) {
+        if (isset($this->start) && isset($this->end) && $this->start > $this->end) {
             throw new LtiException(self::ERROR_START_GT_END);
         }
     }
