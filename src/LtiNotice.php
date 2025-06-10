@@ -203,12 +203,12 @@ class LtiNotice
 
     protected function validateJwtFormat(): self
     {
-        if (!isset($this->request['id_token'])) {
+        if (!isset($this->request['jwt'])) {
             throw new LtiException(static::ERR_MISSING_ID_TOKEN);
         }
 
         // Get parts of JWT.
-        $jwt_parts = explode('.', $this->request['id_token']);
+        $jwt_parts = explode('.', $this->request['jwt']);
 
         if (count($jwt_parts) !== 3) {
             // Invalid number of parts in JWT.
@@ -227,9 +227,6 @@ class LtiNotice
     {
         if (!isset($this->jwt['body']['nonce'])) {
             throw new LtiException(static::ERR_MISSING_NONCE);
-        }
-        if (!$this->cache->checkNonceIsValid($this->jwt['body']['nonce'], $this->request['state'])) {
-            throw new LtiException(static::ERR_INVALID_NONCE);
         }
 
         return $this;
@@ -267,7 +264,7 @@ class LtiNotice
         // Validate JWT signature
         try {
             $headers = new \stdClass;
-            JWT::decode($this->request['id_token'], $public_key, $headers);
+            JWT::decode($this->request['jwt'], $public_key, $headers);
         } catch (ExpiredException $e) {
             // Error validating signature.
             throw new LtiException(static::ERR_INVALID_SIGNATURE, previous: $e);
@@ -286,27 +283,13 @@ class LtiNotice
         $client_id = $this->getAud();
         $this->deployment = $this->db->findDeployment($this->jwt['body']['iss'], $this->jwt['body'][LtiConstants::DEPLOYMENT_ID], $client_id);
 
-        if (!$this->canMigrate()) {
-            return $this->ensureDeploymentExists();
-        }
-
         return $this;
     }
 
     protected function validateMessage(): self
     {
-        if (!isset($this->jwt['body'][LtiConstants::MESSAGE_TYPE])) {
-            // Unable to identify message type.
-            throw new LtiException(static::ERR_INVALID_MESSAGE_TYPE);
-        }
 
-        $validator = $this->getMessageValidator($this->jwt['body']);
-
-        if (!isset($validator)) {
-            throw new LtiException(static::ERR_UNRECOGNIZED_MESSAGE_TYPE);
-        }
-
-        $validator::validate($this->jwt['body']);
+        NoticeMessageValidator::validate($this->jwt['body']);
 
         return $this;
     }
