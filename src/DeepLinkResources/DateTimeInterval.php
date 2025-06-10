@@ -26,15 +26,15 @@ class DateTimeInterval
 
     public function getArray(): array
     {
-        if (!isset($this->start) && !isset($this->end)) {
-            throw new LtiException(self::ERROR_NO_START_OR_END);
-        }
+        // if (!isset($this->start) && !isset($this->end)) {
+        //     throw new LtiException(self::ERROR_NO_START_OR_END);
+        // }
 
         $this->validateStartAndEnd();
 
         return [
-            'startDateTime' => $this->start?->format(DateTime::ATOM),
-            'endDateTime' => $this->end?->format(DateTime::ATOM),
+            'startDateTime' => $this->start?->format(DateTime::ATOM) ?? null,
+            'endDateTime' => $this->end?->format(DateTime::ATOM) ?? null,
         ];
     }
 
@@ -67,7 +67,7 @@ class DateTimeInterval
      */
     private function validateStartAndEnd(): void
     {
-        if (isset($this->start) && isset($this->end) && $this->start > $this->end) {
+        if ($this->start > $this->end) {
             throw new LtiException(self::ERROR_START_GT_END);
         }
     }
