@@ -99,8 +99,7 @@ class LtiNotice
      */
     public function validate(): self
     {
-        return $this->validateState()
-            ->validateJwtFormat()
+        return $this->validateJwtFormat()
             ->validateNonce()
             ->validateRegistration()
             ->validateJwtSignature()
@@ -200,17 +199,6 @@ class LtiNotice
 
         return isset(self::$ltiSupportedAlgs[$jwtAlg]) &&
             self::$ltiSupportedAlgs[$jwtAlg] === $key['kty'];
-    }
-
-    protected function validateState(): self
-    {
-        // Check State for OIDC.
-        if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$this->request['state']) !== $this->request['state']) {
-            // Error if state doesn't match
-            throw new LtiException(static::ERR_STATE_NOT_FOUND);
-        }
-
-        return $this;
     }
 
     protected function validateJwtFormat(): self
