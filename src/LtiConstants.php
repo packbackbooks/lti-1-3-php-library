@@ -23,6 +23,10 @@ class LtiConstants
     public const LTI1P1 = 'https://purl.imsglobal.org/spec/lti/claim/lti1p1';
     public const ROLE_SCOPE_MENTOR = 'https://purl.imsglobal.org/spec/lti/claim/role_scope_mentor';
     public const TOOL_PLATFORM = 'https://purl.imsglobal.org/spec/lti/claim/tool_platform';
+    public const PLATFORM_NOTIFICATION_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice';
+
+    // Other claims
+    public const NOTICE = 'https://purl.imsglobal.org/spec/lti/claim/notice';
 
     // LTI DL
     public const DL_CONTENT_ITEMS = 'https://purl.imsglobal.org/spec/lti-dl/claim/content_items';

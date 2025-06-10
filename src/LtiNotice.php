@@ -14,16 +14,10 @@ use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiDeployment;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\Interfaces\IMigrationDatabase;
-use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
-use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
-use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
+use Packback\Lti1p3\MessageValidators\NoticeMessageValidator;
 
-class LtiMessageLaunch
+class LtiNotice
 {
-    public const TYPE_DEEPLINK = 'LtiDeepLinkingRequest';
-    public const TYPE_SUBMISSIONREVIEW = 'LtiSubmissionReviewRequest';
-    public const TYPE_RESOURCELINK = 'LtiResourceLinkRequest';
     public const ERR_FETCH_PUBLIC_KEY = 'Failed to fetch public key.';
     public const ERR_NO_PUBLIC_KEY = 'Unable to find public key.';
     public const ERR_NO_MATCHING_PUBLIC_KEY = 'Unable to find a public key which matches your JWT.';
@@ -55,7 +49,6 @@ class LtiMessageLaunch
     private array $jwt;
     private ?ILtiRegistration $registration;
     private ?ILtiDeployment $deployment;
-    public string $launch_id;
 
     // See https://www.imsglobal.org/spec/security/v1p1#approved-jwt-signing-algorithms.
     private static $ltiSupportedAlgs = [
@@ -72,9 +65,7 @@ class LtiMessageLaunch
         private ICache $cache,
         private ICookie $cookie,
         private ILtiServiceConnector $serviceConnector
-    ) {
-        $this->launch_id = uniqid('lti1p3_launch_', true);
-    }
+    ) {}
 
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
@@ -88,25 +79,6 @@ class LtiMessageLaunch
         return new LtiMessageLaunch($db, $cache, $cookie, $serviceConnector);
     }
 
-    /**
-     * Load an LtiMessageLaunch from a Cache using a launch id.
-     *
-     * @throws LtiException Will throw an LtiException if validation fails or launch cannot be found
-     */
-    public static function fromCache(
-        string $launch_id,
-        IDatabase $db,
-        ICache $cache,
-        ICookie $cookie,
-        ILtiServiceConnector $serviceConnector
-    ): self {
-        $new = new LtiMessageLaunch($db, $cache, $cookie, $serviceConnector);
-        $new->launch_id = $launch_id;
-        $new->jwt = ['body' => $new->cache->getLaunchData($launch_id)];
-
-        return $new->validateRegistration();
-    }
-
     public function setRequest(array $request): self
     {
         $this->request = $request;
@@ -117,9 +89,7 @@ class LtiMessageLaunch
     public function initialize(array $request): self
     {
         return $this->setRequest($request)
-            ->validate()
-            ->migrate()
-            ->cacheLaunchData();
+            ->validate();
     }
 
     /**
@@ -138,162 +108,12 @@ class LtiMessageLaunch
             ->validateMessage();
     }
 
-    public function migrate(): self
-    {
-        if (!$this->shouldMigrate()) {
-            return $this->ensureDeploymentExists();
-        }
-
-        if (!isset($this->jwt['body'][LtiConstants::LTI1P1]['oauth_consumer_key_sign'])) {
-            throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
-        }
-
-        if (!$this->matchingLti1p1KeyExists()) {
-            throw new LtiException(static::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED);
-        }
-
-        $this->deployment = $this->db->migrateFromLti1p1($this);
-
-        return $this->ensureDeploymentExists();
-    }
-
-    public function cacheLaunchData(): self
-    {
-        $this->cache->cacheLaunchData($this->launch_id, $this->jwt['body']);
-
-        return $this;
-    }
-
     /**
-     * Returns whether or not the current launch can use the names and roles service.
+     * Fetches the decoded body of the JWT used in the current message.
      */
-    public function hasNrps(): bool
-    {
-        return isset($this->jwt['body'][LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url']);
-    }
-
-    /**
-     * Fetches an instance of the names and roles service for the current launch.
-     */
-    public function getNrps(): LtiNamesRolesProvisioningService
-    {
-        return new LtiNamesRolesProvisioningService(
-            $this->serviceConnector,
-            $this->registration,
-            $this->jwt['body'][LtiConstants::NRPS_CLAIM_SERVICE]
-        );
-    }
-
-    /**
-     * Returns whether or not the current launch can use the groups service.
-     */
-    public function hasGs(): bool
-    {
-        return isset($this->jwt['body'][LtiConstants::GS_CLAIM_SERVICE]['context_groups_url']);
-    }
-
-    /**
-     * Fetches an instance of the groups service for the current launch.
-     */
-    public function getGs(): LtiCourseGroupsService
-    {
-        return new LtiCourseGroupsService(
-            $this->serviceConnector,
-            $this->registration,
-            $this->jwt['body'][LtiConstants::GS_CLAIM_SERVICE]
-        );
-    }
-
-    /**
-     * Returns whether or not the current launch can use the assignments and grades service.
-     */
-    public function hasAgs(): bool
-    {
-        return isset($this->jwt['body'][LtiConstants::AGS_CLAIM_ENDPOINT]);
-    }
-
-    /**
-     * Fetches an instance of the assignments and grades service for the current launch.
-     */
-    public function getAgs(): LtiAssignmentsGradesService
-    {
-        return new LtiAssignmentsGradesService(
-            $this->serviceConnector,
-            $this->registration,
-            $this->jwt['body'][LtiConstants::AGS_CLAIM_ENDPOINT]
-        );
-    }
-
-    /**
-     * Returns whether or not the current launch can use the assignments and grades service.
-     */
-    public function hasPns(): bool
-    {
-        return isset($this->jwt['body'][LtiConstants::PNS_CLAIM_ENDPOINT]);
-    }
-
-    /**
-     * Fetches an instance of the assignments and grades service for the current launch.
-     */
-    // @TODO Implement this
-    // public function getPns(): LtiPlatformNotificationService
-    // {
-    //     return new LtiPlatformNotificationService(
-    //         $this->serviceConnector,
-    //         $this->registration
-    //     );
-    // }
-
-    /**
-     * Returns whether or not the current launch is a deep linking launch.
-     */
-    public function isDeepLinkLaunch(): bool
-    {
-        return $this->jwt['body'][LtiConstants::MESSAGE_TYPE] === static::TYPE_DEEPLINK;
-    }
-
-    /**
-     * Fetches a deep link that can be used to construct a deep linking response.
-     */
-    public function getDeepLink(): LtiDeepLink
-    {
-        return new LtiDeepLink(
-            $this->registration,
-            $this->jwt['body'][LtiConstants::DEPLOYMENT_ID],
-            $this->jwt['body'][LtiConstants::DL_DEEP_LINK_SETTINGS]
-        );
-    }
-
-    /**
-     * Returns whether or not the current launch is a submission review launch.
-     */
-    public function isSubmissionReviewLaunch(): bool
-    {
-        return $this->jwt['body'][LtiConstants::MESSAGE_TYPE] === static::TYPE_SUBMISSIONREVIEW;
-    }
-
-    /**
-     * Returns whether or not the current launch is a resource launch.
-     */
-    public function isResourceLaunch(): bool
-    {
-        return $this->jwt['body'][LtiConstants::MESSAGE_TYPE] === static::TYPE_RESOURCELINK;
-    }
-
-    /**
-     * Fetches the decoded body of the JWT used in the current launch.
-     */
-    public function getLaunchData(): array
+    public function getBody(): array
     {
         return $this->jwt['body'];
-    }
-
-    /**
-     * Get the unique launch id for the current launch.
-     */
-    public function getLaunchId(): string
-    {
-        return $this->launch_id;
     }
 
     public static function getMissingRegistrationErrorMsg(string $issuerUrl, ?string $clientId = null): string
@@ -506,9 +326,7 @@ class LtiMessageLaunch
     private function getMessageValidator(array $jwtBody): ?string
     {
         $availableValidators = [
-            DeepLinkMessageValidator::class,
-            ResourceMessageValidator::class,
-            SubmissionReviewMessageValidator::class,
+            NoticeMessageValidator::class,
         ];
 
         // Filter out validators that cannot validate the message
@@ -539,45 +357,5 @@ class LtiMessageLaunch
         }
 
         return $this;
-    }
-
-    public function canMigrate(): bool
-    {
-        return $this->db instanceof IMigrationDatabase;
-    }
-
-    private function shouldMigrate(): bool
-    {
-        return $this->canMigrate()
-            && $this->db->shouldMigrate($this);
-    }
-
-    private function matchingLti1p1KeyExists(): bool
-    {
-        $keys = $this->db->findLti1p1Keys($this);
-
-        foreach ($keys as $key) {
-            if ($this->oauthConsumerKeySignMatches($key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function oauthConsumerKeySignMatches(Lti1p1Key $key): bool
-    {
-        return $this->jwt['body'][LtiConstants::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key);
-    }
-
-    private function getOauthSignature(Lti1p1Key $key): string
-    {
-        return $key->sign(
-            $this->jwt['body'][LtiConstants::DEPLOYMENT_ID],
-            $this->jwt['body']['iss'],
-            $this->getAud(),
-            $this->jwt['body']['exp'],
-            $this->jwt['body']['nonce']
-        );
     }
 }
