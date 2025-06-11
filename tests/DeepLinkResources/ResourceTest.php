@@ -263,7 +263,7 @@ class ResourceTest extends TestCase
             ],
             'submission' => [
                 'endDateTime' => $submissionInterval->getEnd()->format(\DateTime::ATOM),
-            ]
+            ],
         ];
 
         $this->resource->setAvailabilityInterval($availabilityInterval);
