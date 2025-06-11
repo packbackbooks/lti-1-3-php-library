@@ -28,7 +28,7 @@ class DeepLinkMessageValidator extends AbstractMessageValidator
         if (empty($deep_link_settings['deep_link_return_url'])) {
             throw new LtiException('Missing Deep Linking Return URL');
         }
-        if (empty($deep_link_settings['accept_types']) || !empty(array_intercept(static::$acceptTypes, $deep_link_settings['accept_types']))) {
+        if (empty($deep_link_settings['accept_types']) || !empty(array_intersect(static::$acceptTypes, $deep_link_settings['accept_types']))) {
             throw new LtiException('Unsupported placement type');
         }
         if (empty($deep_link_settings['accept_presentation_document_targets'])) {
