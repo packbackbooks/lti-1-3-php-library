@@ -237,6 +237,43 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getSubmissionInterval());
     }
 
+    public function test_it_creates_array_with_null_date_time_intervals()
+    {
+        $expected = [
+            'type' => LtiConstants::DL_RESOURCE_LINK_TYPE,
+        ];
+
+        $this->resource->setAvailabilityInterval(null);
+        $this->resource->setSubmissionInterval(null);
+
+        $result = $this->resource->toArray();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_creates_array_with_date_time_intervals_having_null_dates()
+    {
+        $availabilityInterval = new DateTimeInterval(date_create(), null);
+        $submissionInterval = new DateTimeInterval(null, date_create());
+
+        $expected = [
+            'type' => LtiConstants::DL_RESOURCE_LINK_TYPE,
+            'available' => [
+                'startDateTime' => $availabilityInterval->getStart()->format(\DateTime::ATOM),
+            ],
+            'submission' => [
+                'endDateTime' => $submissionInterval->getEnd()->format(\DateTime::ATOM),
+            ],
+        ];
+
+        $this->resource->setAvailabilityInterval($availabilityInterval);
+        $this->resource->setSubmissionInterval($submissionInterval);
+
+        $result = $this->resource->toArray();
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function test_it_creates_array_with_defined_optional_properties()
     {
         $icon = Icon::new('https://example.com/image.png', 100, 200);
