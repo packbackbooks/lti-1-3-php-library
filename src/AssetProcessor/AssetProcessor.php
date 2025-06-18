@@ -75,12 +75,12 @@ class AssetProcessor
         return $this->report;
     }
 
-    public function getCustom(): ?LtiCustom
+    public function getCustom(): ?array
     {
         return $this->custom;
     }
 
-    public function setCustom(?LtiCustom $value): self
+    public function setCustom(array $value): self
     {
         $this->custom = $value;
 
