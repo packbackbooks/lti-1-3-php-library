@@ -14,7 +14,11 @@ use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiDeployment;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
+use Packback\Lti1p3\LtiConstants;
+use Packback\Lti1p3\LtiException;
+use Packback\Lti1p3\LtiMessageLaunch;
 use Packback\Lti1p3\MessageValidators\NoticeMessageValidator;
+use Packback\Lti1p3\ServiceRequest;
 
 class Notice
 {
