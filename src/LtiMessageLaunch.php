@@ -233,16 +233,16 @@ class LtiMessageLaunch
     }
 
     /**
-     * Fetches an instance of the assignments and grades service for the current launch.
+     * Fetches an instance of the platform notification service for the current launch.
      */
-    // @TODO Implement this
-    // public function getPns(): LtiPlatformNotificationService
-    // {
-    //     return new LtiPlatformNotificationService(
-    //         $this->serviceConnector,
-    //         $this->registration
-    //     );
-    // }
+    public function getPns(): PlatformNotificationService
+    {
+        return new PlatformNotificationService(
+            $this->registration,
+            $this->jwt['body'][LtiConstants::DEPLOYMENT_ID],
+            $this->jwt['body'][LtiConstants::PLATFORM_NOTIFICATION_SERVICE]
+        );
+    }
 
     /**
      * Returns whether or not the current launch is a deep linking launch.
