@@ -79,7 +79,7 @@ class LtiMessageLaunch extends LtiMessage
 
     public function initialize(array $request): static
     {
-        return $this->setRequest($request)
+        return $this->setMessage($request)
             ->validate()
             ->migrate()
             ->cacheLaunchData();
