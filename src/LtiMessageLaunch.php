@@ -18,6 +18,7 @@ use Packback\Lti1p3\Interfaces\IMigrationDatabase;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
+use Packback\Lti1p3\PlatformNotificationService\PlatformNotificationService;
 
 class LtiMessageLaunch
 {
