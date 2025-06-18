@@ -113,7 +113,7 @@ class Report
         return $this->comment;
     }
 
-    public function setComment(?string $value): self
+    public function setComment(string $value): self
     {
         $this->comment = $value;
 
@@ -125,7 +125,7 @@ class Report
         return $this->indicationAlt;
     }
 
-    public function setIndicationAlt(?string $value): self
+    public function setIndicationAlt(string $value): self
     {
         $this->indicationAlt = $value;
 
@@ -137,7 +137,7 @@ class Report
         return $this->indicationColor;
     }
 
-    public function setIndicationColor(?string $value): self
+    public function setIndicationColor(string $value): self
     {
         $this->indicationColor = $value;
 
@@ -149,7 +149,7 @@ class Report
         return $this->scoreGiven;
     }
 
-    public function setScoreGiven(?float $value): self
+    public function setScoreGiven(float $value): self
     {
         $this->scoreGiven = $value;
 
@@ -161,7 +161,7 @@ class Report
         return $this->scoreMaximum;
     }
 
-    public function setScoreMaximum(?float $value): self
+    public function setScoreMaximum(float $value): self
     {
         $this->scoreMaximum = $value;
 
@@ -173,7 +173,7 @@ class Report
         return $this->errorCode;
     }
 
-    public function setErrorCode(?string $value): self
+    public function setErrorCode(string $value): self
     {
         $this->errorCode = $value;
 

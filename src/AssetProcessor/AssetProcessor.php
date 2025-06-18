@@ -25,7 +25,7 @@ class AssetProcessor
             'title' => $this->title,
             'text' => $this->text,
             'url' => $this->url,
-            'custom' => $this->report,
+            'report' => $this->report,
             'custom' => $this->custom,
         ];
     }
@@ -35,7 +35,7 @@ class AssetProcessor
         return $this->title;
     }
 
-    public function setTitle(?string $value): self
+    public function setTitle(string $value): self
     {
         $this->title = $value;
 
@@ -47,7 +47,7 @@ class AssetProcessor
         return $this->text;
     }
 
-    public function setText(?string $value): self
+    public function setText(string $value): self
     {
         $this->text = $value;
 
@@ -59,7 +59,7 @@ class AssetProcessor
         return $this->url;
     }
 
-    public function setUrl(?string $value): self
+    public function setUrl(string $value): self
     {
         $this->url = $value;
 
