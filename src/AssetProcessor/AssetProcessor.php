@@ -20,6 +20,7 @@ class AssetProcessor
     public function getArray(): array
     {
         return [
+            'type' => 'ltiAssetProcessor',
             'title' => $this->title,
             'text' => $this->text,
             'url' => $this->url,
