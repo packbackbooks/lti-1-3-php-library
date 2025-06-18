@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace Packback\Lti1p3\PlatformNotificationService;
 
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 

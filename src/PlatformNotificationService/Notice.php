@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace Packback\Lti1p3\PlatformNotificationService;
 
 use Exception;
 use Firebase\JWT\ExpiredException;
@@ -16,7 +16,7 @@ use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\MessageValidators\NoticeMessageValidator;
 
-class LtiNotice
+class Notice
 {
     public const ERR_FETCH_PUBLIC_KEY = 'Failed to fetch public key.';
     public const ERR_NO_PUBLIC_KEY = 'Unable to find public key.';
