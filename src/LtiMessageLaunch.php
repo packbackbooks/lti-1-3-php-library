@@ -230,7 +230,7 @@ class LtiMessageLaunch
      */
     public function hasPns(): bool
     {
-        return isset($this->jwt['body'][LtiConstants::PLATFORM_NOTIFICATION_SERVICE]);
+        return isset($this->jwt['body'][LtiConstants::PNS_CLAIM_SERVICE]);
     }
 
     /**
@@ -241,7 +241,7 @@ class LtiMessageLaunch
         return new PlatformNotificationService(
             $this->registration,
             $this->jwt['body'][LtiConstants::DEPLOYMENT_ID],
-            $this->jwt['body'][LtiConstants::PLATFORM_NOTIFICATION_SERVICE]
+            $this->jwt['body'][LtiConstants::PNS_CLAIM_SERVICE]
         );
     }
 
