@@ -71,6 +71,7 @@ class LtiMessageLaunch extends LtiMessage
         return $new->validateRegistration();
     }
 
+    #[\Deprecated(message: 'use setMessage() instead', since: '6.3.4')]
     public function setRequest(array $request): static
     {
         return $this->setMessage($request);
