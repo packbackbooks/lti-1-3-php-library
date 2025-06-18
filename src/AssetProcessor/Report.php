@@ -8,13 +8,33 @@ class Report
 {
     use Arrayable;
     private ?string $title = null;
-    private ?string $comment = null;
+
+    /**
+     * Alternate text representing the meaning of the indicationColor for screen readers or as a tooltip over the indication color.
+     */
     private ?string $indicationAlt = null;
+
+    /**
+     * A hex (#RRGGBB) color
+     */
     private ?string $indicationColor = null;
     private ?float $scoreGiven = null;
     private ?float $scoreMaximum = null;
+
+    /**
+     * One of: UNSUPPORTED_ASSET_TYPE, ASSET_TOO_LARGE, ASSET_TOO_SMALL, EULA_NOT_ACCEPTED, DOWNLOAD_FAILED
+     */
     private ?string $errorCode = null;
 
+    /**
+     * Human-readable explanation of the error code
+     */
+    private ?string $comment = null;
+
+    /**
+     * @param  string  $processingProgress  One of: Processed, Processing, PendingManual, Failed, NotProcessed, NotReady
+     * @param  int  $priority  A number from 0 (meaning "good" or "success") to 5 (meaning urgent or time-critical notable features) indicating the tool's perceived priority of the report.
+     */
     public function __construct(
         private $assetId,
         private string $type,
