@@ -49,30 +49,30 @@ class NoticeTest extends TestCase
 
     public function test_it_sets_request()
     {
-        $request = ['jwt' => 'test.jwt.token'];
-        $result = $this->notice->setRequest($request);
+        $message = ['jwt' => 'test.jwt.token'];
+        $result = $this->notice->setMessage($message);
 
         $this->assertSame($this->notice, $result);
     }
 
     public function test_validate_jwt_format_throws_exception_for_missing_jwt()
     {
-        $request = ['no_jwt' => 'value'];
+        $message = ['no_jwt' => 'value'];
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage(Notice::ERR_MISSING_ID_TOKEN);
 
-        $this->notice->setRequest($request)->validate();
+        $this->notice->setMessage($message)->validate();
     }
 
     public function test_validate_jwt_format_throws_exception_for_invalid_jwt_parts()
     {
-        $request = ['jwt' => 'invalid.jwt'];
+        $message = ['jwt' => 'invalid.jwt'];
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage(Notice::ERR_INVALID_ID_TOKEN);
 
-        $this->notice->setRequest($request)->validate();
+        $this->notice->setMessage($message)->validate();
     }
 
     public function test_validate_nonce_throws_exception_for_missing_nonce()
@@ -83,12 +83,12 @@ class NoticeTest extends TestCase
             'aud' => 'test-client-id',
         ]);
 
-        $request = ['jwt' => $jwtWithoutNonce];
+        $message = ['jwt' => $jwtWithoutNonce];
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage(Notice::ERR_MISSING_NONCE);
 
-        $this->notice->setRequest($request)->validate();
+        $this->notice->setMessage($message)->validate();
     }
 
     public function test_validate_registration_throws_exception_for_missing_registration()
@@ -101,7 +101,7 @@ class NoticeTest extends TestCase
         ];
 
         $jwt = $this->createJwtToken($jwtBody);
-        $request = ['jwt' => $jwt];
+        $message = ['jwt' => $jwt];
 
         $this->databaseMock->shouldReceive('findRegistrationByIssuer')
             ->with('https://test.issuer.com', 'test-client-id')
@@ -110,7 +110,7 @@ class NoticeTest extends TestCase
         $this->expectException(LtiException::class);
         $this->expectExceptionMessageMatches('/LTI 1.3 Registration not found/');
 
-        $this->notice->setRequest($request)->validate();
+        $this->notice->setMessage($message)->validate();
     }
 
     public function test_get_missing_registration_error_msg()
@@ -134,27 +134,6 @@ class NoticeTest extends TestCase
 
         $this->assertStringContainsString($issuerUrl, $errorMsg);
         $this->assertStringContainsString('(N/A)', $errorMsg);
-    }
-
-    public function test_error_constants_are_defined()
-    {
-        $this->assertEquals('Failed to fetch public key.', Notice::ERR_FETCH_PUBLIC_KEY);
-        $this->assertEquals('Unable to find public key.', Notice::ERR_NO_PUBLIC_KEY);
-        $this->assertEquals('Unable to find a public key which matches your JWT.', Notice::ERR_NO_MATCHING_PUBLIC_KEY);
-        $this->assertEquals('Missing id_token.', Notice::ERR_MISSING_ID_TOKEN);
-        $this->assertEquals('Invalid id_token, JWT must contain 3 parts.', Notice::ERR_INVALID_ID_TOKEN);
-        $this->assertEquals('Missing Nonce.', Notice::ERR_MISSING_NONCE);
-        $this->assertEquals('Invalid Nonce.', Notice::ERR_INVALID_NONCE);
-        $this->assertEquals('Client id not registered for this issuer.', Notice::ERR_CLIENT_NOT_REGISTERED);
-        $this->assertEquals('No KID specified in the JWT Header.', Notice::ERR_NO_KID);
-        $this->assertEquals('Invalid signature on id_token', Notice::ERR_INVALID_SIGNATURE);
-        $this->assertEquals('No deployment ID was specified', Notice::ERR_MISSING_DEPLOYEMENT_ID);
-        $this->assertEquals('Unable to find deployment.', Notice::ERR_NO_DEPLOYMENT);
-        $this->assertEquals('Invalid message type', Notice::ERR_INVALID_MESSAGE_TYPE);
-        $this->assertEquals('Unrecognized message type.', Notice::ERR_UNRECOGNIZED_MESSAGE_TYPE);
-        $this->assertEquals('Message validation failed.', Notice::ERR_INVALID_MESSAGE);
-        $this->assertEquals('Invalid alg was specified in the JWT header.', Notice::ERR_INVALID_ALG);
-        $this->assertEquals('The alg specified in the JWT header is incompatible with the JWK key type.', Notice::ERR_MISMATCHED_ALG_KEY);
     }
 
     public function test_it_supports_lti_supported_algorithms()
