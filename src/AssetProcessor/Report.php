@@ -8,6 +8,7 @@ class Report
 {
     use Arrayable;
     private ?string $title = null;
+    private ?string $comment = null;
     private ?string $indicationAlt = null;
     private ?string $indicationColor = null;
     private ?float $scoreGiven = null;
@@ -46,6 +47,7 @@ class Report
             'scoreGiven' => $this->scoreGiven,
             'scoreMaximum' => $this->scoreMaximum,
             'title' => $this->title,
+            'comment' => $this->comment,
         ];
     }
 
@@ -82,6 +84,18 @@ class Report
     public function setTitle(?string $value): self
     {
         $this->title = $value;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $value): self
+    {
+        $this->comment = $value;
 
         return $this;
     }
