@@ -10,6 +10,7 @@ class AssetProcessor
     private ?string $title = null;
     private ?string $text = null;
     private ?string $url = null;
+    private ?array $report = null;
     private ?array $custom = null;
 
     public static function new(): self
@@ -24,6 +25,7 @@ class AssetProcessor
             'title' => $this->title,
             'text' => $this->text,
             'url' => $this->url,
+            'custom' => $this->report,
             'custom' => $this->custom,
         ];
     }
@@ -64,16 +66,16 @@ class AssetProcessor
         return $this;
     }
 
-    public function setReport(?Report $report): self
+    public function getReport(): ?array
+    {
+        return $this->report;
+    }
+
+    public function setReport(array $report): self
     {
         $this->report = $report;
 
         return $this;
-    }
-
-    public function getReport(): ?Report
-    {
-        return $this->report;
     }
 
     public function getCustom(): ?array
