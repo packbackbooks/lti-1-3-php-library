@@ -7,35 +7,51 @@ use Packback\Lti1p3\Concerns\Arrayable;
 class Report
 {
     use Arrayable;
-    private ?string $type = null;
-    private ?string $title = null;
-    private ?string $comment = null;
-    private ?int $score_given = null;
-    private ?int $score_maximum = null;
-    private ?string $indication_color = null;
-    private ?string $indication_alt = null;
-    private ?string $error_code = null;
-    private ?int $priority = null;
+    private ?string $title;
+    private ?string $indicationAlt;
+    private ?string $indicationColor;
+    private ?float $scoreGiven;
+    private ?float $scoreMaximum;
+    private ?string $errorCode;
 
-    public static function new(): self
-    {
-        return new AssetProcessor;
+    public function __construct(
+        private $assetId,
+        private string $type,
+        private string $processingProgress,
+        private int $priority,
+        private string $timestamp,
+    ) {}
+
+    public static function new(
+        string $assetId,
+        string $type,
+        string $processingProgress,
+        int $priority,
+        string $timestamp,
+    ): self {
+        return new Report($assetId, $type, $processingProgress, $priority, $timestamp);
     }
 
     public function getArray(): array
     {
         return [
+            'assetId' => $this->assetId,
             'type' => $this->type,
-            'title' => $this->title,
-            'comment' => $this->comment,
-            'score_given' => $this->score_given,
-            'score_maximum' => $this->score_maximum,
-            'score_maximum' => $this->score_maximum,
-            'indication_color' => $this->indication_color,
-            'indication_alt' => $this->indication_alt,
-            'error_code' => $this->error_code,
+            'processingProgress' => $this->processingProgress,
             'priority' => $this->priority,
+            'timestamp' => $this->timestamp,
+            'errorCode' => $this->errorCode,
+            'indicationAlt' => $this->indicationAlt,
+            'indicationColor' => $this->indicationColor,
+            'scoreGiven' => $this->scoreGiven,
+            'scoreMaximum' => $this->scoreMaximum,
+            'title' => $this->title,
         ];
+    }
+
+    public function getAssetId()
+    {
+        return $this->assetId;
     }
 
     public function getType(): string
@@ -43,11 +59,19 @@ class Report
         return $this->type;
     }
 
-    public function setType(?string $value): self
+    public function getProcessingProgress(): string
     {
-        $this->type = $value;
+        return $this->processingProgress;
+    }
 
-        return $this;
+    public function getPriority(): int
+    {
+        return $this->priority;
+    }
+
+    public function getTimestamp(): string
+    {
+        return $this->timestamp;
     }
 
     public function getTitle(): ?string
@@ -62,50 +86,62 @@ class Report
         return $this;
     }
 
-    public function getText(): ?string
+    public function getIndicationAlt(): ?string
     {
-        return $this->text;
+        return $this->indicationAlt;
     }
 
-    public function setText(?string $value): self
+    public function setIndicationAlt(?string $value): self
     {
-        $this->text = $value;
+        $this->indicationAlt = $value;
 
         return $this;
     }
 
-    public function getUrl(): ?string
+    public function getIndicationColor(): ?string
     {
-        return $this->url;
+        return $this->indicationColor;
     }
 
-    public function setUrl(?string $value): self
+    public function setIndicationColor(?string $value): self
     {
-        $this->url = $value;
+        $this->indicationColor = $value;
 
         return $this;
     }
 
-    public function setReport(?Report $report): self
+    public function getScoreGiven(): ?float
     {
-        $this->report = $report;
+        return $this->scoreGiven;
+    }
+
+    public function setScoreGiven(?float $value): self
+    {
+        $this->scoreGiven = $value;
 
         return $this;
     }
 
-    public function getReport(): ?Report
+    public function getScoreMaximum(): ?float
     {
-        return $this->report;
+        return $this->scoreMaximum;
     }
 
-    public function getCustom(): ?LtiCustom
+    public function setScoreMaximum(?float $value): self
     {
-        return $this->custom;
+        $this->scoreMaximum = $value;
+
+        return $this;
     }
 
-    public function setCustom(?LtiCustom $value): self
+    public function getErrorCode(): ?string
     {
-        $this->custom = $value;
+        return $this->errorCode;
+    }
+
+    public function setErrorCode(?string $value): self
+    {
+        $this->errorCode = $value;
 
         return $this;
     }

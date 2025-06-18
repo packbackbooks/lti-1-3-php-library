@@ -7,17 +7,10 @@ use Packback\Lti1p3\Concerns\Arrayable;
 class AssetProcessor
 {
     use Arrayable;
-
-    // private string $type = 'ltiAssetProcessor';
     private ?string $title = null;
     private ?string $text = null;
     private ?string $url = null;
     private ?array $custom = null;
-    // private ?array $report = null; // [
-    //     'released' => true,
-    //     'indicator' => true,
-    //     'url' => '',
-    // ],
 
     public static function new(): self
     {
@@ -27,19 +20,12 @@ class AssetProcessor
     public function getArray(): array
     {
         return [
-            // 'type' => $this->type,
             'title' => $this->title,
             'text' => $this->text,
             'url' => $this->url,
             'custom' => $this->custom,
-            // 'report' => $this->report,
         ];
     }
-
-    // public function getType(): string
-    // {
-    //     return $this->type;
-    // }
 
     public function getTitle(): ?string
     {
