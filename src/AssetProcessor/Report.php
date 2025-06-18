@@ -18,6 +18,7 @@ class Report
      * A hex (#RRGGBB) color
      */
     private ?string $indicationColor = null;
+    private ?string $result = null;
     private ?float $scoreGiven = null;
     private ?float $scoreMaximum = null;
 
@@ -64,6 +65,7 @@ class Report
             'errorCode' => $this->errorCode,
             'indicationAlt' => $this->indicationAlt,
             'indicationColor' => $this->indicationColor,
+            'result' => $this->result,
             'scoreGiven' => $this->scoreGiven,
             'scoreMaximum' => $this->scoreMaximum,
             'title' => $this->title,
@@ -140,6 +142,18 @@ class Report
     public function setIndicationColor(string $value): self
     {
         $this->indicationColor = $value;
+
+        return $this;
+    }
+
+    public function getResult(): ?string
+    {
+        return $this->result;
+    }
+
+    public function setResult(string $value): self
+    {
+        $this->result = $value;
 
         return $this;
     }

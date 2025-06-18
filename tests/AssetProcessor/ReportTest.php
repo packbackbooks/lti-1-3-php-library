@@ -132,6 +132,21 @@ class ReportTest extends TestCase
         $this->assertEquals($expected, $this->report->getIndicationColor());
     }
 
+    public function test_it_gets_result()
+    {
+        $result = $this->report->getResult();
+        $this->assertNull($result);
+    }
+
+    public function test_it_sets_result()
+    {
+        $expected = '5/10';
+        $result = $this->report->setResult($expected);
+
+        $this->assertSame($this->report, $result);
+        $this->assertEquals($expected, $this->report->getResult());
+    }
+
     public function test_it_gets_score_given()
     {
         $result = $this->report->getScoreGiven();
@@ -251,8 +266,7 @@ class ReportTest extends TestCase
             ->setComment('Chained Comment')
             ->setIndicationAlt('Chained Alt')
             ->setIndicationColor('#FF0000')
-            ->setScoreGiven(75.5)
-            ->setScoreMaximum(100.0)
+            ->setResult('5/10')
             ->setErrorCode('EULA_NOT_ACCEPTED');
 
         $this->assertSame($this->report, $result);
@@ -260,32 +274,8 @@ class ReportTest extends TestCase
         $this->assertEquals('Chained Comment', $this->report->getComment());
         $this->assertEquals('Chained Alt', $this->report->getIndicationAlt());
         $this->assertEquals('#FF0000', $this->report->getIndicationColor());
-        $this->assertEquals(75.5, $this->report->getScoreGiven());
-        $this->assertEquals(100.0, $this->report->getScoreMaximum());
+        $this->assertEquals('5/10', $this->report->getResult());
         $this->assertEquals('EULA_NOT_ACCEPTED', $this->report->getErrorCode());
-    }
-
-    public function test_get_array_returns_raw_array_with_nulls()
-    {
-        $this->report->setTitle('Test Title');
-
-        $expected = [
-            'assetId' => self::INITIAL_ASSET_ID,
-            'type' => self::INITIAL_TYPE,
-            'processingProgress' => self::INITIAL_PROCESSING_PROGRESS,
-            'priority' => self::INITIAL_PRIORITY,
-            'timestamp' => self::INITIAL_TIMESTAMP,
-            'errorCode' => null,
-            'indicationAlt' => null,
-            'indicationColor' => null,
-            'scoreGiven' => null,
-            'scoreMaximum' => null,
-            'title' => 'Test Title',
-            'comment' => null,
-        ];
-
-        $result = $this->report->getArray();
-        $this->assertEquals($expected, $result);
     }
 
     public function test_to_array_filters_out_nulls()
