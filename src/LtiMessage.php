@@ -48,7 +48,7 @@ abstract class LtiMessage
         'ES512' => 'EC',
     ];
 
-    abstract protected function validateMessage(): self;
+    abstract protected function validateMessage(): static;
 
     abstract protected function hasJwtToken(): bool;
 
@@ -75,14 +75,14 @@ abstract class LtiMessage
         return str_replace($search, $replace, static::ERR_MISSING_REGISTRATION);
     }
 
-    public function setMessage(array $message): self
+    public function setMessage(array $message): static
     {
         $this->message = $message;
 
         return $this;
     }
 
-    protected function validateJwtFormat(): self
+    protected function validateJwtFormat(): static
     {
         if (!$this->hasJwtToken()) {
             throw new LtiException(static::ERR_MISSING_ID_TOKEN);
@@ -104,7 +104,7 @@ abstract class LtiMessage
         return $this;
     }
 
-    protected function validateNonce(): self
+    protected function validateNonce(): static
     {
         if (!isset($this->jwt['body']['nonce'])) {
             throw new LtiException(static::ERR_MISSING_NONCE);
@@ -113,7 +113,7 @@ abstract class LtiMessage
         return $this;
     }
 
-    protected function validateRegistration(): self
+    protected function validateRegistration(): static
     {
         // Find registration.
         $clientId = $this->getAud();
@@ -133,7 +133,7 @@ abstract class LtiMessage
         return $this;
     }
 
-    protected function validateJwtSignature(): self
+    protected function validateJwtSignature(): static
     {
         if (!isset($this->jwt['header']['kid'])) {
             throw new LtiException(static::ERR_NO_KID);
@@ -154,7 +154,7 @@ abstract class LtiMessage
         return $this;
     }
 
-    protected function validateDeployment(): self
+    protected function validateDeployment(): static
     {
         if (!isset($this->jwt['body'][LtiConstants::DEPLOYMENT_ID])) {
             throw new LtiException(static::ERR_MISSING_DEPLOYEMENT_ID);
@@ -241,7 +241,7 @@ abstract class LtiMessage
     {
         $jwtAlg = $this->jwt['header']['alg'];
 
-        return isset(self::$ltiSupportedAlgs[$jwtAlg]) &&
-            self::$ltiSupportedAlgs[$jwtAlg] === $key['kty'];
+        return isset(static::$ltiSupportedAlgs[$jwtAlg]) &&
+            static::$ltiSupportedAlgs[$jwtAlg] === $key['kty'];
     }
 }

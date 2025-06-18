@@ -4,8 +4,6 @@ namespace Tests\PlatformNotificationService;
 
 use Mockery;
 use Packback\Lti1p3\Interfaces\IDatabase;
-use Packback\Lti1p3\Interfaces\ILtiDeployment;
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiException;
@@ -15,27 +13,18 @@ use Tests\TestCase;
 class NoticeTest extends TestCase
 {
     private Notice $notice;
-    private IDatabase $databaseMock;
-    private ILtiServiceConnector $serviceConnectorMock;
-    private ILtiRegistration $registrationMock;
-    private ILtiDeployment $deploymentMock;
+    private $databaseMock;
+    private $serviceConnectorMock;
 
     protected function setUp(): void
     {
         $this->databaseMock = Mockery::mock(IDatabase::class);
         $this->serviceConnectorMock = Mockery::mock(ILtiServiceConnector::class);
-        $this->registrationMock = Mockery::mock(ILtiRegistration::class);
-        $this->deploymentMock = Mockery::mock(ILtiDeployment::class);
 
         $this->notice = new Notice(
             $this->databaseMock,
             $this->serviceConnectorMock
         );
-    }
-
-    public function test_it_instantiates()
-    {
-        $this->assertInstanceOf(Notice::class, $this->notice);
     }
 
     public function test_it_creates_new_instance()
@@ -134,11 +123,6 @@ class NoticeTest extends TestCase
 
         $this->assertStringContainsString($issuerUrl, $errorMsg);
         $this->assertStringContainsString('(N/A)', $errorMsg);
-    }
-
-    public function test_it_supports_lti_supported_algorithms()
-    {
-        $this->assertTrue(true);
     }
 
     private function createJwtToken(array $body): string

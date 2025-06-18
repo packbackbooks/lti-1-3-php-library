@@ -71,12 +71,12 @@ class LtiMessageLaunch extends LtiMessage
         return $new->validateRegistration();
     }
 
-    public function setRequest(array $request): self
+    public function setRequest(array $request): static
     {
         return $this->setMessage($request);
     }
 
-    public function initialize(array $request): self
+    public function initialize(array $request): static
     {
         return $this->setRequest($request)
             ->validate()
@@ -89,7 +89,7 @@ class LtiMessageLaunch extends LtiMessage
      *
      * @throws LtiException Will throw an LtiException if validation fails
      */
-    public function validate(): self
+    public function validate(): static
     {
         return $this->validateState()
             ->validateJwtFormat()
@@ -100,7 +100,7 @@ class LtiMessageLaunch extends LtiMessage
             ->validateMessage();
     }
 
-    public function migrate(): self
+    public function migrate(): static
     {
         if (!$this->shouldMigrate()) {
             return $this->ensureDeploymentExists();
@@ -119,7 +119,7 @@ class LtiMessageLaunch extends LtiMessage
         return $this->ensureDeploymentExists();
     }
 
-    public function cacheLaunchData(): self
+    public function cacheLaunchData(): static
     {
         $this->cache->cacheLaunchData($this->launch_id, $this->getBody());
 
@@ -266,7 +266,7 @@ class LtiMessageLaunch extends LtiMessage
         return $this->message['id_token'];
     }
 
-    protected function validateState(): self
+    protected function validateState(): static
     {
         // Check State for OIDC.
         if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$this->message['state']) !== $this->message['state']) {
@@ -277,7 +277,7 @@ class LtiMessageLaunch extends LtiMessage
         return $this;
     }
 
-    protected function validateNonce(): self
+    protected function validateNonce(): static
     {
         parent::validateNonce();
 
@@ -288,7 +288,7 @@ class LtiMessageLaunch extends LtiMessage
         return $this;
     }
 
-    protected function validateDeployment(): self
+    protected function validateDeployment(): static
     {
         parent::validateDeployment();
 
@@ -303,7 +303,7 @@ class LtiMessageLaunch extends LtiMessage
         return $this;
     }
 
-    protected function validateMessage(): self
+    protected function validateMessage(): static
     {
         if (!isset($this->getBody()[LtiConstants::MESSAGE_TYPE])) {
             // Unable to identify message type.
@@ -341,7 +341,7 @@ class LtiMessageLaunch extends LtiMessage
     /**
      * @throws LtiException
      */
-    private function ensureDeploymentExists(): self
+    private function ensureDeploymentExists(): static
     {
         if (!isset($this->deployment)) {
             throw new LtiException(static::ERR_NO_DEPLOYMENT);

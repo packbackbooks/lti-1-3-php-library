@@ -14,11 +14,6 @@ class AssetProcessorTest extends TestCase
         $this->assetProcessor = new AssetProcessor;
     }
 
-    public function test_it_instantiates()
-    {
-        $this->assertInstanceOf(AssetProcessor::class, $this->assetProcessor);
-    }
-
     public function test_it_creates_a_new_instance()
     {
         $assetProcessor = AssetProcessor::new();

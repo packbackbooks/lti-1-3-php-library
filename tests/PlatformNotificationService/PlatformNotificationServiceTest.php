@@ -30,11 +30,6 @@ class PlatformNotificationServiceTest extends TestCase
         $this->service = new PlatformNotificationService($this->testSettings);
     }
 
-    public function test_it_instantiates()
-    {
-        $this->assertInstanceOf(PlatformNotificationService::class, $this->service);
-    }
-
     public function test_it_gets_settings()
     {
         $result = $this->service->settings();

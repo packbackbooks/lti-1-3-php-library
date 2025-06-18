@@ -27,7 +27,7 @@ class Notice extends LtiMessage
         return new Notice($db, $serviceConnector);
     }
 
-    public function initialize(array $message): self
+    public function initialize(array $message): static
     {
         return $this->setMessage($message)
             ->validate();
@@ -38,7 +38,7 @@ class Notice extends LtiMessage
      *
      * @throws LtiException Will throw an LtiException if validation fails
      */
-    public function validate(): self
+    public function validate(): static
     {
         return $this->validateJwtFormat()
             ->validateNonce()
@@ -48,7 +48,7 @@ class Notice extends LtiMessage
             ->validateMessage();
     }
 
-    protected function validateMessage(): self
+    protected function validateMessage(): static
     {
         NoticeMessageValidator::validate($this->getBody());
 
