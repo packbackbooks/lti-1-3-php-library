@@ -239,8 +239,6 @@ class LtiMessageLaunch
     public function getPns(): PlatformNotificationService
     {
         return new PlatformNotificationService(
-            $this->registration,
-            $this->jwt['body'][LtiConstants::DEPLOYMENT_ID],
             $this->jwt['body'][LtiConstants::PNS_CLAIM_SERVICE]
         );
     }

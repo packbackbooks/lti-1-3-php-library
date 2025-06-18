@@ -23,6 +23,7 @@ use Packback\Lti1p3\LtiDeployment;
 use Packback\Lti1p3\LtiException;
 use Packback\Lti1p3\LtiMessageLaunch;
 use Packback\Lti1p3\LtiNamesRolesProvisioningService;
+use Packback\Lti1p3\PlatformNotificationService\PlatformNotificationService;
 
 class LtiMessageLaunchTest extends TestCase
 {
@@ -872,6 +873,54 @@ class LtiMessageLaunchTest extends TestCase
         $actual = $launch->getAgs();
 
         $this->assertInstanceOf(LtiAssignmentsGradesService::class, $actual);
+    }
+
+    public function test_a_launch_has_pns()
+    {
+        $payload = $this->payload;
+        $payload[LtiConstants::PNS_CLAIM_SERVICE] = [
+            'platform_notification_service_url' => 'https://example.com/pns',
+            'service_versions' => ['1.0'],
+            'scope' => ['https://purl.imsglobal.org/spec/lti-pns/scope/notice'],
+            'notice_types_supported' => [LtiConstants::NOTICE_TYPE_HELLOWORLD],
+        ];
+        $launch = $this->fakeLaunch($payload);
+
+        $actual = $launch->hasPns();
+
+        $this->assertTrue($actual);
+    }
+
+    public function test_a_launch_does_not_have_pns()
+    {
+        $launch = $this->fakeLaunch($this->payload);
+
+        $actual = $launch->hasPns();
+
+        $this->assertFalse($actual);
+    }
+
+    public function test_get_pns_for_a_launch()
+    {
+        $payload = $this->payload;
+        $payload[LtiConstants::PNS_CLAIM_SERVICE] = [
+            'platform_notification_service_url' => 'https://example.com/pns',
+            'service_versions' => ['1.0', '2.0'],
+            'scope' => [
+                'https://purl.imsglobal.org/spec/lti-pns/scope/notice',
+                'https://purl.imsglobal.org/spec/lti-pns/scope/notice.readonly',
+            ],
+            'notice_types_supported' => [
+                LtiConstants::NOTICE_TYPE_HELLOWORLD,
+                LtiConstants::NOTICE_TYPE_CONTEXTCOPY,
+                LtiConstants::NOTICE_TYPE_ASSETPROCESSORSUBMISSION,
+            ],
+        ];
+        $launch = $this->fakeLaunch($payload);
+
+        $actual = $launch->getPns();
+
+        $this->assertInstanceOf(PlatformNotificationService::class, $actual);
     }
 
     public function test_a_launch_is_a_deep_link()

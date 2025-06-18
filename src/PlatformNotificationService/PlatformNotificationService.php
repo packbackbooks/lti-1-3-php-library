@@ -2,13 +2,9 @@
 
 namespace Packback\Lti1p3\PlatformNotificationService;
 
-use Packback\Lti1p3\Interfaces\ILtiRegistration;
-
 class PlatformNotificationService
 {
     public function __construct(
-        private ILtiRegistration $registration,
-        private string $deployment_id,
         private array $platform_notification_settings
     ) {}
 
