@@ -7,12 +7,12 @@ use Packback\Lti1p3\Concerns\Arrayable;
 class Report
 {
     use Arrayable;
-    private ?string $title;
-    private ?string $indicationAlt;
-    private ?string $indicationColor;
-    private ?float $scoreGiven;
-    private ?float $scoreMaximum;
-    private ?string $errorCode;
+    private ?string $title = null;
+    private ?string $indicationAlt = null;
+    private ?string $indicationColor = null;
+    private ?float $scoreGiven = null;
+    private ?float $scoreMaximum = null;
+    private ?string $errorCode = null;
 
     public function __construct(
         private $assetId,
