@@ -17,13 +17,13 @@ use Packback\Lti1p3\PlatformNotificationService\PlatformNotificationService;
 
 class LtiMessageLaunch extends LtiMessage
 {
-    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_DEEPLINK instead', since: '6.3.4')]
+    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_DEEPLINK instead', since: '6.4')]
     public const TYPE_DEEPLINK = LtiConstants::MESSAGE_TYPE_DEEPLINK;
 
-    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW instead', since: '6.3.4')]
+    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW instead', since: '6.4')]
     public const TYPE_SUBMISSIONREVIEW = LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW;
 
-    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_RESOURCE instead', since: '6.3.4')]
+    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_RESOURCE instead', since: '6.4')]
     public const TYPE_RESOURCELINK = LtiConstants::MESSAGE_TYPE_RESOURCE;
     public const ERR_STATE_NOT_FOUND = 'Please make sure you have cookies and cross-site tracking enabled in the privacy and security settings of your browser.';
     public const ERR_INVALID_NONCE = 'Invalid Nonce.';
@@ -77,7 +77,7 @@ class LtiMessageLaunch extends LtiMessage
         return $new->validateRegistration();
     }
 
-    #[\Deprecated(message: 'use setMessage() instead', since: '6.3.4')]
+    #[\Deprecated(message: 'use setMessage() instead', since: '6.4')]
     public function setRequest(array $request): static
     {
         return $this->setMessage($request);
