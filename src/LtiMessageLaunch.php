@@ -133,6 +133,11 @@ class LtiMessageLaunch extends LtiMessage
         return $this;
     }
 
+    public function getServiceConnector(): ILtiServiceConnector
+    {
+        return $this->serviceConnector;
+    }
+
     /**
      * Returns whether or not the current launch can use the names and roles service.
      */
