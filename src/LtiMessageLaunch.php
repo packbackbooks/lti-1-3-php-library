@@ -138,6 +138,11 @@ class LtiMessageLaunch extends LtiMessage
         return $this->serviceConnector;
     }
 
+    public function getRegistration(): LtiRegistration
+    {
+        return $this->registration;
+    }
+
     /**
      * Returns whether or not the current launch can use the names and roles service.
      */
