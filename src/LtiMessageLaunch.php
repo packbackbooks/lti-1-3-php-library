@@ -17,9 +17,14 @@ use Packback\Lti1p3\PlatformNotificationService\PlatformNotificationService;
 
 class LtiMessageLaunch extends LtiMessage
 {
-    public const TYPE_DEEPLINK = 'LtiDeepLinkingRequest';
-    public const TYPE_SUBMISSIONREVIEW = 'LtiSubmissionReviewRequest';
-    public const TYPE_RESOURCELINK = 'LtiResourceLinkRequest';
+    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_DEEPLINK instead', since: '6.3.4')]
+    public const TYPE_DEEPLINK = LtiConstants::MESSAGE_TYPE_DEEPLINK;
+
+    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW instead', since: '6.3.4')]
+    public const TYPE_SUBMISSIONREVIEW = LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW;
+
+    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_RESOURCE instead', since: '6.3.4')]
+    public const TYPE_RESOURCELINK = LtiConstants::MESSAGE_TYPE_RESOURCE;
     public const ERR_STATE_NOT_FOUND = 'Please make sure you have cookies and cross-site tracking enabled in the privacy and security settings of your browser.';
     public const ERR_INVALID_NONCE = 'Invalid Nonce.';
     public const ERR_NO_DEPLOYMENT = 'Unable to find deployment.';
@@ -211,7 +216,7 @@ class LtiMessageLaunch extends LtiMessage
      */
     public function isDeepLinkLaunch(): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === static::TYPE_DEEPLINK;
+        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === LtiConstants::MESSAGE_TYPE_DEEPLINK;
     }
 
     /**
@@ -231,7 +236,7 @@ class LtiMessageLaunch extends LtiMessage
      */
     public function isSubmissionReviewLaunch(): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === static::TYPE_SUBMISSIONREVIEW;
+        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW;
     }
 
     /**
@@ -239,7 +244,7 @@ class LtiMessageLaunch extends LtiMessage
      */
     public function isResourceLaunch(): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === static::TYPE_RESOURCELINK;
+        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === LtiConstants::MESSAGE_TYPE_RESOURCE;
     }
 
     /**
@@ -247,7 +252,7 @@ class LtiMessageLaunch extends LtiMessage
      */
     public function isEulaLaunch(): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === static::TYPE_EULA;
+        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === LtiConstants::MESSAGE_TYPE_EULA;
     }
 
     /**
