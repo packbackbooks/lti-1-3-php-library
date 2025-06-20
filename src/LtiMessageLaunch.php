@@ -243,7 +243,7 @@ class LtiMessageLaunch extends LtiMessage
     }
 
     /**
-     * Returns whether or not the current launch is a resource launch.
+     * Returns whether or not the current launch is a EULA launch.
      */
     public function isEulaLaunch(): bool
     {
