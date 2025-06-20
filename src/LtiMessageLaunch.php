@@ -243,6 +243,14 @@ class LtiMessageLaunch extends LtiMessage
     }
 
     /**
+     * Returns whether or not the current launch is a resource launch.
+     */
+    public function isEulaLaunch(): bool
+    {
+        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === static::TYPE_EULA;
+    }
+
+    /**
      * Fetches the decoded body of the JWT used in the current launch.
      */
     public function getLaunchData(): array
