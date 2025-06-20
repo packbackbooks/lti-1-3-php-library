@@ -10,6 +10,7 @@ use Packback\Lti1p3\Interfaces\ILtiDeployment;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IMigrationDatabase;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
+use Packback\Lti1p3\MessageValidators\EulaMessageValidator;
 use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
 use Packback\Lti1p3\PlatformNotificationService\PlatformNotificationService;
@@ -328,6 +329,7 @@ class LtiMessageLaunch extends LtiMessage
             DeepLinkMessageValidator::class,
             ResourceMessageValidator::class,
             SubmissionReviewMessageValidator::class,
+            EulaMessageValidator::class,
         ];
 
         // Filter out validators that cannot validate the message
