@@ -17,7 +17,6 @@ class Resource
     private ?Icon $icon = null;
     private ?Icon $thumbnail = null;
     private array $custom_params = [];
-    private string $target = 'iframe';
     private ?Iframe $iframe = null;
     private ?Window $window = null;
     private ?DateTimeInterval $availability_interval = null;
