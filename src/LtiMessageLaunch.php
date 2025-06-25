@@ -11,6 +11,7 @@ use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IMigrationDatabase;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 use Packback\Lti1p3\MessageValidators\EulaMessageValidator;
+use Packback\Lti1p3\MessageValidators\ReportReviewMessageValidator;
 use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
 use Packback\Lti1p3\PlatformNotificationService\PlatformNotificationService;
@@ -350,6 +351,7 @@ class LtiMessageLaunch extends LtiMessage
     {
         $availableValidators = [
             DeepLinkMessageValidator::class,
+            ReportReviewMessageValidator::class,
             ResourceMessageValidator::class,
             SubmissionReviewMessageValidator::class,
             EulaMessageValidator::class,

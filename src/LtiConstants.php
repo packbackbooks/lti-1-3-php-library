@@ -53,6 +53,8 @@ class LtiConstants
     public const AP_CLAIM_REPORT = 'https://purl.imsglobal.org/spec/lti/claim/assetreport';
     public const AP_CLAIM_ACTIVITY = 'https://purl.imsglobal.org/spec/lti/claim/activity';
     public const AP_CLAIM_SUBMISSION = 'https://purl.imsglobal.org/spec/lti/claim/submission';
+    public const AP_CLAIM_REPORT_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/assetreport_type';
+    public const AP_CLAIM_ASSET = 'https://purl.imsglobal.org/spec/lti/claim/asset';
 
     // EULA
     public const EULA_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/eulaservice';
@@ -114,6 +116,7 @@ class LtiConstants
     public const MESSAGE_TYPE_RESOURCE = 'LtiResourceLinkRequest';
     public const MESSAGE_TYPE_SUBMISSIONREVIEW = 'LtiSubmissionReviewRequest';
     public const MESSAGE_TYPE_EULA = 'LtiEulaRequest';
+    public const MESSAGE_TYPE_REPORTREVIEW = 'LtiReportReviewRequest';
 
     // Notice Types
     public const NOTICE_TYPE_HELLOWORLD = 'LtiHelloWorldNotice';
