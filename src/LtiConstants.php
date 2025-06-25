@@ -51,6 +51,8 @@ class LtiConstants
     // AP
     public const AP_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/assetservice';
     public const AP_CLAIM_REPORT = 'https://purl.imsglobal.org/spec/lti/claim/assetreport';
+    public const AP_CLAIM_ACTIVITY = 'https://purl.imsglobal.org/spec/lti/claim/activity';
+    public const AP_CLAIM_SUBMISSION = 'https://purl.imsglobal.org/spec/lti/claim/submission';
 
     // EULA
     public const EULA_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/eulaservice';
