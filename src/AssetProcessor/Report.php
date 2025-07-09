@@ -21,6 +21,7 @@ class Report
     private ?string $result = null;
     private ?float $scoreGiven = null;
     private ?float $scoreMaximum = null;
+    private ?bool $visibleToOwner = null;
 
     /**
      * One of: UNSUPPORTED_ASSET_TYPE, ASSET_TOO_LARGE, ASSET_TOO_SMALL, EULA_NOT_ACCEPTED, DOWNLOAD_FAILED
@@ -68,6 +69,7 @@ class Report
             'result' => $this->result,
             'scoreGiven' => $this->scoreGiven,
             'scoreMaximum' => $this->scoreMaximum,
+            'visibleToOwner' => $this->visibleToOwner,
             'title' => $this->title,
             'comment' => $this->comment,
         ];
@@ -178,6 +180,18 @@ class Report
     public function setScoreMaximum(float $value): self
     {
         $this->scoreMaximum = $value;
+
+        return $this;
+    }
+
+    public function getVisibleToOwner(): ?bool
+    {
+        return $this->visibleToOwner;
+    }
+
+    public function setVisibleToOwner(bool $value): self
+    {
+        $this->visibleToOwner = $value;
 
         return $this;
     }
