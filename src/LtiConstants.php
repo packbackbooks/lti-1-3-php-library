@@ -44,6 +44,21 @@ class LtiConstants
     // LTI GS
     public const GS_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice';
 
+    // PNS
+    public const PNS_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice';
+    public const PNS_CLAIM_NOTICE = 'https://purl.imsglobal.org/spec/lti/claim/notice';
+
+    // AP
+    public const AP_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/assetservice';
+    public const AP_CLAIM_REPORT = 'https://purl.imsglobal.org/spec/lti/claim/assetreport';
+    public const AP_CLAIM_ACTIVITY = 'https://purl.imsglobal.org/spec/lti/claim/activity';
+    public const AP_CLAIM_SUBMISSION = 'https://purl.imsglobal.org/spec/lti/claim/submission';
+    public const AP_CLAIM_REPORT_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/assetreport_type';
+    public const AP_CLAIM_ASSET = 'https://purl.imsglobal.org/spec/lti/claim/asset';
+
+    // EULA
+    public const EULA_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/eulaservice';
+
     // User Vocab
     public const SYSTEM_ADMINISTRATOR = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#Administrator';
     public const SYSTEM_NONE = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#None';
@@ -100,4 +115,11 @@ class LtiConstants
     public const MESSAGE_TYPE_DEEPLINK_RESPONSE = 'LtiDeepLinkingResponse';
     public const MESSAGE_TYPE_RESOURCE = 'LtiResourceLinkRequest';
     public const MESSAGE_TYPE_SUBMISSIONREVIEW = 'LtiSubmissionReviewRequest';
+    public const MESSAGE_TYPE_EULA = 'LtiEulaRequest';
+    public const MESSAGE_TYPE_REPORTREVIEW = 'LtiReportReviewRequest';
+
+    // Notice Types
+    public const NOTICE_TYPE_HELLOWORLD = 'LtiHelloWorldNotice';
+    public const NOTICE_TYPE_CONTEXTCOPY = 'LtiContextCopyNotice';
+    public const NOTICE_TYPE_ASSETPROCESSORSUBMISSION = 'LtiAssetProcessorSubmissionNotice';
 }
