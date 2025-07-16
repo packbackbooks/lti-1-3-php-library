@@ -22,7 +22,7 @@ class AssetProcessorSettingsValidator extends AbstractMessageValidator
         if (empty($jwtBody[LtiConstants::AP_CLAIM_ACTIVITY])) {
             throw new LtiException('Missing Activity Claim');
         }
-        if (empty($jwtBody[LtiConstants::AP_CLAIM_CONTEXT])) {
+        if (empty($jwtBody[LtiConstants::CONTEXT])) {
             throw new LtiException('Missing Context Claim');
         }
     }
