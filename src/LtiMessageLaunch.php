@@ -9,6 +9,7 @@ use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiDeployment;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IMigrationDatabase;
+use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 use Packback\Lti1p3\MessageValidators\EulaMessageValidator;
 use Packback\Lti1p3\MessageValidators\ReportReviewMessageValidator;
@@ -363,6 +364,7 @@ class LtiMessageLaunch extends LtiMessage
             ResourceMessageValidator::class,
             SubmissionReviewMessageValidator::class,
             EulaMessageValidator::class,
+            AssetProcessorSettingsValidator::class,
         ];
 
         // Filter out validators that cannot validate the message

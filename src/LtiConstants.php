@@ -122,6 +122,7 @@ class LtiConstants
     public const MESSAGE_TYPE_SUBMISSIONREVIEW = 'LtiSubmissionReviewRequest';
     public const MESSAGE_TYPE_EULA = 'LtiEulaRequest';
     public const MESSAGE_TYPE_REPORTREVIEW = 'LtiReportReviewRequest';
+    public const MESSAGE_TYPE_ASSETPROCESSORSETTINGS = 'LtiAssetProcessorSettingsRequest';
 
     // Notice Types
     public const NOTICE_TYPE_HELLOWORLD = 'LtiHelloWorldNotice';
