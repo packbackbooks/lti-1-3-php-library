@@ -223,12 +223,17 @@ class LtiMessageLaunch extends LtiMessage
         );
     }
 
+    public function isMessageType(string $type): bool
+    {
+        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === $type;
+    }
+
     /**
      * Returns whether or not the current launch is a deep linking launch.
      */
     public function isDeepLinkLaunch(): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === LtiConstants::MESSAGE_TYPE_DEEPLINK;
+        return $this->isMessageType(LtiConstants::MESSAGE_TYPE_DEEPLINK);
     }
 
     /**
@@ -248,7 +253,7 @@ class LtiMessageLaunch extends LtiMessage
      */
     public function isSubmissionReviewLaunch(): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW;
+        return $this->isMessageType(LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW);
     }
 
     /**
@@ -256,7 +261,7 @@ class LtiMessageLaunch extends LtiMessage
      */
     public function isResourceLaunch(): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === LtiConstants::MESSAGE_TYPE_RESOURCE;
+        return $this->isMessageType(LtiConstants::MESSAGE_TYPE_RESOURCE);
     }
 
     /**
@@ -264,7 +269,7 @@ class LtiMessageLaunch extends LtiMessage
      */
     public function isEulaLaunch(): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === LtiConstants::MESSAGE_TYPE_EULA;
+        return $this->isMessageType(LtiConstants::MESSAGE_TYPE_EULA);
     }
 
     /**
@@ -272,7 +277,15 @@ class LtiMessageLaunch extends LtiMessage
      */
     public function isReportReviewLaunch(): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === LtiConstants::MESSAGE_TYPE_REPORTREVIEW;
+        return $this->isMessageType(LtiConstants::MESSAGE_TYPE_REPORTREVIEW);
+    }
+
+    /**
+     * Returns whether or not the current launch is a EULA launch.
+     */
+    public function isAssetProcessorSettingsLaunch(): bool
+    {
+        return $this->isMessageType(LtiConstants::MESSAGE_TYPE_ASSETPROCESSORSETTINGS);
     }
 
     /**
