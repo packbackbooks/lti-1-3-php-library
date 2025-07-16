@@ -47,6 +47,7 @@ class LtiConstants
     // PNS
     public const PNS_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice';
     public const PNS_CLAIM_NOTICE = 'https://purl.imsglobal.org/spec/lti/claim/notice';
+    public const PNS_SCOPE_NOTICEHANDLERS = 'https://purl.imsglobal.org/spec/lti/scope/noticehandlers';
 
     // AP
     public const AP_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/assetservice';
@@ -55,9 +56,13 @@ class LtiConstants
     public const AP_CLAIM_SUBMISSION = 'https://purl.imsglobal.org/spec/lti/claim/submission';
     public const AP_CLAIM_REPORT_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/assetreport_type';
     public const AP_CLAIM_ASSET = 'https://purl.imsglobal.org/spec/lti/claim/asset';
+    public const AP_SCOPE_REPORT = 'https://purl.imsglobal.org/spec/lti/scope/report';
+    public const AP_SCOPE_ASSET_READONLY = 'https://purl.imsglobal.org/spec/lti/scope/asset.readonly';
 
     // EULA
     public const EULA_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/eulaservice';
+    public const EULA_SCOPE_USER = 'https://purl.imsglobal.org/spec/lti/scope/eula/user';
+    public const EULA_SCOPE_DEPLOYMENT = 'https://purl.imsglobal.org/spec/lti/scope/eula/deployment';
 
     // User Vocab
     public const SYSTEM_ADMINISTRATOR = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#Administrator';
