@@ -8,6 +8,7 @@ use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use GuzzleHttp\Exception\TransferException;
+use Packback\Lti1p3\Concerns\Claimable;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
@@ -18,6 +19,7 @@ use Packback\Lti1p3\ServiceRequest;
 
 abstract class LtiMessage
 {
+    use Claimable;
     public const ERR_FETCH_PUBLIC_KEY = 'Failed to fetch public key.';
     public const ERR_NO_PUBLIC_KEY = 'Unable to find public key.';
     public const ERR_NO_MATCHING_PUBLIC_KEY = 'Unable to find a public key which matches your JWT.';
@@ -117,15 +119,8 @@ abstract class LtiMessage
             ->validateNonce()
             ->validateRegistration()
             ->validateJwtSignature()
-            ->validateDeployment();
-
-        // @todo validate message-agnostic required claims
-        foreach (static::universallyRequiredClaims() as $claim) {
-            if (!$this->hasClaim($claim)) {
-                // Unable to identify message type.
-                throw new LtiException('Missing required claim: '.$claim);
-            }
-        }
+            ->validateDeployment()
+            ->validateClaims();
 
         $validator = $this->getMessageValidator($this->getBody());
 
@@ -229,7 +224,6 @@ abstract class LtiMessage
     protected function universallyRequiredClaims(): array
     {
         return [
-            LtiConstants::MESSAGE_TYPE,
             LtiConstants::VERSION,
             LtiConstants::DEPLOYMENT_ID,
             LtiConstants::ROLES,

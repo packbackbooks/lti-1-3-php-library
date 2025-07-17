@@ -26,6 +26,11 @@ class Notice extends LtiMessage
         return new Notice($db, $serviceConnector);
     }
 
+    public static function requiredClaims(): array
+    {
+        return [];
+    }
+
     public function initialize(array $message): static
     {
         return $this->setMessage($message)

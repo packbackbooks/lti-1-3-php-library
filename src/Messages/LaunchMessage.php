@@ -39,6 +39,13 @@ abstract class LaunchMessage extends LtiMessage
         $this->launch_id = uniqid('lti1p3_launch_', true);
     }
 
+    public static function requiredClaims(): array
+    {
+        return [
+            LtiConstants::MESSAGE_TYPE,
+        ];
+    }
+
     public function initialize(array $request): static
     {
         return $this->setMessage($request)
