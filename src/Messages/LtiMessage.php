@@ -106,6 +106,11 @@ abstract class LtiMessage
         return $this->registration;
     }
 
+    public function hasClaim(string $claim): bool
+    {
+        return isset($this->jwt['body'][$claim]);
+    }
+
     protected function validateMessage(): static
     {
         $this->validateJwtFormat()
@@ -116,7 +121,7 @@ abstract class LtiMessage
 
         // @todo validate message-agnostic required claims
         foreach (static::universallyRequiredClaims() as $claim) {
-            if (!isset($this->jwt['body'][$claim])) {
+            if (!$this->hasClaim($claim)) {
                 // Unable to identify message type.
                 throw new LtiException('Missing required claim: '.$claim);
             }

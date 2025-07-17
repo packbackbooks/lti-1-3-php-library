@@ -17,14 +17,6 @@ use Packback\Lti1p3\LtiRegistration;
 
 abstract class LaunchMessage extends LtiMessage
 {
-    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_DEEPLINK instead', since: '6.4')]
-    public const TYPE_DEEPLINK = LtiConstants::MESSAGE_TYPE_DEEPLINK;
-
-    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW instead', since: '6.4')]
-    public const TYPE_SUBMISSIONREVIEW = LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW;
-
-    #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_RESOURCE instead', since: '6.4')]
-    public const TYPE_RESOURCELINK = LtiConstants::MESSAGE_TYPE_RESOURCE;
     public const ERR_STATE_NOT_FOUND = 'Please make sure you have cookies and cross-site tracking enabled in the privacy and security settings of your browser.';
     public const ERR_NO_DEPLOYMENT = 'Unable to find deployment.';
     public const ERR_INVALID_MESSAGE_TYPE = 'Invalid message type';

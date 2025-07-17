@@ -5,7 +5,6 @@ namespace Packback\Lti1p3;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
-use Packback\Lti1p3\Interfaces\ILtiDeployment;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Messages\LaunchMessage;
 use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
@@ -26,26 +25,6 @@ class LtiMessageLaunch extends LaunchMessage
 
     #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_RESOURCE instead', since: '6.4')]
     public const TYPE_RESOURCELINK = LtiConstants::MESSAGE_TYPE_RESOURCE;
-    public const ERR_STATE_NOT_FOUND = 'Please make sure you have cookies and cross-site tracking enabled in the privacy and security settings of your browser.';
-    public const ERR_INVALID_NONCE = 'Invalid Nonce.';
-    public const ERR_NO_DEPLOYMENT = 'Unable to find deployment.';
-    public const ERR_INVALID_MESSAGE_TYPE = 'Invalid message type';
-    public const ERR_UNRECOGNIZED_MESSAGE_TYPE = 'Unrecognized message type.';
-    public const ERR_INVALID_MESSAGE = 'Message validation failed.';
-    public const ERR_INVALID_ALG = 'Invalid alg was specified in the JWT header.';
-    public const ERR_OAUTH_KEY_SIGN_NOT_VERIFIED = 'Unable to upgrade from LTI 1.1 to 1.3. No OAuth Consumer Key matched this signature.';
-    public const ERR_OAUTH_KEY_SIGN_MISSING = 'Unable to upgrade from LTI 1.1 to 1.3. The oauth_consumer_key_sign was not provided.';
-    protected ?ILtiDeployment $deployment;
-    public string $launch_id;
-
-    public function __construct(
-        protected IDatabase $db,
-        protected ICache $cache,
-        protected ICookie $cookie,
-        protected ILtiServiceConnector $serviceConnector
-    ) {
-        $this->launch_id = uniqid('lti1p3_launch_', true);
-    }
 
     /**
      * Static function to allow for method chaining without having to assign to a variable first.
