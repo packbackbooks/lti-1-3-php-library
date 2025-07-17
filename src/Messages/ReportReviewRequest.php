@@ -17,6 +17,11 @@ class ReportReviewRequest extends LaunchMessage
     public static function requiredClaims(): array
     {
         return [
+            LtiConstants::MESSAGE_TYPE,
+            LtiConstants::AP_CLAIM_ACTIVITY,
+            LtiConstants::AP_CLAIM_SUBMISSION,
+            LtiConstants::AP_CLAIM_ASSET,
+            LtiConstants::AP_CLAIM_REPORT_TYPE,
         ];
     }
 
@@ -24,9 +29,9 @@ class ReportReviewRequest extends LaunchMessage
     {
         return [
             LtiConstants::FOR_USER,
-            LtiConstants::AP_CLAIM_SUBMISSION,
-            LtiConstants::AP_CLAIM_ASSET,
-            LtiConstants::AP_CLAIM_ASSETREPORT_TYPE,
+            LtiConstants::CONTEXT,
+            LtiConstants::TARGET_LINK_URI,
+            LtiConstants::PNS_CLAIM_SERVICE,
         ];
     }
 
