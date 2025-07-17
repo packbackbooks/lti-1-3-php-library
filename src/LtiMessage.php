@@ -82,6 +82,11 @@ abstract class LtiMessage
         return $this;
     }
 
+    public function isMessageType(string $type): bool
+    {
+        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === $type;
+    }
+
     protected function validateJwtFormat(): static
     {
         if (!$this->hasJwtToken()) {
