@@ -2,37 +2,37 @@
 
 namespace Packback\Lti1p3\Messages;
 
-use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
+use Packback\Lti1p3\LtiConstants;
+use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 
-class EulaRequest extends LaunchMessage
+class DeepLinkingRequest extends LaunchMessage
 {
     public static function messageType(): string
     {
-        return LtiConstants::MESSAGE_TYPE_EULA;
+        return LtiContstants::MESSAGE_TYPE_DEEPLINK;
     }
 
     public static function requiredClaims(): array
     {
         return [
             LtiConstants::MESSAGE_TYPE,
-            LtiConstants::TARGET_LINK_URI,
-            LtiConstants::EULA_SERVICE,
+            LtiConstants::DL_DEEP_LINK_SETTINGS,
         ];
     }
 
     public static function optionalClaims(): array
     {
         return [
-            LtiConstants::CONTEXT,
-            LtiConstants::TOOL_PLATFORM,
             LtiConstants::LAUNCH_PRESENTATION,
+            LtiConstants::TOOL_PLATFORM,
+            LtiConstants::CONTEXT,
+            LtiConstants::ROLE_SCOPE_MENTOR,
             LtiConstants::CUSTOM,
-            LtiConstants::LIS,
         ];
     }
 
     protected function messageValidator(): string
     {
-        return AssetProcessorSettingsValidator::class;
+        return DeepLinkMessageValidator::class;
     }
 }

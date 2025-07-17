@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\PlatformNotificationService;
+namespace Tests\Messages;
 
 use Mockery;
 use Packback\Lti1p3\Interfaces\IDatabase;

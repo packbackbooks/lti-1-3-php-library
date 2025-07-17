@@ -7,13 +7,15 @@ class LtiConstants
     public const V1_3 = '1.3.0';
 
     // Required message claims
-    public const MESSAGE_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/message_type';
     public const VERSION = 'https://purl.imsglobal.org/spec/lti/claim/version';
     public const DEPLOYMENT_ID = 'https://purl.imsglobal.org/spec/lti/claim/deployment_id';
-    public const TARGET_LINK_URI = 'https://purl.imsglobal.org/spec/lti/claim/target_link_uri';
-    public const RESOURCE_LINK = 'https://purl.imsglobal.org/spec/lti/claim/resource_link';
     public const ROLES = 'https://purl.imsglobal.org/spec/lti/claim/roles';
     public const FOR_USER = 'https://purl.imsglobal.org/spec/lti/claim/for_user';
+
+    // Required resource link claims
+    public const MESSAGE_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/message_type';
+    public const TARGET_LINK_URI = 'https://purl.imsglobal.org/spec/lti/claim/target_link_uri';
+    public const RESOURCE_LINK = 'https://purl.imsglobal.org/spec/lti/claim/resource_link';
 
     // Optional message claims
     public const CONTEXT = 'https://purl.imsglobal.org/spec/lti/claim/context';

@@ -55,9 +55,7 @@ abstract class LtiMessage
         'ES512' => 'EC',
     ];
 
-    // abstract public static function requiredClaims(): array;
-
-    // abstract public static function optionalClaims(): array;
+    abstract public static function requiredClaims(): array;
 
     abstract protected function hasJwtToken(): bool;
 

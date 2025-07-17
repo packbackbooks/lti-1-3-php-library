@@ -2,13 +2,14 @@
 
 namespace Packback\Lti1p3\Messages;
 
-use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
+use Packback\Lti1p3\LtiConstants;
+use Packback\Lti1p3\Validators\ResourceMessageValidator;
 
-class AssetProcessorSettingsRequest extends LaunchMessage
+class ResourceLinkRequest extends LaunchMessage
 {
     public static function messageType(): string
     {
-        return LtiContstants::MESSAGE_TYPE_ASSETPROCESSORSETTINGS;
+        return LtiContstants::MESSAGE_TYPE_RESOURCE;
     }
 
     public static function requiredClaims(): array
@@ -16,24 +17,24 @@ class AssetProcessorSettingsRequest extends LaunchMessage
         return [
             LtiConstants::MESSAGE_TYPE,
             LtiConstants::TARGET_LINK_URI,
-            LtiConstants::AP_CLAIM_ACTIVITY,
-            LtiConstants::CONTEXT,
+            LtiConstants::RESOURCE_LINK,
         ];
     }
 
     public static function optionalClaims(): array
     {
         return [
-            LtiConstants::ROLE_SCOPE_MENTOR,
+            LtiConstants::CONTEXT,
             LtiConstants::TOOL_PLATFORM,
+            LtiConstants::ROLE_SCOPE_MENTOR,
             LtiConstants::LAUNCH_PRESENTATION,
-            LtiConstants::CUSTOM,
             LtiConstants::LIS,
+            LtiConstants::CUSTOM,
         ];
     }
 
     protected function messageValidator(): string
     {
-        return AssetProcessorSettingsValidator::class;
+        return ResourceMessageValidator::class;
     }
 }
