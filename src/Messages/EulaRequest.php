@@ -36,7 +36,7 @@ class EulaRequest extends LtiMessage
         return LtiConstants::MESSAGE_TYPE_EULA;
     }
 
-    protected function getMessageValidator(array $jwtBody): ?string
+    protected function messageValidator(array $jwtBody): ?string
     {
         return AssetProcessorSettingsValidator::class;
     }

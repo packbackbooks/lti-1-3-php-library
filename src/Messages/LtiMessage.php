@@ -122,7 +122,7 @@ abstract class LtiMessage
             ->validateDeployment()
             ->validateClaims();
 
-        $validator = $this->getMessageValidator($this->getBody());
+        $validator = $this->messageValidator($this->getBody());
 
         if (!isset($validator)) {
             throw new LtiException(static::ERR_UNRECOGNIZED_MESSAGE_TYPE);
