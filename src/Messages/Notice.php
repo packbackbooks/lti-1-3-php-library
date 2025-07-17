@@ -1,11 +1,10 @@
 <?php
 
-namespace Packback\Lti1p3\PlatformNotificationService;
+namespace Packback\Lti1p3\Messages;
 
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\LtiException;
-use Packback\Lti1p3\LtiMessage;
 use Packback\Lti1p3\MessageValidators\NoticeMessageValidator;
 
 class Notice extends LtiMessage
@@ -40,19 +39,12 @@ class Notice extends LtiMessage
      */
     public function validate(): static
     {
-        return $this->validateJwtFormat()
-            ->validateNonce()
-            ->validateRegistration()
-            ->validateJwtSignature()
-            ->validateDeployment()
-            ->validateMessage();
+        return $this->validateMessage();
     }
 
-    protected function validateMessage(): static
+    protected function messageValidator(): string
     {
-        NoticeMessageValidator::validate($this->getBody());
-
-        return $this;
+        return NoticeMessageValidator::class;
     }
 
     protected function hasJwtToken(): bool

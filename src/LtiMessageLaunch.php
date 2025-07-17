@@ -2,13 +2,12 @@
 
 namespace Packback\Lti1p3;
 
-use Firebase\JWT\JWT;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiDeployment;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\Interfaces\IMigrationDatabase;
+use Packback\Lti1p3\Messages\LaunchMessage;
 use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 use Packback\Lti1p3\MessageValidators\EulaMessageValidator;
@@ -17,7 +16,7 @@ use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
 use Packback\Lti1p3\PlatformNotificationService\PlatformNotificationService;
 
-class LtiMessageLaunch extends LtiMessage
+class LtiMessageLaunch extends LaunchMessage
 {
     #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_DEEPLINK instead', since: '6.4')]
     public const TYPE_DEEPLINK = LtiConstants::MESSAGE_TYPE_DEEPLINK;
@@ -83,66 +82,6 @@ class LtiMessageLaunch extends LtiMessage
     public function setRequest(array $request): static
     {
         return $this->setMessage($request);
-    }
-
-    public function initialize(array $request): static
-    {
-        return $this->setMessage($request)
-            ->validate()
-            ->migrate()
-            ->cacheLaunchData();
-    }
-
-    /**
-     * Validates all aspects of an incoming LTI message launch and caches the launch if successful.
-     *
-     * @throws LtiException Will throw an LtiException if validation fails
-     */
-    public function validate(): static
-    {
-        return $this->validateState()
-            ->validateJwtFormat()
-            ->validateNonce()
-            ->validateRegistration()
-            ->validateJwtSignature()
-            ->validateDeployment()
-            ->validateMessage();
-    }
-
-    public function migrate(): static
-    {
-        if (!$this->shouldMigrate()) {
-            return $this->ensureDeploymentExists();
-        }
-
-        if (!isset($this->getBody()[LtiConstants::LTI1P1]['oauth_consumer_key_sign'])) {
-            throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
-        }
-
-        if (!$this->matchingLti1p1KeyExists()) {
-            throw new LtiException(static::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED);
-        }
-
-        $this->deployment = $this->db->migrateFromLti1p1($this);
-
-        return $this->ensureDeploymentExists();
-    }
-
-    public function cacheLaunchData(): static
-    {
-        $this->cache->cacheLaunchData($this->launch_id, $this->getBody());
-
-        return $this;
-    }
-
-    public function getServiceConnector(): ILtiServiceConnector
-    {
-        return $this->serviceConnector;
-    }
-
-    public function getRegistration(): LtiRegistration
-    {
-        return $this->registration;
     }
 
     /**
@@ -223,6 +162,11 @@ class LtiMessageLaunch extends LtiMessage
         );
     }
 
+    public static function messageType(): string
+    {
+        return '';
+    }
+
     public function isMessageType(string $type): bool
     {
         return $this->getBody()[LtiConstants::MESSAGE_TYPE] === $type;
@@ -273,7 +217,7 @@ class LtiMessageLaunch extends LtiMessage
     }
 
     /**
-     * Returns whether or not the current launch is a EULA launch.
+     * Returns whether or not the current launch is a Report Review launch.
      */
     public function isReportReviewLaunch(): bool
     {
@@ -281,95 +225,14 @@ class LtiMessageLaunch extends LtiMessage
     }
 
     /**
-     * Returns whether or not the current launch is a EULA launch.
+     * Returns whether or not the current launch is an Asset Processor Settings launch.
      */
     public function isAssetProcessorSettingsLaunch(): bool
     {
         return $this->isMessageType(LtiConstants::MESSAGE_TYPE_ASSETPROCESSORSETTINGS);
     }
 
-    /**
-     * Fetches the decoded body of the JWT used in the current launch.
-     */
-    public function getLaunchData(): array
-    {
-        return $this->getBody();
-    }
-
-    /**
-     * Get the unique launch id for the current launch.
-     */
-    public function getLaunchId(): string
-    {
-        return $this->launch_id;
-    }
-
-    protected function hasJwtToken(): bool
-    {
-        return isset($this->message['id_token']);
-    }
-
-    protected function getJwtToken(): string
-    {
-        return $this->message['id_token'];
-    }
-
-    protected function validateState(): static
-    {
-        // Check State for OIDC.
-        if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$this->message['state']) !== $this->message['state']) {
-            // Error if state doesn't match
-            throw new LtiException(static::ERR_STATE_NOT_FOUND);
-        }
-
-        return $this;
-    }
-
-    protected function validateNonce(): static
-    {
-        parent::validateNonce();
-
-        if (!$this->cache->checkNonceIsValid($this->getBody()['nonce'], $this->message['state'])) {
-            throw new LtiException(static::ERR_INVALID_NONCE);
-        }
-
-        return $this;
-    }
-
-    protected function validateDeployment(): static
-    {
-        parent::validateDeployment();
-
-        // Find deployment.
-        $client_id = $this->getAud();
-        $this->deployment = $this->db->findDeployment($this->getBody()['iss'], $this->getBody()[LtiConstants::DEPLOYMENT_ID], $client_id);
-
-        if (!$this->canMigrate()) {
-            return $this->ensureDeploymentExists();
-        }
-
-        return $this;
-    }
-
-    protected function validateMessage(): static
-    {
-        if (!isset($this->getBody()[LtiConstants::MESSAGE_TYPE])) {
-            // Unable to identify message type.
-            throw new LtiException(static::ERR_INVALID_MESSAGE_TYPE);
-        }
-
-        $validator = $this->getMessageValidator($this->getBody());
-
-        if (!isset($validator)) {
-            throw new LtiException(static::ERR_UNRECOGNIZED_MESSAGE_TYPE);
-        }
-
-        $validator::validate($this->getBody());
-
-        return $this;
-    }
-
-    private function getMessageValidator(array $jwtBody): ?string
+    protected function messageValidator(): string
     {
         $availableValidators = [
             DeepLinkMessageValidator::class,
@@ -381,63 +244,16 @@ class LtiMessageLaunch extends LtiMessage
         ];
 
         // Filter out validators that cannot validate the message
-        $applicableValidators = array_filter($availableValidators, function ($validator) use ($jwtBody) {
-            return $validator::canValidate($jwtBody);
+        $applicableValidators = array_filter($availableValidators, function ($validator) {
+            return $validator::canValidate($this->getBody());
         });
 
         // There should be 0-1 validators. This will either return the validator, or null if none apply.
         return array_shift($applicableValidators);
     }
 
-    /**
-     * @throws LtiException
-     */
-    private function ensureDeploymentExists(): static
+    protected function getMessageValidator(array $jwtBody): ?string
     {
-        if (!isset($this->deployment)) {
-            throw new LtiException(static::ERR_NO_DEPLOYMENT);
-        }
-
-        return $this;
-    }
-
-    public function canMigrate(): bool
-    {
-        return $this->db instanceof IMigrationDatabase;
-    }
-
-    private function shouldMigrate(): bool
-    {
-        return $this->canMigrate()
-            && $this->db->shouldMigrate($this);
-    }
-
-    private function matchingLti1p1KeyExists(): bool
-    {
-        $keys = $this->db->findLti1p1Keys($this);
-
-        foreach ($keys as $key) {
-            if ($this->oauthConsumerKeySignMatches($key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function oauthConsumerKeySignMatches(Lti1p1Key $key): bool
-    {
-        return $this->getBody()[LtiConstants::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key);
-    }
-
-    private function getOauthSignature(Lti1p1Key $key): string
-    {
-        return $key->sign(
-            $this->getBody()[LtiConstants::DEPLOYMENT_ID],
-            $this->getBody()['iss'],
-            $this->getAud(),
-            $this->getBody()['exp'],
-            $this->getBody()['nonce']
-        );
+        return $this->messageValidator();
     }
 }

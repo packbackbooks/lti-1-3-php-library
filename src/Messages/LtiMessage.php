@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace Packback\Lti1p3\Messages;
 
 use Exception;
 use Firebase\JWT\ExpiredException;
@@ -11,6 +11,10 @@ use GuzzleHttp\Exception\TransferException;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
+use Packback\Lti1p3\LtiConstants;
+use Packback\Lti1p3\LtiException;
+use Packback\Lti1p3\LtiRegistration;
+use Packback\Lti1p3\ServiceRequest;
 
 abstract class LtiMessage
 {
@@ -20,6 +24,7 @@ abstract class LtiMessage
     public const ERR_MISSING_ID_TOKEN = 'Missing id_token.';
     public const ERR_INVALID_ID_TOKEN = 'Invalid id_token, JWT must contain 3 parts.';
     public const ERR_MISSING_NONCE = 'Missing Nonce.';
+    public const ERR_INVALID_NONCE = 'Invalid Nonce.';
 
     /**
      * :issuerUrl and :clientId are used to substitute the queried issuerUrl
@@ -48,11 +53,15 @@ abstract class LtiMessage
         'ES512' => 'EC',
     ];
 
-    abstract protected function validateMessage(): static;
+    // abstract public static function requiredClaims(): array;
+
+    // abstract public static function optionalClaims(): array;
 
     abstract protected function hasJwtToken(): bool;
 
     abstract protected function getJwtToken(): string;
+
+    abstract protected function messageValidator(): string;
 
     /**
      * Fetches the decoded body of the JWT used in the current message.
@@ -87,6 +96,43 @@ abstract class LtiMessage
         return $this->getBody()[LtiConstants::MESSAGE_TYPE] === $type;
     }
 
+    public function getServiceConnector(): ILtiServiceConnector
+    {
+        return $this->serviceConnector;
+    }
+
+    public function getRegistration(): LtiRegistration
+    {
+        return $this->registration;
+    }
+
+    protected function validateMessage(): static
+    {
+        $this->validateJwtFormat()
+            ->validateNonce()
+            ->validateRegistration()
+            ->validateJwtSignature()
+            ->validateDeployment();
+
+        // @todo validate message-agnostic required claims
+        foreach (static::universallyRequiredClaims() as $claim) {
+            if (!isset($this->jwt['body'][$claim])) {
+                // Unable to identify message type.
+                throw new LtiException('Missing required claim: '.$claim);
+            }
+        }
+
+        $validator = $this->getMessageValidator($this->getBody());
+
+        if (!isset($validator)) {
+            throw new LtiException(static::ERR_UNRECOGNIZED_MESSAGE_TYPE);
+        }
+
+        $validator::validate($this->getBody());
+
+        return $this;
+    }
+
     protected function validateJwtFormat(): static
     {
         if (!$this->hasJwtToken()) {
@@ -113,6 +159,13 @@ abstract class LtiMessage
     {
         if (!isset($this->jwt['body']['nonce'])) {
             throw new LtiException(static::ERR_MISSING_NONCE);
+        }
+
+        /**
+         * @todo, how do we do this for async notifications?
+         */
+        if (isset($this->cache) && !$this->cache->checkNonceIsValid($this->getBody()['nonce'], $this->message['state'])) {
+            throw new LtiException(static::ERR_INVALID_NONCE);
         }
 
         return $this;
@@ -166,6 +219,16 @@ abstract class LtiMessage
         }
 
         return $this;
+    }
+
+    protected function universallyRequiredClaims(): array
+    {
+        return [
+            LtiConstants::MESSAGE_TYPE,
+            LtiConstants::VERSION,
+            LtiConstants::DEPLOYMENT_ID,
+            LtiConstants::ROLES,
+        ];
     }
 
     protected function getAud(): string

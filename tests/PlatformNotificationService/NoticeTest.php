@@ -7,7 +7,7 @@ use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiException;
-use Packback\Lti1p3\PlatformNotificationService\Notice;
+use Packback\Lti1p3\Messages\Notice;
 use Tests\TestCase;
 
 class NoticeTest extends TestCase
