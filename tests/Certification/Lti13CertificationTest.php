@@ -298,7 +298,7 @@ class Lti13CertificationTest extends TestCase
         $payload = $this->payload;
         unset($payload[LtiConstants::VERSION]);
 
-        $this->expectExceptionMessage('Missing LTI Version');
+        $this->expectExceptionMessage('Missing required claim: https://purl.imsglobal.org/spec/lti/claim/version');
 
         $this->launch($payload);
     }
@@ -338,7 +338,7 @@ class Lti13CertificationTest extends TestCase
         $payload = $this->payload;
         unset($payload[LtiConstants::MESSAGE_TYPE]);
 
-        $this->expectExceptionMessage('Invalid message type');
+        $this->expectExceptionMessage('Missing required claim: https://purl.imsglobal.org/spec/lti/claim/message_type');
 
         $this->launch($payload);
     }
@@ -348,7 +348,7 @@ class Lti13CertificationTest extends TestCase
         $payload = $this->payload;
         unset($payload[LtiConstants::ROLES]);
 
-        $this->expectExceptionMessage('Missing Roles Claim');
+        $this->expectExceptionMessage('Missing required claim: https://purl.imsglobal.org/spec/lti/claim/roles');
 
         $this->launch($payload);
     }
