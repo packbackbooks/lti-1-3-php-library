@@ -217,7 +217,7 @@ class LtiMessageBridge
         return $this;
     }
 
-    protected function validateJwtFormat(array $message, string $tokenKey): static
+    protected function validateJwtFormat(array $message, string $tokenKey): array
     {
         if (!isset($message[$tokenKey])) {
             throw new LtiException(static::ERR_MISSING_ID_TOKEN);
