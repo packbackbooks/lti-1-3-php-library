@@ -106,11 +106,6 @@ abstract class LtiMessage
         return $this->registration;
     }
 
-    public function hasClaim(string $claim): bool
-    {
-        return isset($this->jwt['body'][$claim]);
-    }
-
     protected function validateMessage(): static
     {
         $this->validateJwtFormat()
@@ -118,7 +113,7 @@ abstract class LtiMessage
             ->validateRegistration()
             ->validateJwtSignature()
             ->validateDeployment()
-            ->validateClaims();
+            ->validateClaims($this->jwt);
 
         $validator = $this->messageValidator($this->getBody());
 

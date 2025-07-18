@@ -54,6 +54,17 @@ abstract class LaunchMessage extends LtiMessage
             ->cacheLaunchData();
     }
 
+    /**
+     * Validates all aspects of an incoming LTI message launch and caches the launch if successful.
+     *
+     * @throws LtiException Will throw an LtiException if validation fails
+     */
+    public function validate(): static
+    {
+        return $this->validateState()
+            ->validateMessage();
+    }
+
     public function migrate(): static
     {
         if (!$this->shouldMigrate()) {
@@ -71,17 +82,6 @@ abstract class LaunchMessage extends LtiMessage
         $this->deployment = $this->db->migrateFromLti1p1($this);
 
         return $this->ensureDeploymentExists();
-    }
-
-    /**
-     * Validates all aspects of an incoming LTI message launch and caches the launch if successful.
-     *
-     * @throws LtiException Will throw an LtiException if validation fails
-     */
-    public function validate(): static
-    {
-        return $this->validateState()
-            ->validateMessage();
     }
 
     public function cacheLaunchData(): static

@@ -6,9 +6,17 @@ use Packback\Lti1p3\LtiException;
 
 trait Claimable
 {
-    abstract public static function requiredClaims(): array;
+    // abstract public static function requiredClaims(): array;
 
-    abstract public function hasClaim(string $claim): bool;
+    public function getClaim(array $jwt, string $claim): bool
+    {
+        return $jwt['body'][$claim];
+    }
+
+    public function hasClaim(array $jwt, string $claim): bool
+    {
+        return isset($jwt['body'][$claim]);
+    }
 
     protected static function universallyRequiredClaims(): array
     {
@@ -19,17 +27,24 @@ trait Claimable
         ];
     }
 
-    public function validateClaims(): static
+    public function validateUniversalClaims(array $jwt): static
     {
         foreach (static::universallyRequiredClaims() as $claim) {
-            if (!$this->hasClaim($claim)) {
+            if (!$this->hasClaim($jwt, $claim)) {
                 // Unable to identify message type.
                 throw new LtiException('Missing required claim: '.$claim);
             }
         }
 
+        return $this;
+    }
+
+    public function validateClaims(array $jwt): static
+    {
+        $this->validateUniversalClaims($jwt);
+
         foreach (static::requiredClaims() as $claim) {
-            if (!$this->hasClaim($claim)) {
+            if (!$this->hasClaim($jwt, $claim)) {
                 // Unable to identify message type.
                 throw new LtiException('Missing required claim: '.$claim);
             }
