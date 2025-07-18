@@ -102,7 +102,7 @@ class LtiMessageBridge
      *
      * @throws LtiException Will throw an LtiException if validation fails
      */
-    public function validate(array $message, string $typeClaim): static
+    public function validate(array $message, string $typeClaim): array
     {
         if (isset($message['state'])) {
             $this->validateState($message);
@@ -114,7 +114,7 @@ class LtiMessageBridge
         $this->validateNonce($jwt, $message);
         $registration = $this->validateRegistration($jwt);
         $this->validateJwtSignature($registration, $jwt, $message[$tokenKey]);
-        $deployment = $this->validateDeployment();
+        $deployment = $this->validateDeployment($jwt);
         $this->validateUniversalClaims($jwt);
 
         return [$jwt, $registration, $deployment];
@@ -122,12 +122,12 @@ class LtiMessageBridge
 
     public function createMessage(array $jwt, string $typeClaim): LtiMessage
     {
-        $class = static::getMessageClass($jwt, $typeClaim);
+        $class = $this->getMessageClass($jwt, $typeClaim);
 
         return new $class($jwt['body']);
     }
 
-    public static function getMessageClass(array $jwt, string $typeClaim): string
+    public function getMessageClass(array $jwt, string $typeClaim): string
     {
         if ($typeClaim === LtiConstants::MESSAGE_TYPE) {
             $type = $this->getClaim($jwt, $typeClaim);
@@ -186,11 +186,6 @@ class LtiMessageBridge
     public function getRegistration(): LtiRegistration
     {
         return $this->registration;
-    }
-
-    public function hasClaim(string $claim): bool
-    {
-        return isset($this->jwt['body'][$claim]);
     }
 
     protected function validateState(array $message): static
@@ -301,7 +296,7 @@ class LtiMessageBridge
         return $this;
     }
 
-    protected function validateDeployment(array $jwt): ?ILtiDeployment
+    protected function validateDeployment(array $jwt): ?LtiDeployment
     {
         if (!isset($jwt['body'][LtiConstants::DEPLOYMENT_ID])) {
             throw new LtiException(static::ERR_MISSING_DEPLOYEMENT_ID);
@@ -315,7 +310,7 @@ class LtiMessageBridge
          * @todo if is launch
          */
         if (!$this->canMigrate()) {
-            return $this->ensureDeploymentExists($deployment);
+            $this->ensureDeploymentExists($deployment);
         }
 
         return $deployment;
@@ -415,7 +410,7 @@ class LtiMessageBridge
     /**
      * @todo handle migrations
      */
-    public function migrate(?ILtiDeployment $deployment, array $jwt): static
+    public function migrate(?LtiDeployment $deployment, array $jwt): static
     {
         if (!$this->shouldMigrate()) {
             return $this->ensureDeploymentExists($deployment);
@@ -465,7 +460,7 @@ class LtiMessageBridge
     /**
      * @throws LtiException
      */
-    protected function ensureDeploymentExists(?ILtiDeployment $deployment = null): static
+    protected function ensureDeploymentExists(?LtiDeployment $deployment = null): static
     {
         if (!isset($deployment)) {
             throw new LtiException(static::ERR_NO_DEPLOYMENT);

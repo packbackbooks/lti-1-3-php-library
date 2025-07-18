@@ -8,7 +8,7 @@ trait Claimable
 {
     // abstract public static function requiredClaims(): array;
 
-    public function getClaim(array $jwt, string $claim): bool
+    public function getClaim(array $jwt, string $claim): string
     {
         return $jwt['body'][$claim];
     }
