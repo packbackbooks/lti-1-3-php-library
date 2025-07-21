@@ -11,7 +11,7 @@ use Packback\Lti1p3\Messages\Notice;
 
 abstract class ClaimFactory
 {
-    public static function create(string $claim, LtiMessage $message): Claim
+    public static function create(string $claim, LtiMessage $message)
     {
         $class = static::getClaimClass($claim);
 

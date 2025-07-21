@@ -103,7 +103,7 @@ abstract class Factory
     {
         $class = $this->getMessageClass($jwt);
 
-        return new $class($registration, $jwt['body']);
+        return new $class($this->serviceConnector, $registration, $jwt['body']);
     }
 
     abstract public function getTypeName($jwt): string;
