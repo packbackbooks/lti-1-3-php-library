@@ -99,11 +99,11 @@ abstract class Factory
         return [$jwt, $registration, $deployment];
     }
 
-    public function createMessage(array $jwt): LtiMessage
+    public function createMessage(ILtiRegistration $registration, array $jwt): LtiMessage
     {
         $class = $this->getMessageClass($jwt);
 
-        return new $class($jwt['body']);
+        return new $class($registration, $jwt['body']);
     }
 
     abstract public function getTypeName($jwt): string;

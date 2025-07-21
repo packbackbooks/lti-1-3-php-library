@@ -37,7 +37,7 @@ class MessageFactory extends Factory
         /**
          * @var LaunchMessage
          */
-        $messageInstance = $this->createMessage($jwt);
+        $messageInstance = $this->createMessage($registration, $jwt);
         $messageInstance->validate();
 
         $this->migrate($deployment, $jwt)
@@ -48,7 +48,7 @@ class MessageFactory extends Factory
 
     public function getTypeName($jwt): string
     {
-        return $this->getClaim($jwt, LtiConstants::MESSAGE_TYPE);
+        return $this->getClaim($jwt['body'], LtiConstants::MESSAGE_TYPE);
     }
 
     protected function validateState(array $message): static

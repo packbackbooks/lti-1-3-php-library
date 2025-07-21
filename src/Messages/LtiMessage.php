@@ -4,6 +4,7 @@ namespace Packback\Lti1p3\Messages;
 
 use Firebase\JWT\JWT;
 use Packback\Lti1p3\Concerns\Claimable;
+use Packback\Lti1p3\Interfaces\ILtiRegistration;
 
 abstract class LtiMessage
 {
@@ -13,7 +14,10 @@ abstract class LtiMessage
     // abstract public static function optionalClaims(): array;
     abstract public static function messageValidator(): string;
 
-    public function __construct(protected array $body) {}
+    public function __construct(
+        protected ILtiRegistration $registration,
+        protected array $body
+    ) {}
 
     /**
      * Fetches the decoded body of the JWT used in the current message.

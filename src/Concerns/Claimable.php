@@ -9,14 +9,14 @@ trait Claimable
 {
     // abstract public static function requiredClaims(): array;
 
-    public function getClaim(array $jwt, string $claim): mixed
+    public function getClaim(array $jwtBody, string $claim): mixed
     {
-        return $jwt['body'][$claim];
+        return $jwtBody[$claim];
     }
 
-    public function hasClaim(array $jwt, string $claim): bool
+    public function hasClaim(array $jwtBody, string $claim): bool
     {
-        return isset($jwt['body'][$claim]);
+        return isset($jwtBody[$claim]);
     }
 
     protected static function universallyRequiredClaims(): array

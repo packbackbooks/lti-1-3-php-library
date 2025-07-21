@@ -16,7 +16,7 @@ class NoticeFactory extends Factory
     {
         [$jwt, $registration, $deployment] = $this->validate($message);
 
-        $messageInstance = $this->createMessage($jwt);
+        $messageInstance = $this->createMessage($registration, $jwt);
         $messageInstance->validate();
 
         return $messageInstance;
@@ -24,7 +24,7 @@ class NoticeFactory extends Factory
 
     public function getTypeName($jwt): string
     {
-        return $this->getClaim($jwt, LtiConstants::PNS_CLAIM_NOTICE)['type'];
+        return $this->getClaim($jwt['body'], LtiConstants::PNS_CLAIM_NOTICE)['type'];
     }
 
     protected function validateState(array $message): static

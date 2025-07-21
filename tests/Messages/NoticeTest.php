@@ -2,16 +2,23 @@
 
 namespace Tests\Messages;
 
+use Mockery;
+use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Messages\Notice;
 use Tests\TestCase;
 
 class NoticeTest extends TestCase
 {
-    protected function setUp(): void {}
+    private $registrationMock;
+
+    protected function setUp(): void
+    {
+        $this->registrationMock = Mockery::mock(ILtiRegistration::class);
+    }
 
     public function test_it_creates_new_instance()
     {
-        $notice = new Notice([]);
+        $notice = new Notice($this->registrationMock, []);
         $this->assertInstanceOf(Notice::class, $notice);
     }
 }

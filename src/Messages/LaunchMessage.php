@@ -2,12 +2,16 @@
 
 namespace Packback\Lti1p3\Messages;
 
+use Packback\Lti1p3\Interfaces\ILtiRegistration;
+
 abstract class LaunchMessage extends LtiMessage
 {
     protected string $launchId;
 
-    public function __construct(protected array $body)
-    {
+    public function __construct(
+        protected ILtiRegistration $registration,
+        protected array $body
+    ) {
         $this->launchId = uniqid('lti1p3_launch_', true);
     }
 
