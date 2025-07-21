@@ -3,6 +3,7 @@
 namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Activity;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Claims\PlatformNotificationService;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\Messages\LtiMessage;
