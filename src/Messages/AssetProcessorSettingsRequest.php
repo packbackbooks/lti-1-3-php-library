@@ -2,13 +2,14 @@
 
 namespace Packback\Lti1p3\Messages;
 
+use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
 
 class AssetProcessorSettingsRequest extends LaunchMessage
 {
     public static function messageType(): string
     {
-        return LtiContstants::MESSAGE_TYPE_ASSETPROCESSORSETTINGS;
+        return LtiConstants::MESSAGE_TYPE_ASSETPROCESSORSETTINGS;
     }
 
     public static function requiredClaims(): array

@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\Messages;
 
+use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
 
 class EulaRequest extends LaunchMessage
@@ -16,7 +17,7 @@ class EulaRequest extends LaunchMessage
         return [
             LtiConstants::MESSAGE_TYPE,
             LtiConstants::TARGET_LINK_URI,
-            LtiConstants::EULA_SERVICE,
+            LtiConstants::EULA_CLAIM_SERVICE,
         ];
     }
 

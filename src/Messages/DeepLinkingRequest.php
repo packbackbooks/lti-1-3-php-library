@@ -9,7 +9,7 @@ class DeepLinkingRequest extends LaunchMessage
 {
     public static function messageType(): string
     {
-        return LtiContstants::MESSAGE_TYPE_DEEPLINK;
+        return LtiConstants::MESSAGE_TYPE_DEEPLINK;
     }
 
     public static function requiredClaims(): array

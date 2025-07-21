@@ -2,13 +2,13 @@
 
 namespace Packback\Lti1p3\Messages;
 
-use Packback\Lti1p3\MessageValidators\ReportReviewValidator;
+use Packback\Lti1p3\LtiConstants;
 
 class ReportReviewRequest extends LaunchMessage
 {
     public static function messageType(): string
     {
-        return LtiContstants::MESSAGE_TYPE_REPORTREVIEW;
+        return LtiConstants::MESSAGE_TYPE_REPORTREVIEW;
     }
 
     /**

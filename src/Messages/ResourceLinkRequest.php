@@ -3,13 +3,13 @@
 namespace Packback\Lti1p3\Messages;
 
 use Packback\Lti1p3\LtiConstants;
-use Packback\Lti1p3\Validators\ResourceMessageValidator;
+use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 
 class ResourceLinkRequest extends LaunchMessage
 {
     public static function messageType(): string
     {
-        return LtiContstants::MESSAGE_TYPE_RESOURCE;
+        return LtiConstants::MESSAGE_TYPE_RESOURCE;
     }
 
     public static function requiredClaims(): array
