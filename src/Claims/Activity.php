@@ -12,9 +12,4 @@ class Activity extends Claim
     {
         return LtiConstants::AP_CLAIM_ACTIVITY;
     }
-
-    public function getArray(): array
-    {
-        return [];
-    }
 }
