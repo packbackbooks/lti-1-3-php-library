@@ -22,14 +22,14 @@ trait Claimable
     /**
      * @todo get rid of all of these
      */
-    protected static function universallyRequiredClaims(): array
-    {
-        return [
-            LtiConstants::VERSION,
-            LtiConstants::DEPLOYMENT_ID,
-            LtiConstants::ROLES,
-        ];
-    }
+    // protected static function universallyRequiredClaims(): array
+    // {
+    //     return [
+    //         LtiConstants::VERSION,
+    //         LtiConstants::DEPLOYMENT_ID,
+    //         LtiConstants::ROLES,
+    //     ];
+    // }
 
     // public function validateUniversalClaims(array $jwt): static
     // {

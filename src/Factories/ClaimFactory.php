@@ -4,10 +4,13 @@ namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Activity;
 use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Claims\DeepLinkSettings;
+use Packback\Lti1p3\Claims\DeploymentId;
+use Packback\Lti1p3\Claims\MessageType;
+use Packback\Lti1p3\Claims\Notice;
 use Packback\Lti1p3\Claims\PlatformNotificationService;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\Messages\LtiMessage;
-use Packback\Lti1p3\Messages\Notice;
 
 abstract class ClaimFactory
 {
@@ -15,14 +18,31 @@ abstract class ClaimFactory
     {
         $class = static::getClaimClass($claim);
 
-        return new $class($message->getBody());
+        switch ($claim) {
+            case LtiConstants::PNS_CLAIM_NOTICE:
+                return new Notice($message->getBody());
+            case LtiConstants::AP_CLAIM_ACTIVITY:
+                return new Activity($message->getBody());
+            case LtiConstants::PNS_CLAIM_SERVICE:
+                return new PlatformNotificationService($message->getBody());
+            case LtiConstants::DL_DEEP_LINK_SETTINGS:
+                return new DeepLinkSettings($message->getBody());
+            case LtiConstants::DEPLOYMENT_ID:
+                return new DeploymentId($message->getBody());
+            case LtiConstants::MESSAGE_TYPE:
+                return new MessageType($message->getBody());
+            default:
+                throw new \InvalidArgumentException(
+                    "Claim type '$claim' is not recognized or not implemented."
+                );
+        }
     }
 
     public static function getClaimClass(string $claim): string
     {
         $typeClaimMap = [
             // LtiConstants::VERSION => ::class,
-            // LtiConstants::DEPLOYMENT_ID => ::class,
+            LtiConstants::DEPLOYMENT_ID => DeploymentId::class,
             // LtiConstants::ROLES => ::class,
             // LtiConstants::FOR_USER => ::class,
             // LtiConstants::MESSAGE_TYPE => ::class,
@@ -37,7 +57,7 @@ abstract class ClaimFactory
             // LtiConstants::TOOL_PLATFORM => ::class,
             // LtiConstants::DL_CONTENT_ITEMS => ::class,
             // LtiConstants::DL_DATA => ::class,
-            // LtiConstants::DL_DEEP_LINK_SETTINGS => ::class,
+            LtiConstants::DL_DEEP_LINK_SETTINGS => DeepLinkSettings::class,
             // LtiConstants::NRPS_CLAIM_SERVICE => ::class,
             // LtiConstants::AGS_CLAIM_ENDPOINT => ::class,
             // LtiConstants::GS_CLAIM_SERVICE => ::class,

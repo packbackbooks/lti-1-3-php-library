@@ -130,9 +130,9 @@ class LtiMessageBridge
     public function getMessageClass(array $jwt, string $typeClaim): string
     {
         if ($typeClaim === LtiConstants::MESSAGE_TYPE) {
-            $type = $this->getClaim($jwt, $typeClaim);
+            $type = $this->getClaim($jwt, $typeClaim)->getBody();
         } elseif ($typeClaim === LtiConstants::PNS_CLAIM_NOTICE) {
-            $type = $this->getClaim($jwt, $typeClaim)['type'];
+            $type = $this->getClaim($jwt, $typeClaim)->getBody()['type'];
         }
 
         /**
