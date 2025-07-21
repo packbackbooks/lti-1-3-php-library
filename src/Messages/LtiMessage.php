@@ -25,8 +25,6 @@ abstract class LtiMessage
 
     public function validate(): static
     {
-        $this->validateClaims($this->getBody());
-
         static::messageValidator()::validate($this->getBody());
 
         return $this;
