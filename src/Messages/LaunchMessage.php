@@ -19,4 +19,12 @@ abstract class LaunchMessage extends LtiMessage
     {
         return $this->launchId;
     }
+
+    /**
+     * @todo deprecate
+     */
+    public function getLaunchData(): array
+    {
+        return $this->body;
+    }
 }
