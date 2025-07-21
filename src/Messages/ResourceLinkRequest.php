@@ -33,7 +33,7 @@ class ResourceLinkRequest extends LaunchMessage
         ];
     }
 
-    protected function messageValidator(): string
+    public static function messageValidator(): string
     {
         return ResourceMessageValidator::class;
     }

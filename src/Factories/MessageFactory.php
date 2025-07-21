@@ -6,6 +6,8 @@ use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
+use Packback\Lti1p3\Interfaces\IMigrationDatabase;
+use Packback\Lti1p3\Lti1p1Key;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeployment;
 use Packback\Lti1p3\LtiException;
@@ -32,11 +34,14 @@ class MessageFactory extends Factory
     {
         [$jwt, $registration, $deployment] = $this->validate($message);
 
+        /**
+         * @var LaunchMessage
+         */
         $messageInstance = $this->createMessage($jwt);
         $messageInstance->validate();
 
         $this->migrate($deployment, $jwt)
-            ->cacheLaunchData(uniqid('lti1p3_launch_', true), $jwt);
+            ->cacheLaunchData($messageInstance, $jwt);
 
         return $messageInstance;
     }
@@ -124,19 +129,11 @@ class MessageFactory extends Factory
         return $this->ensureDeploymentExists($deployment);
     }
 
-    public function cacheLaunchData(string $launchId, array $jwt): static
+    public function cacheLaunchData(LaunchMessage $message, array $jwt): static
     {
-        $this->cache->cacheLaunchData($this->launch_id, $jwt['body']);
+        $this->cache->cacheLaunchData($message->getLaunchId(), $jwt['body']);
 
         return $this;
-    }
-
-    /**
-     * Get the unique launch id for the current launch.
-     */
-    public function getLaunchId(): string
-    {
-        return $this->launch_id;
     }
 
     public function canMigrate(): bool

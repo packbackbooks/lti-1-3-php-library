@@ -3,6 +3,7 @@
 namespace Packback\Lti1p3\Messages;
 
 use Packback\Lti1p3\LtiConstants;
+use Packback\Lti1p3\MessageValidators\ReportReviewMessageValidator;
 
 class ReportReviewRequest extends LaunchMessage
 {
@@ -35,8 +36,8 @@ class ReportReviewRequest extends LaunchMessage
         ];
     }
 
-    protected function messageValidator(): string
+    public static function messageValidator(): string
     {
-        return ReportReviewValidator::class;
+        return ReportReviewMessageValidator::class;
     }
 }

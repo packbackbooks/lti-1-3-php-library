@@ -15,7 +15,7 @@ use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
 use Packback\Lti1p3\PlatformNotificationService\PlatformNotificationService;
 
-class AbstractedLtiMessageLaunch extends LaunchMessage
+class AbstractedLtiMessageLaunch // extends LaunchMessage
 {
     #[\Deprecated(message: 'use LtiConstants::MESSAGE_TYPE_DEEPLINK instead', since: '6.4')]
     public const TYPE_DEEPLINK = LtiConstants::MESSAGE_TYPE_DEEPLINK;

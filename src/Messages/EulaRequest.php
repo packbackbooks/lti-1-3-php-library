@@ -32,7 +32,7 @@ class EulaRequest extends LaunchMessage
         ];
     }
 
-    protected function messageValidator(): string
+    public static function messageValidator(): string
     {
         return AssetProcessorSettingsValidator::class;
     }

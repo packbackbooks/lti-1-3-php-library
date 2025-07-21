@@ -31,7 +31,7 @@ class DeepLinkingRequest extends LaunchMessage
         ];
     }
 
-    protected function messageValidator(): string
+    public static function messageValidator(): string
     {
         return DeepLinkMessageValidator::class;
     }

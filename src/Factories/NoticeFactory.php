@@ -3,6 +3,8 @@
 namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\LtiConstants;
+use Packback\Lti1p3\LtiException;
+use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\Messages\Notice;
 
 class NoticeFactory extends Factory
