@@ -94,8 +94,8 @@ abstract class Factory
         $this->validateNonce($jwt, $message);
         $registration = $this->validateRegistration($jwt);
         $this->validateJwtSignature($registration, $jwt, $message);
+        $this->validateRequiredClaims($jwt);
         $deployment = $this->validateDeployment($jwt);
-        $this->validateType($jwt);
 
         return [$jwt, $registration, $deployment];
     }
@@ -247,12 +247,26 @@ abstract class Factory
         return $this;
     }
 
-    protected function validateDeployment(array $jwt): ?LtiDeployment
+    protected function validateRequiredClaims(array $jwt): static
     {
-        if (!isset($jwt['body'][LtiConstants::DEPLOYMENT_ID])) {
-            throw new LtiException(static::ERR_MISSING_DEPLOYEMENT_ID);
+        $requiredClaims = [
+            LtiConstants::VERSION,
+            LtiConstants::DEPLOYMENT_ID,
+            LtiConstants::ROLES,
+            static::getTypeClaim(),
+        ];
+        foreach ($requiredClaims as $claim) {
+            if (!static::hasClaimInBody($claim, $jwt['body'])) {
+                // Unable to identify message type.
+                throw new LtiException('Missing required claim: '.$claim);
+            }
         }
 
+        return $this;
+    }
+
+    protected function validateDeployment(array $jwt): ?LtiDeployment
+    {
         // Find deployment.
         $client_id = $this->getAud($jwt);
         /**
@@ -262,24 +276,6 @@ abstract class Factory
 
         return $deployment;
     }
-
-    protected function validateType(array $jwt): static
-    {
-        if (!isset($jwt['body'][static::getTypeClaim()])) {
-            throw new LtiException('Missing required claim: '.static::getTypeClaim());
-        }
-
-        return $this;
-    }
-
-    abstract protected function requiredClaims(): array;
-    // {
-    //     return [
-    //         LtiConstants::VERSION,
-    //         LtiConstants::DEPLOYMENT_ID,
-    //         LtiConstants::ROLES,
-    //     ];
-    // }
 
     protected function getAud(array $jwt): string
     {

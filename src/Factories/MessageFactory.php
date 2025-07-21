@@ -99,16 +99,6 @@ class MessageFactory extends Factory
         return $deployment;
     }
 
-    protected function requiredClaims(): array
-    {
-        return [
-            LtiConstants::VERSION,
-            LtiConstants::DEPLOYMENT_ID,
-            LtiConstants::ROLES,
-            LtiConstants::MESSAGE_TYPE,
-        ];
-    }
-
     /**
      * @todo handle migrations
      */
