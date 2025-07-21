@@ -2,7 +2,11 @@
 
 namespace Packback\Lti1p3\Messages;
 
+use Packback\Lti1p3\Claims\PlatformNotificationService;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
+use Packback\Lti1p3\LtiAssignmentsGradesService;
+use Packback\Lti1p3\LtiCourseGroupsService;
+use Packback\Lti1p3\LtiNamesRolesProvisioningService;
 
 abstract class LaunchMessage extends LtiMessage
 {
@@ -41,9 +45,7 @@ abstract class LaunchMessage extends LtiMessage
      */
     public function getPns(): PlatformNotificationService
     {
-        return new PlatformNotificationService(
-            $this->getBody()[LtiConstants::PNS_CLAIM_SERVICE]
-        );
+        return $this->getClaim(LtiConstants::PNS_CLAIM_SERVICE);
     }
     /**
      * Returns whether or not the current launch can use the names and roles service.

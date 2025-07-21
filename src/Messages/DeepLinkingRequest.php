@@ -44,8 +44,8 @@ class DeepLinkingRequest extends LaunchMessage
     {
         return new LtiDeepLink(
             $this->registration,
-            $this->getClaim(LtiConstants::DEPLOYMENT_ID),
-            $this->getClaim(LtiConstants::DL_DEEP_LINK_SETTINGS)
+            $this->getClaim(LtiConstants::DEPLOYMENT_ID)->getBody(),
+            $this->getClaim(LtiConstants::DL_DEEP_LINK_SETTINGS)->getBody()
         );
     }
 }
