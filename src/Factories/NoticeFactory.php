@@ -24,7 +24,7 @@ class NoticeFactory extends Factory
 
     public function getTypeName($jwt): string
     {
-        return $this->getClaim($jwt['body'], LtiConstants::PNS_CLAIM_NOTICE)['type'];
+        return static::getClaimFrom(LtiConstants::PNS_CLAIM_NOTICE, $jwt['body'])['type'];
     }
 
     protected function validateState(array $message): static

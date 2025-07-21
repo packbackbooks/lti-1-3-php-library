@@ -33,4 +33,14 @@ abstract class LtiMessage
 
         return $this;
     }
+
+    public function hasClaim(string $claim): bool
+    {
+        return static::hasClaimInBody($claim, $this->body);
+    }
+
+    public function getClaim(string $claim): bool
+    {
+        return static::getClaimFrom($claim, $this->body);
+    }
 }
