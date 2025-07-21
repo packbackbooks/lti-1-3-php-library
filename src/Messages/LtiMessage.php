@@ -3,7 +3,6 @@
 namespace Packback\Lti1p3\Messages;
 
 use Firebase\JWT\JWT;
-use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Concerns\Claimable;
 use Packback\Lti1p3\Factories\ClaimFactory;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
@@ -43,7 +42,7 @@ abstract class LtiMessage
         return static::hasClaimInBody($claim, $this->body);
     }
 
-    public function getClaim(string $claim): Claim
+    public function getClaim(string $claim)
     {
         return ClaimFactory::create($claim, $this);
     }
