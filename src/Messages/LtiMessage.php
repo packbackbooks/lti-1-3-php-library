@@ -7,6 +7,7 @@ use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Concerns\Claimable;
 use Packback\Lti1p3\Factories\ClaimFactory;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
+use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 
 abstract class LtiMessage
 {
@@ -17,6 +18,7 @@ abstract class LtiMessage
     abstract public static function messageValidator(): string;
 
     public function __construct(
+        protected ILtiServiceConnector $serviceConnector,
         protected ILtiRegistration $registration,
         protected array $body
     ) {}

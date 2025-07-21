@@ -2,6 +2,8 @@
 
 namespace Packback\Lti1p3\Claims;
 
+use Packback\Lti1p3\LtiConstants;
+
 class Activity extends Claim
 {
     public function __construct(

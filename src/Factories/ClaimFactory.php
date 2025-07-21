@@ -9,16 +9,16 @@ use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\Messages\LtiMessage;
 use Packback\Lti1p3\Messages\Notice;
 
-abstract class Factory
+abstract class ClaimFactory
 {
     public static function create(string $claim, LtiMessage $message): Claim
     {
-        $class = $this->getClaimClass($claim);
+        $class = static::getClaimClass($claim);
 
         return new $class($message->getBody());
     }
 
-    public function getClaimClass(string $claim): string
+    public static function getClaimClass(string $claim): string
     {
         $typeClaimMap = [
             // LtiConstants::VERSION => ::class,

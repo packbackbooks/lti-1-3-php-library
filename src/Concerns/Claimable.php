@@ -31,29 +31,29 @@ trait Claimable
         ];
     }
 
-    public function validateUniversalClaims(array $jwt): static
-    {
-        foreach (static::universallyRequiredClaims() as $claim) {
-            if (!$this->hasClaim($jwt, $claim)) {
-                // Unable to identify message type.
-                throw new LtiException('Missing required claim: '.$claim);
-            }
-        }
+    // public function validateUniversalClaims(array $jwt): static
+    // {
+    //     foreach (static::universallyRequiredClaims() as $claim) {
+    //         if (!$this->hasClaim($jwt, $claim)) {
+    //             // Unable to identify message type.
+    //             throw new LtiException('Missing required claim: '.$claim);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function validateClaims(array $jwt): static
-    {
-        $this->validateUniversalClaims($jwt);
+    // public function validateClaims(array $jwt): static
+    // {
+    //     $this->validateUniversalClaims($jwt);
 
-        foreach (static::requiredClaims() as $claim) {
-            if (!$this->hasClaim($jwt, $claim)) {
-                // Unable to identify message type.
-                throw new LtiException('Missing required claim: '.$claim);
-            }
-        }
+    //     foreach (static::requiredClaims() as $claim) {
+    //         if (!$this->hasClaim($jwt, $claim)) {
+    //             // Unable to identify message type.
+    //             throw new LtiException('Missing required claim: '.$claim);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

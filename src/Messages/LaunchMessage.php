@@ -4,7 +4,9 @@ namespace Packback\Lti1p3\Messages;
 
 use Packback\Lti1p3\Claims\PlatformNotificationService;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
+use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\LtiAssignmentsGradesService;
+use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiCourseGroupsService;
 use Packback\Lti1p3\LtiNamesRolesProvisioningService;
 
@@ -13,6 +15,7 @@ abstract class LaunchMessage extends LtiMessage
     protected string $launchId;
 
     public function __construct(
+        protected ILtiServiceConnector $serviceConnector,
         protected ILtiRegistration $registration,
         protected array $body
     ) {
@@ -63,7 +66,7 @@ abstract class LaunchMessage extends LtiMessage
         return new LtiNamesRolesProvisioningService(
             $this->serviceConnector,
             $this->registration,
-            $this->jwt['body'][LtiConstants::NRPS_CLAIM_SERVICE]
+            $this->getBody()[LtiConstants::NRPS_CLAIM_SERVICE]
         );
     }
     /**
@@ -82,7 +85,7 @@ abstract class LaunchMessage extends LtiMessage
         return new LtiCourseGroupsService(
             $this->serviceConnector,
             $this->registration,
-            $this->jwt['body'][LtiConstants::GS_CLAIM_SERVICE]
+            $this->getBody()[LtiConstants::GS_CLAIM_SERVICE]
         );
     }
     /**
@@ -101,7 +104,7 @@ abstract class LaunchMessage extends LtiMessage
         return new LtiAssignmentsGradesService(
             $this->serviceConnector,
             $this->registration,
-            $this->jwt['body'][LtiConstants::AGS_CLAIM_ENDPOINT]
+            $this->getBody()[LtiConstants::AGS_CLAIM_ENDPOINT]
         );
     }
 }
