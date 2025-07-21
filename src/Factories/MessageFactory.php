@@ -46,9 +46,14 @@ class MessageFactory extends Factory
         return $messageInstance;
     }
 
+    public static function getTypeClaim(): string
+    {
+        return LtiConstants::MESSAGE_TYPE;
+    }
+
     public function getTypeName($jwt): string
     {
-        return static::getClaimFrom(LtiConstants::MESSAGE_TYPE, $jwt['body']);
+        return static::getClaimFrom(getTypeClaim(), $jwt['body']);
     }
 
     protected function validateState(array $message): static

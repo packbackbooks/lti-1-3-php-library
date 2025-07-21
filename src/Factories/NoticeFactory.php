@@ -22,9 +22,14 @@ class NoticeFactory extends Factory
         return $messageInstance;
     }
 
+    public static function getTypeClaim(): string
+    {
+        return LtiConstants::PNS_CLAIM_NOTICE;
+    }
+
     public function getTypeName($jwt): string
     {
-        return static::getClaimFrom(LtiConstants::PNS_CLAIM_NOTICE, $jwt['body'])['type'];
+        return static::getClaimFrom(static::getTypeClaim(), $jwt['body'])['type'];
     }
 
     protected function validateState(array $message): static

@@ -95,6 +95,7 @@ abstract class Factory
         $registration = $this->validateRegistration($jwt);
         $this->validateJwtSignature($registration, $jwt, $message);
         $deployment = $this->validateDeployment($jwt);
+        $this->validateType($jwt);
 
         return [$jwt, $registration, $deployment];
     }
@@ -105,6 +106,8 @@ abstract class Factory
 
         return new $class($this->serviceConnector, $registration, $jwt['body']);
     }
+
+    abstract public static function getTypeClaim(): string;
 
     abstract public function getTypeName($jwt): string;
 
@@ -258,6 +261,15 @@ abstract class Factory
         $deployment = $this->db->findDeployment($jwt['body']['iss'], $jwt['body'][LtiConstants::DEPLOYMENT_ID], $client_id);
 
         return $deployment;
+    }
+
+    protected function validateType(array $jwt): static
+    {
+        if (!isset($jwt['body'][static::getTypeClaim()])) {
+            throw new LtiException('Missing required claim: '.static::getTypeClaim());
+        }
+
+        return $this;
     }
 
     abstract protected function requiredClaims(): array;
