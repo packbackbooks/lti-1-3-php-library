@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use Mockery;
 use Mockery\MockInterface;
 use Packback\Lti1p3\AbstractedLtiMessageLaunch;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -81,9 +82,9 @@ class AbstractedLtiMessageLaunchTest extends TestCase
         ];
 
         $this->payload = [
-            LtiConstants::MESSAGE_TYPE => 'LtiResourceLinkRequest',
-            LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::RESOURCE_LINK => [
+            Claim::MESSAGE_TYPE => 'LtiResourceLinkRequest',
+            Claim::VERSION => LtiConstants::V1_3,
+            Claim::RESOURCE_LINK => [
                 'id' => 'd3a2504bba5184799a38f141e8df2335cfa8206d',
                 'description' => null,
                 'title' => null,
@@ -94,14 +95,14 @@ class AbstractedLtiMessageLaunchTest extends TestCase
             ],
             'aud' => $this->issuer['client_id'],
             'azp' => $this->issuer['client_id'],
-            LtiConstants::DEPLOYMENT_ID => $this->key['deployment_id'],
+            Claim::DEPLOYMENT_ID => $this->key['deployment_id'],
             'exp' => Carbon::now()->addDay()->timestamp,
             'iat' => Carbon::now()->subDay()->timestamp,
             'iss' => $this->issuer['issuer'],
             'nonce' => 'nonce-5e73ef2f4c6ea0.93530902',
             'sub' => '66b6a854-9f43-4bb2-90e8-6653c9126272',
-            LtiConstants::TARGET_LINK_URI => 'https://lms-api.packback.localhost/api/lti/launch',
-            LtiConstants::CONTEXT => [
+            Claim::TARGET_LINK_URI => 'https://lms-api.packback.localhost/api/lti/launch',
+            Claim::CONTEXT => [
                 'id' => 'd3a2504bba5184799a38f141e8df2335cfa8206d',
                 'label' => 'Canvas Unlauched',
                 'title' => 'Canvas - A Fresh Course That Remains Unlaunched',
@@ -113,7 +114,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
                     'errors' => [],
                 ],
             ],
-            LtiConstants::TOOL_PLATFORM => [
+            Claim::TOOL_PLATFORM => [
                 'guid' => 'FnwyPrXqSxwv8QCm11UwILpDJMAUPJ9WGn8zcvBM:canvas-lms',
                 'name' => 'Packback Engineering',
                 'version' => 'cloud',
@@ -123,7 +124,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
                     'errors' => [],
                 ],
             ],
-            LtiConstants::LAUNCH_PRESENTATION => [
+            Claim::LAUNCH_PRESENTATION => [
                 'document_target' => 'iframe',
                 'height' => 400,
                 'width' => 800,
@@ -135,14 +136,14 @@ class AbstractedLtiMessageLaunchTest extends TestCase
                 ],
             ],
             'locale' => 'en',
-            LtiConstants::ROLES => [
+            Claim::ROLES => [
                 LtiConstants::INSTITUTION_ADMINISTRATOR,
                 LtiConstants::INSTITUTION_INSTRUCTOR,
                 LtiConstants::MEMBERSHIP_INSTRUCTOR,
                 LtiConstants::SYSTEM_SYSADMIN,
                 LtiConstants::SYSTEM_USER,
             ],
-            LtiConstants::CUSTOM => [],
+            Claim::CUSTOM => [],
             'errors' => [
                 'errors' => [],
             ],
@@ -503,7 +504,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $jwtPayload = $this->payload;
-        unset($jwtPayload[LtiConstants::DEPLOYMENT_ID]);
+        unset($jwtPayload[Claim::DEPLOYMENT_ID]);
         $payload = [
             'utf8' => '✓',
             'id_token' => $this->buildJWT($jwtPayload, $this->issuer),
@@ -570,7 +571,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        unset($payload[LtiConstants::MESSAGE_TYPE]);
+        unset($payload[Claim::MESSAGE_TYPE]);
         $params = [
             'utf8' => '✓',
             'id_token' => $this->buildJWT($payload, $this->issuer),
@@ -611,7 +612,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
         );
 
         $payload = $this->payload;
-        $payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
+        $payload[Claim::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
 
         $params = [
             'utf8' => '✓',
@@ -642,7 +643,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
         $this->migrationDatabase->shouldReceive('findLti1p1Keys')
             ->once()->andReturn([$matchingKey]);
         $matchingKey->shouldReceive('sign')
-            ->once()->andReturn($payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign']);
+            ->once()->andReturn($payload[Claim::LTI1P1]['oauth_consumer_key_sign']);
         $this->migrationDatabase->shouldReceive('migrateFromLti1p1')
             ->once()->andReturn($this->deployment);
         $this->cache->shouldReceive('cacheLaunchData')
@@ -707,7 +708,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
         );
 
         $payload = $this->payload;
-        $payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
+        $payload[Claim::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
 
         $params = [
             'utf8' => '✓',
@@ -757,7 +758,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
         );
 
         $payload = $this->payload;
-        $payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
+        $payload[Claim::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
 
         $params = [
             'utf8' => '✓',
@@ -788,7 +789,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
         $this->migrationDatabase->shouldReceive('findLti1p1Keys')
             ->once()->andReturn([$matchingKey]);
         $matchingKey->shouldReceive('sign')
-            ->once()->andReturn($payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign']);
+            ->once()->andReturn($payload[Claim::LTI1P1]['oauth_consumer_key_sign']);
         $this->migrationDatabase->shouldReceive('migrateFromLti1p1')
             ->once()->andReturn(null);
 
@@ -802,7 +803,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url'] = 'https://example.com';
+        $payload[Claim::NRPS_NAMESROLESSERVICE]['context_memberships_url'] = 'https://example.com';
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasNrps();
@@ -814,7 +815,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        unset($payload[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url']);
+        unset($payload[Claim::NRPS_NAMESROLESSERVICE]['context_memberships_url']);
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasNrps();
@@ -826,7 +827,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url'] = 'https://example.com';
+        $payload[Claim::NRPS_NAMESROLESSERVICE]['context_memberships_url'] = 'https://example.com';
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getNrps();
@@ -838,7 +839,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url'] = 'https://example.com';
+        $payload[Claim::GS_GROUPSSERVICE]['context_groups_url'] = 'https://example.com';
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasGs();
@@ -850,7 +851,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        unset($payload[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url']);
+        unset($payload[Claim::GS_GROUPSSERVICE]['context_groups_url']);
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasGs();
@@ -862,7 +863,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url'] = 'https://example.com';
+        $payload[Claim::GS_GROUPSSERVICE]['context_groups_url'] = 'https://example.com';
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getGs();
@@ -874,7 +875,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::AGS_CLAIM_ENDPOINT] = ['https://example.com'];
+        $payload[Claim::AGS_ENDPOINT] = ['https://example.com'];
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasAgs();
@@ -886,7 +887,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        unset($payload[LtiConstants::AGS_CLAIM_ENDPOINT]);
+        unset($payload[Claim::AGS_ENDPOINT]);
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasAgs();
@@ -898,7 +899,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::AGS_CLAIM_ENDPOINT] = ['https://example.com'];
+        $payload[Claim::AGS_ENDPOINT] = ['https://example.com'];
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getAgs();
@@ -910,7 +911,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::PNS_CLAIM_SERVICE] = [
+        $payload[Claim::PLATFORMNOTIFICATIONSERVICE] = [
             'platform_notification_service_url' => 'https://example.com/pns',
             'service_versions' => ['1.0'],
             'scope' => ['https://purl.imsglobal.org/spec/lti-pns/scope/notice'],
@@ -937,7 +938,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::PNS_CLAIM_SERVICE] = [
+        $payload[Claim::PLATFORMNOTIFICATIONSERVICE] = [
             'platform_notification_service_url' => 'https://example.com/pns',
             'service_versions' => ['1.0', '2.0'],
             'scope' => [
@@ -961,7 +962,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isDeepLinkLaunch();
@@ -973,7 +974,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
+        $payload[Claim::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isDeepLinkLaunch();
@@ -985,8 +986,8 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::DEPLOYMENT_ID] = 'deployment_id';
-        $payload[LtiConstants::DL_DEEP_LINK_SETTINGS] = [];
+        $payload[Claim::DEPLOYMENT_ID] = 'deployment_id';
+        $payload[Claim::DL_DEEP_LINK_SETTINGS] = [];
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getDeepLink();
@@ -998,7 +999,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
+        $payload[Claim::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isSubmissionReviewLaunch();
@@ -1010,7 +1011,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isSubmissionReviewLaunch();
@@ -1022,7 +1023,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_RESOURCELINK;
+        $payload[Claim::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_RESOURCELINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isResourceLaunch();
@@ -1034,7 +1035,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isResourceLaunch();
@@ -1046,7 +1047,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
     {
         $this->markTestSkipped('must be revisited.');
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getLaunchData();
@@ -1060,7 +1061,7 @@ class AbstractedLtiMessageLaunchTest extends TestCase
         $expected = 'launch_id';
 
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = AbstractedLtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload, $expected);
 
         $actual = $launch->getLaunchId();

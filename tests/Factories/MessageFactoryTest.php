@@ -3,6 +3,7 @@
 namespace Tests\Factories;
 
 use Mockery;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Factories\MessageFactory;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
@@ -63,7 +64,7 @@ class MessageFactoryTest extends TestCase
     public function test_validate_nonce_throws_exception_for_missing_nonce()
     {
         $jwtWithoutNonce = $this->createJwtToken([
-            LtiConstants::VERSION => LtiConstants::V1_3,
+            Claim::VERSION => LtiConstants::V1_3,
             'iss' => 'https://test.issuer.com',
             'aud' => 'test-client-id',
         ]);
@@ -79,7 +80,7 @@ class MessageFactoryTest extends TestCase
     public function test_validate_registration_throws_exception_for_missing_registration()
     {
         $jwtBody = [
-            LtiConstants::VERSION => LtiConstants::V1_3,
+            Claim::VERSION => LtiConstants::V1_3,
             'iss' => 'https://test.issuer.com',
             'aud' => 'test-client-id',
             'nonce' => 'test-nonce',

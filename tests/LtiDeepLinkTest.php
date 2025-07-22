@@ -5,6 +5,7 @@ namespace Tests;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Mockery;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\DeepLinkResources\Resource;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\LtiConstants;
@@ -61,10 +62,10 @@ class LtiDeepLinkTest extends TestCase
         $this->assertEquals([self::ISSUER], $resultPayload->aud);
         $this->assertEquals($resultPayload->exp, $resultPayload->iat + 600);
         $this->assertStringStartsWith('nonce-', $resultPayload->nonce);
-        $this->assertEquals(self::DEPLOYMENT_ID, $resultPayload->{LtiConstants::DEPLOYMENT_ID});
-        $this->assertEquals(LtiConstants::MESSAGE_TYPE_DEEPLINK_RESPONSE, $resultPayload->{LtiConstants::MESSAGE_TYPE});
-        $this->assertEquals(LtiConstants::V1_3, $resultPayload->{LtiConstants::VERSION});
-        $this->assertEquals([self::LTI_RESOURCE_ARRAY], $resultPayload->{LtiConstants::DL_CONTENT_ITEMS});
+        $this->assertEquals(self::DEPLOYMENT_ID, $resultPayload->{Claim::DEPLOYMENT_ID});
+        $this->assertEquals(LtiConstants::MESSAGE_TYPE_DEEPLINK_RESPONSE, $resultPayload->{Claim::MESSAGE_TYPE});
+        $this->assertEquals(LtiConstants::V1_3, $resultPayload->{Claim::VERSION});
+        $this->assertEquals([self::LTI_RESOURCE_ARRAY], $resultPayload->{Claim::DL_CONTENT_ITEMS});
     }
 
     public function test_jwt_response_does_not_contain_data_property_when_not_set()
@@ -78,7 +79,7 @@ class LtiDeepLinkTest extends TestCase
         $publicKey = new Key(file_get_contents(__DIR__.'/data/public.key'), 'RS256');
         $resultPayload = JWT::decode($result, $publicKey);
 
-        $this->assertArrayNotHasKey(LtiConstants::DL_DATA, get_object_vars($resultPayload));
+        $this->assertArrayNotHasKey(Claim::DL_DATA, get_object_vars($resultPayload));
     }
 
     public function test_jwt_response_contains_data_property_when_set()
@@ -96,7 +97,7 @@ class LtiDeepLinkTest extends TestCase
         $publicKey = new Key(file_get_contents(__DIR__.'/data/public.key'), 'RS256');
         $resultPayload = JWT::decode($result, $publicKey);
 
-        $this->assertEquals($dataValue, $resultPayload->{LtiConstants::DL_DATA});
+        $this->assertEquals($dataValue, $resultPayload->{Claim::DL_DATA});
     }
 
     public function test_settings()

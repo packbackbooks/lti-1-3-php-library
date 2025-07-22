@@ -7,6 +7,7 @@ use Exception;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -167,9 +168,9 @@ class Lti13CertificationTest extends TestCase
         ];
 
         $this->payload = [
-            LtiConstants::MESSAGE_TYPE => 'LtiResourceLinkRequest',
-            LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::RESOURCE_LINK => [
+            Claim::MESSAGE_TYPE => 'LtiResourceLinkRequest',
+            Claim::VERSION => LtiConstants::V1_3,
+            Claim::RESOURCE_LINK => [
                 'id' => 'd3a2504bba5184799a38f141e8df2335cfa8206d',
                 'description' => null,
                 'title' => null,
@@ -180,14 +181,14 @@ class Lti13CertificationTest extends TestCase
             ],
             'aud' => $this->issuer['client_id'],
             'azp' => $this->issuer['client_id'],
-            LtiConstants::DEPLOYMENT_ID => $this->key['deployment_id'],
+            Claim::DEPLOYMENT_ID => $this->key['deployment_id'],
             'exp' => Carbon::now()->addDay()->timestamp,
             'iat' => Carbon::now()->subDay()->timestamp,
             'iss' => $this->issuer['issuer'],
             'nonce' => 'nonce-5e73ef2f4c6ea0.93530902',
             'sub' => '66b6a854-9f43-4bb2-90e8-6653c9126272',
-            LtiConstants::TARGET_LINK_URI => 'https://lms-api.packback.localhost/api/lti/launch',
-            LtiConstants::CONTEXT => [
+            Claim::TARGET_LINK_URI => 'https://lms-api.packback.localhost/api/lti/launch',
+            Claim::CONTEXT => [
                 'id' => 'd3a2504bba5184799a38f141e8df2335cfa8206d',
                 'label' => 'Canvas Unlauched',
                 'title' => 'Canvas - A Fresh Course That Remains Unlaunched',
@@ -199,7 +200,7 @@ class Lti13CertificationTest extends TestCase
                     'errors' => [],
                 ],
             ],
-            LtiConstants::TOOL_PLATFORM => [
+            Claim::TOOL_PLATFORM => [
                 'guid' => 'FnwyPrXqSxwv8QCm11UwILpDJMAUPJ9WGn8zcvBM:canvas-lms',
                 'name' => 'Packback Engineering',
                 'version' => 'cloud',
@@ -209,7 +210,7 @@ class Lti13CertificationTest extends TestCase
                     'errors' => [],
                 ],
             ],
-            LtiConstants::LAUNCH_PRESENTATION => [
+            Claim::LAUNCH_PRESENTATION => [
                 'document_target' => 'iframe',
                 'height' => 400,
                 'width' => 800,
@@ -221,14 +222,14 @@ class Lti13CertificationTest extends TestCase
                 ],
             ],
             'locale' => 'en',
-            LtiConstants::ROLES => [
+            Claim::ROLES => [
                 LtiConstants::INSTITUTION_ADMINISTRATOR,
                 LtiConstants::INSTITUTION_INSTRUCTOR,
                 LtiConstants::MEMBERSHIP_INSTRUCTOR,
                 LtiConstants::SYSTEM_SYSADMIN,
                 LtiConstants::SYSTEM_USER,
             ],
-            LtiConstants::CUSTOM => [],
+            Claim::CUSTOM => [],
             'errors' => [
                 'errors' => [],
             ],
@@ -286,7 +287,7 @@ class Lti13CertificationTest extends TestCase
     public function test_lti_version_passed_is_not13()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::VERSION] = 'not-1.3';
+        $payload[Claim::VERSION] = 'not-1.3';
 
         $this->expectExceptionMessage('Incorrect version, expected 1.3.0');
 
@@ -296,7 +297,7 @@ class Lti13CertificationTest extends TestCase
     public function test_no_lti_version_passed_is_in_jwt()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::VERSION]);
+        unset($payload[Claim::VERSION]);
 
         $this->expectExceptionMessage('Missing LTI Version');
 
@@ -336,7 +337,7 @@ class Lti13CertificationTest extends TestCase
     public function test_message_type_claim_missing()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::MESSAGE_TYPE]);
+        unset($payload[Claim::MESSAGE_TYPE]);
 
         $this->expectExceptionMessage('Invalid message type');
 
@@ -346,7 +347,7 @@ class Lti13CertificationTest extends TestCase
     public function test_role_claim_missing()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::ROLES]);
+        unset($payload[Claim::ROLES]);
 
         $this->expectExceptionMessage('issing Roles Claim');
 
@@ -356,7 +357,7 @@ class Lti13CertificationTest extends TestCase
     public function test_deployment_id_claim_missing()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::DEPLOYMENT_ID]);
+        unset($payload[Claim::DEPLOYMENT_ID]);
 
         $this->expectExceptionMessage('No deployment ID was specified');
 
@@ -376,13 +377,13 @@ class Lti13CertificationTest extends TestCase
 
         $db->matchingKeys = [$key];
         $db->shouldMigrate = true;
-        $db->createdDeployment = new LtiDeployment($payload[LtiConstants::DEPLOYMENT_ID]);
+        $db->createdDeployment = new LtiDeployment($payload[Claim::DEPLOYMENT_ID]);
 
         $payload['exp'] = '3272987750'; // To ensure signature matches
-        $payload[LtiConstants::LTI1P1] = [
+        $payload[Claim::LTI1P1] = [
             'oauth_consumer_key' => $key->getKey(),
             'oauth_consumer_key_sign' => $key->sign(
-                $payload[LtiConstants::DEPLOYMENT_ID],
+                $payload[Claim::DEPLOYMENT_ID],
                 $payload['iss'],
                 $payload['aud'],
                 $payload['exp'],
@@ -408,7 +409,7 @@ class Lti13CertificationTest extends TestCase
         ];
         $db->shouldMigrate = true;
 
-        $payload[LtiConstants::LTI1P1] = [
+        $payload[Claim::LTI1P1] = [
             'oauth_consumer_key' => 'somekey',
         ];
 
@@ -431,7 +432,7 @@ class Lti13CertificationTest extends TestCase
         ];
         $db->shouldMigrate = true;
 
-        $payload[LtiConstants::LTI1P1] = [
+        $payload[Claim::LTI1P1] = [
             'oauth_consumer_key' => 'somekey',
             'oauth_consumer_key_sign' => 'badsignature',
         ];
@@ -551,7 +552,7 @@ class Lti13CertificationTest extends TestCase
             $payload['exp'] = Carbon::now()->addDay()->timestamp;
             $payload['iat'] = Carbon::now()->subDay()->timestamp;
             // Set a random context ID to avoid reusing the same LMS Course
-            $payload[LtiConstants::CONTEXT]['id'] = 'lms-course-id';
+            $payload[Claim::CONTEXT]['id'] = 'lms-course-id';
             // Set a random user ID to avoid reusing the same LmsUser
             $payload['sub'] = 'lms-user-id';
 
