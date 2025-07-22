@@ -39,7 +39,7 @@ class ClaimFactory
 {
     use Claimable;
 
-    public static function create(string $claim, LtiMessage $message)
+    public static function create(string $claim, LtiMessage $message): Claim
     {
         switch ($claim) {
             case Claim::NOTICE:

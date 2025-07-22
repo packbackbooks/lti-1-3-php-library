@@ -69,16 +69,25 @@ abstract class JwtPayloadFactory
         protected ILtiServiceConnector $serviceConnector
     ) {}
 
+    abstract public static function getTypeClaim(): string;
     abstract public function create(array $message): LtiMessage;
-    // {
-    //     $this->setMessage($message);
-    //     [$jwt, $registration, $deployment] = $this->validate($message, $typeClaim);
+    abstract public function getTypeName($jwt): string;
+    abstract protected static function getTokenKey(): string;
+    abstract protected function validateState(array $message): static;
+    abstract protected function validateNonce(array $jwt, array $message): static;
 
-    //     $messageInstance = $this->createMessage($jwt, $typeClaim);
-    //     $messageInstance->validate();
+    public static function getMissingRegistrationErrorMsg(string $issuerUrl, ?string $clientId = null): string
+    {
+        // Guard against client ID being null
+        if (!isset($clientId)) {
+            $clientId = '(N/A)';
+        }
 
-    //     return $this;
-    // }
+        $search = [':issuerUrl', ':clientId'];
+        $replace = [$issuerUrl, $clientId];
+
+        return str_replace($search, $replace, static::ERR_MISSING_REGISTRATION);
+    }
 
     /**
      * Validates all aspects of an incoming LTI message launch and caches the launch if successful.
@@ -121,35 +130,8 @@ abstract class JwtPayloadFactory
             default:
                 throw new LtiException(static::ERR_INVALID_MESSAGE_TYPE);
         }
+
     }
-
-    abstract public static function getTypeClaim(): string;
-
-    abstract public function getTypeName($jwt): string;
-
-    public static function getMissingRegistrationErrorMsg(string $issuerUrl, ?string $clientId = null): string
-    {
-        // Guard against client ID being null
-        if (!isset($clientId)) {
-            $clientId = '(N/A)';
-        }
-
-        $search = [':issuerUrl', ':clientId'];
-        $replace = [$issuerUrl, $clientId];
-
-        return str_replace($search, $replace, static::ERR_MISSING_REGISTRATION);
-    }
-
-    abstract protected function validateState(array $message): static;
-    // {
-    //     // Check State for OIDC.
-    //     if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$message['state']) !== $message['state']) {
-    //         // Error if state doesn't match
-    //         throw new LtiException(static::ERR_STATE_NOT_FOUND);
-    //     }
-
-    //     return $this;
-    // }
 
     protected function validateJwtFormat(array $message): array
     {
@@ -173,27 +155,6 @@ abstract class JwtPayloadFactory
 
         return $jwt;
     }
-
-    abstract protected static function getTokenKey(): string;
-    // {
-    //     return static::$claimTokenKeyMap[$claim];
-    // }
-
-    abstract protected function validateNonce(array $jwt, array $message): static;
-    // {
-    //     if (!isset($jwt['body']['nonce'])) {
-    //         throw new LtiException(static::ERR_MISSING_NONCE);
-    //     }
-
-    //     /**
-    //      * @todo, how do we do this for async notifications?
-    //      */
-    //     if (isset($this->cache) && !$this->cache->checkNonceIsValid($jwt['body']['nonce'], $message['state'])) {
-    //         throw new LtiException(static::ERR_INVALID_NONCE);
-    //     }
-
-    //     return $this;
-    // }
 
     protected function validateRegistration(array $jwt): ILtiRegistration
     {
@@ -244,11 +205,13 @@ abstract class JwtPayloadFactory
             Claim::ROLES,
             static::getTypeClaim(),
         ];
+
         foreach ($requiredClaims as $claim) {
             if (!static::hasClaimInBody($claim, $jwt['body'])) {
                 // Unable to identify message type.
                 throw new LtiException('Missing required claim: '.$claim);
             }
+
         }
 
         return $this;
@@ -273,6 +236,7 @@ abstract class JwtPayloadFactory
         } else {
             return $jwt['body']['aud'];
         }
+
     }
 
     /**
@@ -292,6 +256,7 @@ abstract class JwtPayloadFactory
         } catch (TransferException $e) {
             throw new LtiException(static::ERR_NO_PUBLIC_KEY, previous: $e);
         }
+
         $publicKeySet = $this->serviceConnector->getResponseBody($response);
 
         if (empty($publicKeySet)) {
