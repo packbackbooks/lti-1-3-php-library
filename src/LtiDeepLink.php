@@ -3,6 +3,7 @@
 namespace Packback\Lti1p3;
 
 use Firebase\JWT\JWT;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 
 class LtiDeepLink
@@ -21,10 +22,10 @@ class LtiDeepLink
             'exp' => time() + 600,
             'iat' => time(),
             'nonce' => LtiOidcLogin::secureRandomString('nonce-'),
-            LtiConstants::DEPLOYMENT_ID => $this->deployment_id,
+            Claim::DEPLOYMENT_ID => $this->deployment_id,
             LtiConstants::MESSAGE_TYPE => LtiConstants::MESSAGE_TYPE_DEEPLINK_RESPONSE,
             LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::DL_CONTENT_ITEMS => array_map(function ($resource) {
+            Claim::DL_CONTENT_ITEMS => array_map(function ($resource) {
                 return $resource->toArray();
             }, $resources),
         ];
@@ -32,7 +33,7 @@ class LtiDeepLink
         // https://www.imsglobal.org/spec/lti-dl/v2p0/#deep-linking-request-message
         // 'data' is an optional property which, if it exists, must be returned by the tool
         if (isset($this->settings()['data'])) {
-            $message_jwt[LtiConstants::DL_DATA] = $this->settings()['data'];
+            $message_jwt[Claim::DL_DATA] = $this->settings()['data'];
         }
 
         return JWT::encode($message_jwt, $this->registration->getToolPrivateKey(), 'RS256', $this->registration->getKid());

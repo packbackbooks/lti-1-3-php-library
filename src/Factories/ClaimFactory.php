@@ -6,6 +6,7 @@ use Packback\Lti1p3\Claims\Activity;
 use Packback\Lti1p3\Claims\Asset;
 use Packback\Lti1p3\Claims\AssetProcessorService;
 use Packback\Lti1p3\Claims\AssignmentGradeService;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Claims\ContentItems;
 use Packback\Lti1p3\Claims\Context;
 use Packback\Lti1p3\Claims\Custom;
@@ -32,7 +33,6 @@ use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\Claims\ToolPlatform;
 use Packback\Lti1p3\Claims\Version;
 use Packback\Lti1p3\Concerns\Claimable;
-use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\Messages\LtiMessage;
 
 class ClaimFactory
@@ -42,63 +42,63 @@ class ClaimFactory
     public static function create(string $claim, LtiMessage $message)
     {
         switch ($claim) {
-            case LtiConstants::PNS_CLAIM_NOTICE:
+            case Claim::NOTICE:
                 return new Notice(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::AP_CLAIM_ACTIVITY:
+            case Claim::ACTIVITY:
                 return new Activity(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::PNS_CLAIM_SERVICE:
+            case Claim::PLATFORMNOTIFICATIONSERVICE:
                 return new PlatformNotificationService(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::DL_DEEP_LINK_SETTINGS:
+            case Claim::DL_DEEP_LINK_SETTINGS:
                 return new DeepLinkSettings(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::DEPLOYMENT_ID:
+            case Claim::DEPLOYMENT_ID:
                 return new DeploymentId(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::MESSAGE_TYPE:
+            case Claim::MESSAGE_TYPE:
                 return new MessageType(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::VERSION:
+            case Claim::VERSION:
                 return new Version(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::ROLES:
+            case Claim::ROLES:
                 return new Roles(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::FOR_USER:
+            case Claim::FOR_USER:
                 return new ForUser(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::TARGET_LINK_URI:
+            case Claim::TARGET_LINK_URI:
                 return new TargetLinkUri(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::RESOURCE_LINK:
+            case Claim::RESOURCE_LINK:
                 return new ResourceLink(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::CONTEXT:
+            case Claim::CONTEXT:
                 return new Context(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::CUSTOM:
+            case Claim::CUSTOM:
                 return new Custom(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::LAUNCH_PRESENTATION:
+            case Claim::LAUNCH_PRESENTATION:
                 return new LaunchPresentation(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::LIS:
+            case Claim::LIS:
                 return new Lis(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::LTI1P1:
+            case Claim::LTI1P1:
                 return new Lti1p1(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::ROLE_SCOPE_MENTOR:
+            case Claim::ROLE_SCOPE_MENTOR:
                 return new RoleScopeMentor(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::TOOL_PLATFORM:
+            case Claim::TOOL_PLATFORM:
                 return new ToolPlatform(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::DL_CONTENT_ITEMS:
+            case Claim::DL_CONTENT_ITEMS:
                 return new ContentItems(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::DL_DATA:
+            case Claim::DL_DATA:
                 return new Data(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::NRPS_CLAIM_SERVICE:
+            case Claim::NRPS_NAMESROLESSERVICE:
                 return new NamesRoleProvisioningService(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::AGS_CLAIM_ENDPOINT:
+            case Claim::AGS_ENDPOINT:
                 return new AssignmentGradeService(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::GS_CLAIM_SERVICE:
+            case Claim::GS_GROUPSSERVICE:
                 return new GroupService(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::AP_CLAIM_SERVICE:
+            case Claim::ASSETSERVICE:
                 return new AssetProcessorService(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::AP_CLAIM_REPORT:
+            case Claim::ASSETREPORT:
                 return new Report(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::AP_CLAIM_SUBMISSION:
+            case Claim::SUBMISSION:
                 return new Submission(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::AP_CLAIM_REPORT_TYPE:
+            case Claim::ASSETREPORT_TYPE:
                 return new ReportType(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::AP_CLAIM_ASSET:
+            case Claim::ASSET:
                 return new Asset(static::getClaimFrom($claim, $message->getBody()));
-            case LtiConstants::EULA_CLAIM_SERVICE:
+            case Claim::EULASERVICE:
                 return new EulaService(static::getClaimFrom($claim, $message->getBody()));
             default:
                 throw new \InvalidArgumentException(

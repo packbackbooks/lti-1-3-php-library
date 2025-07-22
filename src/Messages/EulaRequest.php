@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\Messages;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
 
@@ -16,19 +17,19 @@ class EulaRequest extends LaunchMessage
     {
         return [
             LtiConstants::MESSAGE_TYPE,
-            LtiConstants::TARGET_LINK_URI,
-            LtiConstants::EULA_CLAIM_SERVICE,
+            Claim::TARGET_LINK_URI,
+            Claim::EULASERVICE,
         ];
     }
 
     public static function optionalClaims(): array
     {
         return [
-            LtiConstants::CONTEXT,
-            LtiConstants::TOOL_PLATFORM,
-            LtiConstants::LAUNCH_PRESENTATION,
-            LtiConstants::CUSTOM,
-            LtiConstants::LIS,
+            Claim::CONTEXT,
+            Claim::TOOL_PLATFORM,
+            Claim::LAUNCH_PRESENTATION,
+            Claim::CUSTOM,
+            Claim::LIS,
         ];
     }
 

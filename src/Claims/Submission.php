@@ -2,12 +2,10 @@
 
 namespace Packback\Lti1p3\Claims;
 
-use Packback\Lti1p3\LtiConstants;
-
 class Submission extends Claim
 {
     public static function key(): string
     {
-        return LtiConstants::AP_CLAIM_SUBMISSION;
+        return Claim::SUBMISSION;
     }
 }

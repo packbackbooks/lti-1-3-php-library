@@ -8,6 +8,7 @@ use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use GuzzleHttp\Exception\TransferException;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Concerns\Claimable;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
@@ -250,9 +251,9 @@ abstract class Factory
     protected function validateRequiredClaims(array $jwt): static
     {
         $requiredClaims = [
-            LtiConstants::VERSION,
-            LtiConstants::DEPLOYMENT_ID,
-            LtiConstants::ROLES,
+            Claim::VERSION,
+            Claim::DEPLOYMENT_ID,
+            Claim::ROLES,
             static::getTypeClaim(),
         ];
         foreach ($requiredClaims as $claim) {
@@ -272,7 +273,7 @@ abstract class Factory
         /**
          * @var ?LtiDeployment
          */
-        $deployment = $this->db->findDeployment($jwt['body']['iss'], $jwt['body'][LtiConstants::DEPLOYMENT_ID], $client_id);
+        $deployment = $this->db->findDeployment($jwt['body']['iss'], $jwt['body'][Claim::DEPLOYMENT_ID], $client_id);
 
         return $deployment;
     }

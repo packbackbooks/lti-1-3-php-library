@@ -2,11 +2,11 @@
 
 namespace Packback\Lti1p3\Messages;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Claims\PlatformNotificationService;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\LtiAssignmentsGradesService;
-use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiCourseGroupsService;
 use Packback\Lti1p3\LtiNamesRolesProvisioningService;
 
@@ -40,7 +40,7 @@ abstract class LaunchMessage extends LtiMessage
      */
     public function hasPns(): bool
     {
-        return $this->hasClaim(LtiConstants::PNS_CLAIM_SERVICE);
+        return $this->hasClaim(Claim::PLATFORMNOTIFICATIONSERVICE);
     }
 
     /**
@@ -48,14 +48,14 @@ abstract class LaunchMessage extends LtiMessage
      */
     public function getPns(): PlatformNotificationService
     {
-        return $this->getClaim(LtiConstants::PNS_CLAIM_SERVICE);
+        return $this->getClaim(Claim::PLATFORMNOTIFICATIONSERVICE);
     }
     /**
      * Returns whether or not the current launch can use the names and roles service.
      */
     public function hasNrps(): bool
     {
-        return $this->hasClaim(LtiConstants::NRPS_CLAIM_SERVICE);
+        return $this->hasClaim(Claim::NRPS_NAMESROLESSERVICE);
     }
 
     /**
@@ -66,7 +66,7 @@ abstract class LaunchMessage extends LtiMessage
         return new LtiNamesRolesProvisioningService(
             $this->serviceConnector,
             $this->registration,
-            $this->getBody()[LtiConstants::NRPS_CLAIM_SERVICE]
+            $this->getBody()[Claim::NRPS_NAMESROLESSERVICE]
         );
     }
     /**
@@ -74,7 +74,7 @@ abstract class LaunchMessage extends LtiMessage
      */
     public function hasGs(): bool
     {
-        return $this->hasClaim(LtiConstants::GS_CLAIM_SERVICE);
+        return $this->hasClaim(Claim::GS_GROUPSSERVICE);
     }
 
     /**
@@ -85,7 +85,7 @@ abstract class LaunchMessage extends LtiMessage
         return new LtiCourseGroupsService(
             $this->serviceConnector,
             $this->registration,
-            $this->getBody()[LtiConstants::GS_CLAIM_SERVICE]
+            $this->getBody()[Claim::GS_GROUPSSERVICE]
         );
     }
     /**
@@ -93,7 +93,7 @@ abstract class LaunchMessage extends LtiMessage
      */
     public function hasAgs(): bool
     {
-        return $this->hasClaim(LtiConstants::AGS_CLAIM_ENDPOINT);
+        return $this->hasClaim(Claim::AGS_ENDPOINT);
     }
 
     /**
@@ -104,7 +104,7 @@ abstract class LaunchMessage extends LtiMessage
         return new LtiAssignmentsGradesService(
             $this->serviceConnector,
             $this->registration,
-            $this->getBody()[LtiConstants::AGS_CLAIM_ENDPOINT]
+            $this->getBody()[Claim::AGS_ENDPOINT]
         );
     }
 }

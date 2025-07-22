@@ -2,7 +2,7 @@
 
 namespace Packback\Lti1p3\Factories;
 
-use Packback\Lti1p3\LtiConstants;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\LtiException;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\Messages\Notice;
@@ -24,7 +24,7 @@ class NoticeFactory extends Factory
 
     public static function getTypeClaim(): string
     {
-        return LtiConstants::PNS_CLAIM_NOTICE;
+        return Claim::NOTICE;
     }
 
     public function getTypeName($jwt): string

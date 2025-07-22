@@ -8,6 +8,7 @@ use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use GuzzleHttp\Exception\TransferException;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Concerns\Claimable;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
@@ -68,7 +69,7 @@ class LtiMessageBridge
     ];
     protected static $claimTokenKeyMap = [
         LtiConstants::MESSAGE_TYPE => 'id_token',
-        LtiConstants::PNS_CLAIM_NOTICE => 'jwt',
+        Claim::NOTICE => 'jwt',
     ];
 
     public function __construct(
@@ -131,7 +132,7 @@ class LtiMessageBridge
     {
         if ($typeClaim === LtiConstants::MESSAGE_TYPE) {
             $type = $this->getClaim($jwt, $typeClaim)->getBody();
-        } elseif ($typeClaim === LtiConstants::PNS_CLAIM_NOTICE) {
+        } elseif ($typeClaim === Claim::NOTICE) {
             $type = $this->getClaim($jwt, $typeClaim)->getBody()['type'];
         }
 
@@ -298,13 +299,13 @@ class LtiMessageBridge
 
     protected function validateDeployment(array $jwt): ?LtiDeployment
     {
-        if (!isset($jwt['body'][LtiConstants::DEPLOYMENT_ID])) {
+        if (!isset($jwt['body'][Claim::DEPLOYMENT_ID])) {
             throw new LtiException(static::ERR_MISSING_DEPLOYEMENT_ID);
         }
 
         // Find deployment.
         $client_id = $this->getAud($jwt);
-        $deployment = $this->db->findDeployment($jwt['body']['iss'], $jwt['body'][LtiConstants::DEPLOYMENT_ID], $client_id);
+        $deployment = $this->db->findDeployment($jwt['body']['iss'], $jwt['body'][Claim::DEPLOYMENT_ID], $client_id);
 
         /**
          * @todo if is launch
@@ -319,9 +320,9 @@ class LtiMessageBridge
     protected function universallyRequiredClaims(): array
     {
         return [
-            LtiConstants::VERSION,
-            LtiConstants::DEPLOYMENT_ID,
-            LtiConstants::ROLES,
+            Claim::VERSION,
+            Claim::DEPLOYMENT_ID,
+            Claim::ROLES,
         ];
     }
 
@@ -416,7 +417,7 @@ class LtiMessageBridge
             return $this->ensureDeploymentExists($deployment);
         }
 
-        if (!isset($jwt['body'][LtiConstants::LTI1P1]['oauth_consumer_key_sign'])) {
+        if (!isset($jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'])) {
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
         }
 
@@ -501,13 +502,13 @@ class LtiMessageBridge
 
     private function oauthConsumerKeySignMatches(array $jwt, Lti1p1Key $key): bool
     {
-        return $jwt['body'][LtiConstants::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key, $jwt);
+        return $jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key, $jwt);
     }
 
     private function getOauthSignature(Lti1p1Key $key, array $jwt): string
     {
         return $key->sign(
-            $jwt['body'][LtiConstants::DEPLOYMENT_ID],
+            $jwt['body'][Claim::DEPLOYMENT_ID],
             $jwt['body']['iss'],
             $this->getAud($jwt),
             $jwt['body']['exp'],

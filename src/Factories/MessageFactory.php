@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\Factories;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -108,7 +109,7 @@ class MessageFactory extends Factory
             return $this->ensureDeploymentExists($deployment);
         }
 
-        if (!isset($jwt['body'][LtiConstants::LTI1P1]['oauth_consumer_key_sign'])) {
+        if (!isset($jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'])) {
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
         }
 
@@ -163,13 +164,13 @@ class MessageFactory extends Factory
 
     private function oauthConsumerKeySignMatches(array $jwt, Lti1p1Key $key): bool
     {
-        return $jwt['body'][LtiConstants::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key, $jwt);
+        return $jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key, $jwt);
     }
 
     private function getOauthSignature(Lti1p1Key $key, array $jwt): string
     {
         return $key->sign(
-            $jwt['body'][LtiConstants::DEPLOYMENT_ID],
+            $jwt['body'][Claim::DEPLOYMENT_ID],
             $jwt['body']['iss'],
             $this->getAud($jwt),
             $jwt['body']['exp'],

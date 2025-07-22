@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -68,7 +69,7 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
      */
     public function hasNrps(): bool
     {
-        return isset($this->getBody()[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url']);
+        return isset($this->getBody()[Claim::NRPS_NAMESROLESSERVICE]['context_memberships_url']);
     }
 
     /**
@@ -79,7 +80,7 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
         return new LtiNamesRolesProvisioningService(
             $this->serviceConnector,
             $this->registration,
-            $this->getBody()[LtiConstants::NRPS_CLAIM_SERVICE]
+            $this->getBody()[Claim::NRPS_NAMESROLESSERVICE]
         );
     }
 
@@ -88,7 +89,7 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
      */
     public function hasGs(): bool
     {
-        return isset($this->getBody()[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url']);
+        return isset($this->getBody()[Claim::GS_GROUPSSERVICE]['context_groups_url']);
     }
 
     /**
@@ -99,7 +100,7 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
         return new LtiCourseGroupsService(
             $this->serviceConnector,
             $this->registration,
-            $this->getBody()[LtiConstants::GS_CLAIM_SERVICE]
+            $this->getBody()[Claim::GS_GROUPSSERVICE]
         );
     }
 
@@ -108,7 +109,7 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
      */
     public function hasAgs(): bool
     {
-        return isset($this->getBody()[LtiConstants::AGS_CLAIM_ENDPOINT]);
+        return isset($this->getBody()[Claim::AGS_ENDPOINT]);
     }
 
     /**
@@ -119,7 +120,7 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
         return new LtiAssignmentsGradesService(
             $this->serviceConnector,
             $this->registration,
-            $this->getBody()[LtiConstants::AGS_CLAIM_ENDPOINT]
+            $this->getBody()[Claim::AGS_ENDPOINT]
         );
     }
 
@@ -128,7 +129,7 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
      */
     public function hasPns(): bool
     {
-        return isset($this->getBody()[LtiConstants::PNS_CLAIM_SERVICE]);
+        return isset($this->getBody()[Claim::PLATFORMNOTIFICATIONSERVICE]);
     }
 
     /**
@@ -137,7 +138,7 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
     public function getPns(): PlatformNotificationService
     {
         return new PlatformNotificationService(
-            $this->getBody()[LtiConstants::PNS_CLAIM_SERVICE]
+            $this->getBody()[Claim::PLATFORMNOTIFICATIONSERVICE]
         );
     }
 
@@ -166,8 +167,8 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
     {
         return new LtiDeepLink(
             $this->registration,
-            $this->getBody()[LtiConstants::DEPLOYMENT_ID],
-            $this->getBody()[LtiConstants::DL_DEEP_LINK_SETTINGS]
+            $this->getBody()[Claim::DEPLOYMENT_ID],
+            $this->getBody()[Claim::DL_DEEP_LINK_SETTINGS]
         );
     }
 

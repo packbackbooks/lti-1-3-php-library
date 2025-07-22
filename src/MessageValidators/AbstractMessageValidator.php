@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\MessageValidators;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Interfaces\IMessageValidator;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiException;
@@ -25,13 +26,13 @@ abstract class AbstractMessageValidator implements IMessageValidator
         if (empty($jwtBody['sub'])) {
             throw new LtiException('Must have a user (sub)');
         }
-        if (!isset($jwtBody[LtiConstants::VERSION])) {
+        if (!isset($jwtBody[Claim::VERSION])) {
             throw new LtiException('Missing LTI Version');
         }
-        if ($jwtBody[LtiConstants::VERSION] !== LtiConstants::V1_3) {
+        if ($jwtBody[Claim::VERSION] !== LtiConstants::V1_3) {
             throw new LtiException('Incorrect version, expected 1.3.0');
         }
-        if (!isset($jwtBody[LtiConstants::ROLES])) {
+        if (!isset($jwtBody[Claim::ROLES])) {
             throw new LtiException('Missing Roles Claim');
         }
     }

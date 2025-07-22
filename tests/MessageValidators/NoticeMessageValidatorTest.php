@@ -2,6 +2,7 @@
 
 namespace Tests\MessageValidators;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiException;
 use Packback\Lti1p3\MessageValidators\NoticeMessageValidator;
@@ -12,12 +13,12 @@ class NoticeMessageValidatorTest extends TestCase
     public function test_it_validates_valid_notice_message()
     {
         $validJwtBody = [
-            LtiConstants::VERSION => LtiConstants::V1_3,
+            Claim::VERSION => LtiConstants::V1_3,
             'iss' => 'https://test.issuer.com',
             'aud' => 'test-client-id',
             'nonce' => 'test-nonce',
-            LtiConstants::DEPLOYMENT_ID => 'test-deployment',
-            LtiConstants::PNS_CLAIM_NOTICE => [
+            Claim::DEPLOYMENT_ID => 'test-deployment',
+            Claim::NOTICE => [
                 'notice_type' => LtiConstants::NOTICE_TYPE_HELLOWORLD,
                 'timestamp' => '2024-01-15T10:30:00Z',
                 'data' => ['message' => 'Hello, World!'],
@@ -33,7 +34,7 @@ class NoticeMessageValidatorTest extends TestCase
             'iss' => 'https://test.issuer.com',
             'aud' => 'test-client-id',
             'nonce' => 'test-nonce',
-            LtiConstants::DEPLOYMENT_ID => 'test-deployment',
+            Claim::DEPLOYMENT_ID => 'test-deployment',
         ];
 
         $this->expectException(LtiException::class);
@@ -45,11 +46,11 @@ class NoticeMessageValidatorTest extends TestCase
     public function test_it_throws_exception_for_incorrect_lti_version()
     {
         $jwtBodyWithWrongVersion = [
-            LtiConstants::VERSION => '1.2.0',
+            Claim::VERSION => '1.2.0',
             'iss' => 'https://test.issuer.com',
             'aud' => 'test-client-id',
             'nonce' => 'test-nonce',
-            LtiConstants::DEPLOYMENT_ID => 'test-deployment',
+            Claim::DEPLOYMENT_ID => 'test-deployment',
         ];
 
         $this->expectException(LtiException::class);
@@ -61,11 +62,11 @@ class NoticeMessageValidatorTest extends TestCase
     public function test_it_accepts_correct_lti_version()
     {
         $jwtBodyWithCorrectVersion = [
-            LtiConstants::VERSION => LtiConstants::V1_3,
+            Claim::VERSION => LtiConstants::V1_3,
             'iss' => 'https://test.issuer.com',
             'aud' => 'test-client-id',
             'nonce' => 'test-nonce',
-            LtiConstants::DEPLOYMENT_ID => 'test-deployment',
+            Claim::DEPLOYMENT_ID => 'test-deployment',
         ];
 
         $this->assertNull(NoticeMessageValidator::validate($jwtBodyWithCorrectVersion));
@@ -74,7 +75,7 @@ class NoticeMessageValidatorTest extends TestCase
     public function test_it_validates_minimal_notice_message()
     {
         $minimalJwtBody = [
-            LtiConstants::VERSION => LtiConstants::V1_3,
+            Claim::VERSION => LtiConstants::V1_3,
         ];
 
         $this->assertNull(NoticeMessageValidator::validate($minimalJwtBody));
@@ -93,7 +94,7 @@ class NoticeMessageValidatorTest extends TestCase
     public function test_it_handles_null_version()
     {
         $jwtBodyWithNullVersion = [
-            LtiConstants::VERSION => null,
+            Claim::VERSION => null,
             'iss' => 'https://test.issuer.com',
         ];
 
@@ -106,7 +107,7 @@ class NoticeMessageValidatorTest extends TestCase
     public function test_it_handles_empty_string_version()
     {
         $jwtBodyWithEmptyVersion = [
-            LtiConstants::VERSION => '',
+            Claim::VERSION => '',
             'iss' => 'https://test.issuer.com',
         ];
 
@@ -119,7 +120,7 @@ class NoticeMessageValidatorTest extends TestCase
     public function test_it_handles_numeric_version()
     {
         $jwtBodyWithNumericVersion = [
-            LtiConstants::VERSION => 1.3,
+            Claim::VERSION => 1.3,
             'iss' => 'https://test.issuer.com',
         ];
 
@@ -132,22 +133,22 @@ class NoticeMessageValidatorTest extends TestCase
     public function test_it_validates_notice_with_all_optional_claims()
     {
         $fullJwtBody = [
-            LtiConstants::VERSION => LtiConstants::V1_3,
+            Claim::VERSION => LtiConstants::V1_3,
             'iss' => 'https://test.issuer.com',
             'aud' => 'test-client-id',
             'sub' => 'test-user-id',
             'nonce' => 'test-nonce',
             'iat' => time(),
             'exp' => time() + 3600,
-            LtiConstants::DEPLOYMENT_ID => 'test-deployment',
-            LtiConstants::TARGET_LINK_URI => 'https://test.tool.com/launch',
-            LtiConstants::ROLES => [LtiConstants::INSTITUTION_INSTRUCTOR],
-            LtiConstants::CONTEXT => [
+            Claim::DEPLOYMENT_ID => 'test-deployment',
+            Claim::TARGET_LINK_URI => 'https://test.tool.com/launch',
+            Claim::ROLES => [LtiConstants::INSTITUTION_INSTRUCTOR],
+            Claim::CONTEXT => [
                 'id' => 'test-context-id',
                 'label' => 'Test Course',
                 'title' => 'Test Course Title',
             ],
-            LtiConstants::PNS_CLAIM_NOTICE => [
+            Claim::NOTICE => [
                 'notice_type' => LtiConstants::NOTICE_TYPE_CONTEXTCOPY,
                 'timestamp' => '2024-01-15T10:30:00Z',
                 'data' => [
@@ -167,8 +168,8 @@ class NoticeMessageValidatorTest extends TestCase
 
     public function test_pns_claim_constants_are_defined()
     {
-        $this->assertEquals('https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice', LtiConstants::PNS_CLAIM_SERVICE);
-        $this->assertEquals('https://purl.imsglobal.org/spec/lti/claim/notice', LtiConstants::PNS_CLAIM_NOTICE);
+        $this->assertEquals('https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice', Claim::PLATFORMNOTIFICATIONSERVICE);
+        $this->assertEquals('https://purl.imsglobal.org/spec/lti/claim/notice', Claim::NOTICE);
     }
 
     public function test_notice_type_constants_are_defined()
@@ -188,8 +189,8 @@ class NoticeMessageValidatorTest extends TestCase
 
         foreach ($noticeTypes as $noticeType) {
             $jwtBody = [
-                LtiConstants::VERSION => LtiConstants::V1_3,
-                LtiConstants::PNS_CLAIM_NOTICE => [
+                Claim::VERSION => LtiConstants::V1_3,
+                Claim::NOTICE => [
                     'notice_type' => $noticeType,
                     'timestamp' => '2024-01-15T10:30:00Z',
                 ],

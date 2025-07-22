@@ -2,69 +2,84 @@
 
 namespace Packback\Lti1p3;
 
+use Packback\Lti1p3\Claims\Claim;
+
 class LtiConstants
 {
     public const V1_3 = '1.3.0';
 
     // Required message claims
-    public const VERSION = 'https://purl.imsglobal.org/spec/lti/claim/version';
-    public const DEPLOYMENT_ID = 'https://purl.imsglobal.org/spec/lti/claim/deployment_id';
-    public const ROLES = 'https://purl.imsglobal.org/spec/lti/claim/roles';
-    public const FOR_USER = 'https://purl.imsglobal.org/spec/lti/claim/for_user';
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::VERSION instead', since: '6.4')]
+    public const VERSION = Claim::VERSION;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::DEPLOYMENT_ID instead', since: '6.4')]
+    public const DEPLOYMENT_ID = Claim::DEPLOYMENT_ID;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::ROLES instead', since: '6.4')]
+    public const ROLES = Claim::ROLES;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::FOR_USER instead', since: '6.4')]
+    public const FOR_USER = Claim::FOR_USER;
 
     // Required resource link claims
-    public const MESSAGE_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/message_type';
-    public const TARGET_LINK_URI = 'https://purl.imsglobal.org/spec/lti/claim/target_link_uri';
-    public const RESOURCE_LINK = 'https://purl.imsglobal.org/spec/lti/claim/resource_link';
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::MESSAGE_TYPE instead', since: '6.4')]
+    public const MESSAGE_TYPE = Claim::MESSAGE_TYPE;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::TARGET_LINK_URI instead', since: '6.4')]
+    public const TARGET_LINK_URI = Claim::TARGET_LINK_URI;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::RESOURCE_LINK instead', since: '6.4')]
+    public const RESOURCE_LINK = Claim::RESOURCE_LINK;
 
     // Optional message claims
-    public const CONTEXT = 'https://purl.imsglobal.org/spec/lti/claim/context';
-    public const CUSTOM = 'https://purl.imsglobal.org/spec/lti/claim/custom';
-    public const LAUNCH_PRESENTATION = 'https://purl.imsglobal.org/spec/lti/claim/launch_presentation';
-    public const LIS = 'https://purl.imsglobal.org/spec/lti/claim/lis';
-    public const LTI1P1 = 'https://purl.imsglobal.org/spec/lti/claim/lti1p1';
-    public const ROLE_SCOPE_MENTOR = 'https://purl.imsglobal.org/spec/lti/claim/role_scope_mentor';
-    public const TOOL_PLATFORM = 'https://purl.imsglobal.org/spec/lti/claim/tool_platform';
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::CONTEXT instead', since: '6.4')]
+    public const CONTEXT = Claim::CONTEXT;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::CUSTOM instead', since: '6.4')]
+    public const CUSTOM = Claim::CUSTOM;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::LAUNCH_PRESENTATION instead', since: '6.4')]
+    public const LAUNCH_PRESENTATION = Claim::LAUNCH_PRESENTATION;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::LIS instead', since: '6.4')]
+    public const LIS = Claim::LIS;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::LTI1P1 instead', since: '6.4')]
+    public const LTI1P1 = Claim::LTI1P1;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::ROLE_SCOPE_MENTOR instead', since: '6.4')]
+    public const ROLE_SCOPE_MENTOR = Claim::ROLE_SCOPE_MENTOR;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::TOOL_PLATFORM instead', since: '6.4')]
+    public const TOOL_PLATFORM = Claim::TOOL_PLATFORM;
 
     // LTI DL
-    public const DL_CONTENT_ITEMS = 'https://purl.imsglobal.org/spec/lti-dl/claim/content_items';
-    public const DL_DATA = 'https://purl.imsglobal.org/spec/lti-dl/claim/data';
-    public const DL_DEEP_LINK_SETTINGS = 'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings';
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::DL_CONTENT_ITEMS instead', since: '6.4')]
+    public const DL_CONTENT_ITEMS = Claim::DL_CONTENT_ITEMS;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::DL_DATA instead', since: '6.4')]
+    public const DL_DATA = Claim::DL_DATA;
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::DL_DEEP_LINK_SETTINGS instead', since: '6.4')]
+    public const DL_DEEP_LINK_SETTINGS = Claim::DL_DEEP_LINK_SETTINGS;
     public const DL_RESOURCE_LINK_TYPE = 'ltiResourceLink';
 
     // LTI NRPS
-    public const NRPS_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice';
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::NRPS_NAMESROLESSERVICE instead', since: '6.4')]
+    public const NRPS_CLAIM_SERVICE = Claim::NRPS_NAMESROLESSERVICE;
     public const NRPS_SCOPE_MEMBERSHIP_READONLY = 'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly';
 
     // LTI AGS
-    public const AGS_CLAIM_ENDPOINT = 'https://purl.imsglobal.org/spec/lti-ags/claim/endpoint';
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::AGS_ENDPOINT instead', since: '6.4')]
+    public const AGS_CLAIM_ENDPOINT = Claim::AGS_ENDPOINT;
     public const AGS_SCOPE_LINEITEM = 'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem';
     public const AGS_SCOPE_LINEITEM_READONLY = 'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly';
     public const AGS_SCOPE_RESULT_READONLY = 'https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly';
     public const AGS_SCOPE_SCORE = 'https://purl.imsglobal.org/spec/lti-ags/scope/score';
 
     // LTI GS
-    public const GS_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice';
-
-    // PNS
-    public const PNS_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice';
-    public const PNS_CLAIM_NOTICE = 'https://purl.imsglobal.org/spec/lti/claim/notice';
-    public const PNS_SCOPE_NOTICEHANDLERS = 'https://purl.imsglobal.org/spec/lti/scope/noticehandlers';
-
-    // AP
-    public const AP_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/assetservice';
-    public const AP_CLAIM_REPORT = 'https://purl.imsglobal.org/spec/lti/claim/assetreport';
-    public const AP_CLAIM_ACTIVITY = 'https://purl.imsglobal.org/spec/lti/claim/activity';
-    public const AP_CLAIM_SUBMISSION = 'https://purl.imsglobal.org/spec/lti/claim/submission';
-    public const AP_CLAIM_REPORT_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/assetreport_type';
-    public const AP_CLAIM_ASSET = 'https://purl.imsglobal.org/spec/lti/claim/asset';
-    public const AP_SCOPE_REPORT = 'https://purl.imsglobal.org/spec/lti/scope/report';
-    public const AP_SCOPE_ASSET_READONLY = 'https://purl.imsglobal.org/spec/lti/scope/asset.readonly';
-
-    // EULA
-    public const EULA_CLAIM_SERVICE = 'https://purl.imsglobal.org/spec/lti/claim/eulaservice';
-    public const EULA_SCOPE_USER = 'https://purl.imsglobal.org/spec/lti/scope/eula/user';
-    public const EULA_SCOPE_DEPLOYMENT = 'https://purl.imsglobal.org/spec/lti/scope/eula/deployment';
+    #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::GS_GROUPSSERVICE instead', since: '6.4')]
+    public const GS_CLAIM_SERVICE = Claim::GS_GROUPSSERVICE;
 
     // User Vocab
     public const SYSTEM_ADMINISTRATOR = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#Administrator';

@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\Messages;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 
@@ -16,20 +17,20 @@ class ResourceLinkRequest extends LaunchMessage
     {
         return [
             LtiConstants::MESSAGE_TYPE,
-            LtiConstants::TARGET_LINK_URI,
-            LtiConstants::RESOURCE_LINK,
+            Claim::TARGET_LINK_URI,
+            Claim::RESOURCE_LINK,
         ];
     }
 
     public static function optionalClaims(): array
     {
         return [
-            LtiConstants::CONTEXT,
-            LtiConstants::TOOL_PLATFORM,
-            LtiConstants::ROLE_SCOPE_MENTOR,
-            LtiConstants::LAUNCH_PRESENTATION,
-            LtiConstants::LIS,
-            LtiConstants::CUSTOM,
+            Claim::CONTEXT,
+            Claim::TOOL_PLATFORM,
+            Claim::ROLE_SCOPE_MENTOR,
+            Claim::LAUNCH_PRESENTATION,
+            Claim::LIS,
+            Claim::CUSTOM,
         ];
     }
 

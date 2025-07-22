@@ -8,6 +8,7 @@ use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use GuzzleHttp\Exception\TransferException;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -118,7 +119,7 @@ class LtiMessageLaunch
      */
     public function hasPns(): bool
     {
-        return isset($this->getBody()[LtiConstants::PNS_CLAIM_SERVICE]);
+        return isset($this->getBody()[Claim::PLATFORMNOTIFICATIONSERVICE]);
     }
 
     /**
@@ -127,7 +128,7 @@ class LtiMessageLaunch
     public function getPns(): PlatformNotificationService
     {
         return new PlatformNotificationService(
-            $this->getBody()[LtiConstants::PNS_CLAIM_SERVICE]
+            $this->getBody()[Claim::PLATFORMNOTIFICATIONSERVICE]
         );
     }
 
@@ -168,7 +169,7 @@ class LtiMessageLaunch
             return $this->ensureDeploymentExists();
         }
 
-        if (!isset($this->jwt['body'][LtiConstants::LTI1P1]['oauth_consumer_key_sign'])) {
+        if (!isset($this->jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'])) {
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
         }
 
@@ -193,7 +194,7 @@ class LtiMessageLaunch
      */
     public function hasNrps(): bool
     {
-        return isset($this->jwt['body'][LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url']);
+        return isset($this->jwt['body'][Claim::NRPS_NAMESROLESSERVICE]['context_memberships_url']);
     }
 
     /**
@@ -204,7 +205,7 @@ class LtiMessageLaunch
         return new LtiNamesRolesProvisioningService(
             $this->serviceConnector,
             $this->registration,
-            $this->jwt['body'][LtiConstants::NRPS_CLAIM_SERVICE]
+            $this->jwt['body'][Claim::NRPS_NAMESROLESSERVICE]
         );
     }
 
@@ -213,7 +214,7 @@ class LtiMessageLaunch
      */
     public function hasGs(): bool
     {
-        return isset($this->jwt['body'][LtiConstants::GS_CLAIM_SERVICE]['context_groups_url']);
+        return isset($this->jwt['body'][Claim::GS_GROUPSSERVICE]['context_groups_url']);
     }
 
     /**
@@ -224,7 +225,7 @@ class LtiMessageLaunch
         return new LtiCourseGroupsService(
             $this->serviceConnector,
             $this->registration,
-            $this->jwt['body'][LtiConstants::GS_CLAIM_SERVICE]
+            $this->jwt['body'][Claim::GS_GROUPSSERVICE]
         );
     }
 
@@ -233,7 +234,7 @@ class LtiMessageLaunch
      */
     public function hasAgs(): bool
     {
-        return isset($this->jwt['body'][LtiConstants::AGS_CLAIM_ENDPOINT]);
+        return isset($this->jwt['body'][Claim::AGS_ENDPOINT]);
     }
 
     /**
@@ -244,7 +245,7 @@ class LtiMessageLaunch
         return new LtiAssignmentsGradesService(
             $this->serviceConnector,
             $this->registration,
-            $this->jwt['body'][LtiConstants::AGS_CLAIM_ENDPOINT]
+            $this->jwt['body'][Claim::AGS_ENDPOINT]
         );
     }
 
@@ -253,7 +254,7 @@ class LtiMessageLaunch
      */
     public function isDeepLinkLaunch(): bool
     {
-        return $this->jwt['body'][LtiConstants::MESSAGE_TYPE] === static::TYPE_DEEPLINK;
+        return $this->jwt['body'][Claim::MESSAGE_TYPE] === static::TYPE_DEEPLINK;
     }
 
     /**
@@ -263,8 +264,8 @@ class LtiMessageLaunch
     {
         return new LtiDeepLink(
             $this->registration,
-            $this->jwt['body'][LtiConstants::DEPLOYMENT_ID],
-            $this->jwt['body'][LtiConstants::DL_DEEP_LINK_SETTINGS]
+            $this->jwt['body'][Claim::DEPLOYMENT_ID],
+            $this->jwt['body'][Claim::DL_DEEP_LINK_SETTINGS]
         );
     }
 
@@ -273,7 +274,7 @@ class LtiMessageLaunch
      */
     public function isSubmissionReviewLaunch(): bool
     {
-        return $this->jwt['body'][LtiConstants::MESSAGE_TYPE] === static::TYPE_SUBMISSIONREVIEW;
+        return $this->jwt['body'][Claim::MESSAGE_TYPE] === static::TYPE_SUBMISSIONREVIEW;
     }
 
     /**
@@ -281,7 +282,7 @@ class LtiMessageLaunch
      */
     public function isResourceLaunch(): bool
     {
-        return $this->jwt['body'][LtiConstants::MESSAGE_TYPE] === static::TYPE_RESOURCELINK;
+        return $this->jwt['body'][Claim::MESSAGE_TYPE] === static::TYPE_RESOURCELINK;
     }
 
     /**
@@ -474,13 +475,13 @@ class LtiMessageLaunch
 
     protected function validateDeployment(): self
     {
-        if (!isset($this->jwt['body'][LtiConstants::DEPLOYMENT_ID])) {
+        if (!isset($this->jwt['body'][Claim::DEPLOYMENT_ID])) {
             throw new LtiException(static::ERR_MISSING_DEPLOYEMENT_ID);
         }
 
         // Find deployment.
         $client_id = $this->getAud();
-        $this->deployment = $this->db->findDeployment($this->jwt['body']['iss'], $this->jwt['body'][LtiConstants::DEPLOYMENT_ID], $client_id);
+        $this->deployment = $this->db->findDeployment($this->jwt['body']['iss'], $this->jwt['body'][Claim::DEPLOYMENT_ID], $client_id);
 
         if (!$this->canMigrate()) {
             return $this->ensureDeploymentExists();
@@ -491,7 +492,7 @@ class LtiMessageLaunch
 
     protected function validateMessage(): self
     {
-        if (!isset($this->jwt['body'][LtiConstants::MESSAGE_TYPE])) {
+        if (!isset($this->jwt['body'][Claim::MESSAGE_TYPE])) {
             // Unable to identify message type.
             throw new LtiException(static::ERR_INVALID_MESSAGE_TYPE);
         }
@@ -575,13 +576,13 @@ class LtiMessageLaunch
 
     private function oauthConsumerKeySignMatches(Lti1p1Key $key): bool
     {
-        return $this->jwt['body'][LtiConstants::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key);
+        return $this->jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key);
     }
 
     private function getOauthSignature(Lti1p1Key $key): string
     {
         return $key->sign(
-            $this->jwt['body'][LtiConstants::DEPLOYMENT_ID],
+            $this->jwt['body'][Claim::DEPLOYMENT_ID],
             $this->jwt['body']['iss'],
             $this->getAud(),
             $this->jwt['body']['exp'],

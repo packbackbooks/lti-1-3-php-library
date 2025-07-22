@@ -2,12 +2,10 @@
 
 namespace Packback\Lti1p3\Claims;
 
-use Packback\Lti1p3\LtiConstants;
-
 class AssetProcessorService extends Claim
 {
     public static function key(): string
     {
-        return LtiConstants::AP_CLAIM_SERVICE;
+        return Claim::ASSETSERVICE;
     }
 }

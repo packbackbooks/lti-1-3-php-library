@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\Messages;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\MessageValidators\ReportReviewMessageValidator;
 
@@ -19,20 +20,20 @@ class ReportReviewRequest extends LaunchMessage
     {
         return [
             LtiConstants::MESSAGE_TYPE,
-            LtiConstants::AP_CLAIM_ACTIVITY,
-            LtiConstants::AP_CLAIM_SUBMISSION,
-            LtiConstants::AP_CLAIM_ASSET,
-            LtiConstants::AP_CLAIM_REPORT_TYPE,
+            Claim::ACTIVITY,
+            Claim::SUBMISSION,
+            Claim::ASSET,
+            Claim::ASSETREPORT_TYPE,
         ];
     }
 
     public static function optionalClaims(): array
     {
         return [
-            LtiConstants::FOR_USER,
-            LtiConstants::CONTEXT,
-            LtiConstants::TARGET_LINK_URI,
-            LtiConstants::PNS_CLAIM_SERVICE,
+            Claim::FOR_USER,
+            Claim::CONTEXT,
+            Claim::TARGET_LINK_URI,
+            Claim::PLATFORMNOTIFICATIONSERVICE,
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\MessageValidators;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiException;
 
@@ -19,10 +20,10 @@ class AssetProcessorSettingsValidator extends AbstractMessageValidator
     {
         static::validateGenericMessage($jwtBody);
 
-        if (empty($jwtBody[LtiConstants::AP_CLAIM_ACTIVITY])) {
+        if (empty($jwtBody[Claim::ACTIVITY])) {
             throw new LtiException('Missing Activity Claim');
         }
-        if (empty($jwtBody[LtiConstants::CONTEXT])) {
+        if (empty($jwtBody[Claim::CONTEXT])) {
             throw new LtiException('Missing Context Claim');
         }
     }

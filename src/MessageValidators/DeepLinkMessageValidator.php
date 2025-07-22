@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\MessageValidators;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiException;
 
@@ -21,10 +22,10 @@ class DeepLinkMessageValidator extends AbstractMessageValidator
     {
         static::validateGenericMessage($jwtBody);
 
-        if (empty($jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS])) {
+        if (empty($jwtBody[Claim::DL_DEEP_LINK_SETTINGS])) {
             throw new LtiException('Missing Deep Linking Settings');
         }
-        $deep_link_settings = $jwtBody[LtiConstants::DL_DEEP_LINK_SETTINGS];
+        $deep_link_settings = $jwtBody[Claim::DL_DEEP_LINK_SETTINGS];
         if (empty($deep_link_settings['deep_link_return_url'])) {
             throw new LtiException('Missing Deep Linking Return URL');
         }
