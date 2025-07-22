@@ -15,7 +15,7 @@ use Packback\Lti1p3\LtiException;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\Messages\LaunchMessage;
 
-class MessageFactory extends Factory
+class MessageFactory extends JwtPayloadFactory
 {
     public const ERR_MISSING_NONCE = 'Missing Nonce.';
     public const ERR_INVALID_NONCE = 'Invalid Nonce.';
@@ -117,9 +117,7 @@ class MessageFactory extends Factory
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED);
         }
 
-        /**
-         * @todo figure out what to do about this
-         */
+        // @phpstan-ignore method.notFound
         $deployment = $this->db->migrateFromLti1p1($this);
 
         return $this->ensureDeploymentExists($deployment);
@@ -139,18 +137,14 @@ class MessageFactory extends Factory
 
     private function shouldMigrate(): bool
     {
-        /**
-         * @todo figure out what to do here
-         */
         return $this->canMigrate()
+            // @phpstan-ignore method.notFound
             && $this->db->shouldMigrate($this);
     }
 
     private function matchingLti1p1KeyExists(array $jwt): bool
     {
-        /**
-         * @todo figure out what to do here
-         */
+        // @phpstan-ignore method.notFound
         $keys = $this->db->findLti1p1Keys($this);
 
         foreach ($keys as $key) {

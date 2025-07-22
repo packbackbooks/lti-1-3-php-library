@@ -19,7 +19,6 @@ use Packback\Lti1p3\Interfaces\IMigrationDatabase;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
-use Packback\Lti1p3\PlatformNotificationService\PlatformNotificationService;
 
 class LtiMessageLaunch
 {
@@ -107,29 +106,6 @@ class LtiMessageLaunch
         $new->jwt = ['body' => $new->cache->getLaunchData($launch_id)];
 
         return $new->validateRegistration();
-    }
-
-    public function getBody(): array
-    {
-        return $this->jwt['body'];
-    }
-
-    /**
-     * Returns whether or not the current launch can use the assignments and grades service.
-     */
-    public function hasPns(): bool
-    {
-        return isset($this->getBody()[Claim::PLATFORMNOTIFICATIONSERVICE]);
-    }
-
-    /**
-     * Fetches an instance of the platform notification service for the current launch.
-     */
-    public function getPns(): PlatformNotificationService
-    {
-        return new PlatformNotificationService(
-            $this->getBody()[Claim::PLATFORMNOTIFICATIONSERVICE]
-        );
     }
 
     public function setRequest(array $request): self
@@ -500,10 +476,6 @@ class LtiMessageLaunch
         $validator = $this->getMessageValidator($this->jwt['body']);
 
         if (!isset($validator)) {
-            /**
-             * @todo remove this
-             */
-            return $this;
             throw new LtiException(static::ERR_UNRECOGNIZED_MESSAGE_TYPE);
         }
 

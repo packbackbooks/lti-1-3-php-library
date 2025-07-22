@@ -7,7 +7,7 @@ use Packback\Lti1p3\LtiException;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\Messages\Notice;
 
-class NoticeFactory extends Factory
+class NoticeFactory extends JwtPayloadFactory
 {
     public const ERR_MISSING_NONCE = 'Missing Nonce.';
     public const ERR_INVALID_NONCE = 'Invalid Nonce.';
@@ -16,6 +16,9 @@ class NoticeFactory extends Factory
     {
         [$jwt, $registration, $deployment] = $this->validate($message);
 
+        /**
+         * @var Notice
+         */
         $messageInstance = $this->createMessage($registration, $jwt);
         $messageInstance->validate();
 
@@ -38,10 +41,10 @@ class NoticeFactory extends Factory
          * @todo Do we even need to do this?
          */
         // Check State for OIDC.
-        if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$message['state']) !== $message['state']) {
-            // Error if state doesn't match
-            throw new LtiException(static::ERR_STATE_NOT_FOUND);
-        }
+        // if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$message['state']) !== $message['state']) {
+        //     // Error if state doesn't match
+        //     throw new LtiException(static::ERR_STATE_NOT_FOUND);
+        // }
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3;
+namespace Packback\Lti1p3\Factories;
 
 use Exception;
 use Firebase\JWT\ExpiredException;
@@ -10,19 +10,22 @@ use Firebase\JWT\Key;
 use GuzzleHttp\Exception\TransferException;
 use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Concerns\Claimable;
-use Packback\Lti1p3\Interfaces\ICache;
-use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\Messages\AssetProcessorSettingRequest;
+use Packback\Lti1p3\LtiConstants;
+use Packback\Lti1p3\LtiDeployment;
+use Packback\Lti1p3\LtiException;
+use Packback\Lti1p3\Messages\AssetProcessorSettingsRequest;
 use Packback\Lti1p3\Messages\DeepLinkingRequest;
 use Packback\Lti1p3\Messages\EulaRequest;
+use Packback\Lti1p3\Messages\LtiMessage;
 use Packback\Lti1p3\Messages\Notice;
 use Packback\Lti1p3\Messages\ReportReviewRequest;
 use Packback\Lti1p3\Messages\ResourceLinkRequest;
+use Packback\Lti1p3\ServiceRequest;
 
-class LtiMessageBridge
+abstract class JwtPayloadFactory
 {
     use Claimable;
     public const ERR_FETCH_PUBLIC_KEY = 'Failed to fetch public key.';
@@ -50,13 +53,6 @@ class LtiMessageBridge
     public const ERR_UNRECOGNIZED_MESSAGE_TYPE = 'Unrecognized message type.';
     public const ERR_INVALID_MESSAGE = 'Message validation failed.';
     public const ERR_INVALID_ALG = 'Invalid alg was specified in the JWT header.';
-    public const ERR_OAUTH_KEY_SIGN_NOT_VERIFIED = 'Unable to upgrade from LTI 1.1 to 1.3. No OAuth Consumer Key matched this signature.';
-    public const ERR_OAUTH_KEY_SIGN_MISSING = 'Unable to upgrade from LTI 1.1 to 1.3. The oauth_consumer_key_sign was not provided.';
-    protected ?ILtiDeployment $deployment;
-    public string $launch_id;
-    protected array $message;
-    protected array $jwt;
-    protected ?ILtiRegistration $registration;
 
     // See https://www.imsglobal.org/spec/security/v1p1#approved-jwt-signing-algorithms.
     protected static $ltiSupportedAlgs = [
@@ -67,97 +63,69 @@ class LtiMessageBridge
         'ES384' => 'EC',
         'ES512' => 'EC',
     ];
-    protected static $claimTokenKeyMap = [
-        Claim::MESSAGE_TYPE => 'id_token',
-        Claim::NOTICE => 'jwt',
-    ];
 
     public function __construct(
         protected IDatabase $db,
-        protected ICache $cache,
-        protected ICookie $cookie,
         protected ILtiServiceConnector $serviceConnector
     ) {}
 
-    public function initialize(array $message, string $typeClaim): static
-    {
-        $this->setMessage($message);
-        [$jwt, $registration, $deployment] = $this->validate($message, $typeClaim);
+    abstract public function create(array $message): LtiMessage;
+    // {
+    //     $this->setMessage($message);
+    //     [$jwt, $registration, $deployment] = $this->validate($message, $typeClaim);
 
-        $messageInstance = $this->createMessage($jwt, $typeClaim);
-        $messageInstance->validate();
+    //     $messageInstance = $this->createMessage($jwt, $typeClaim);
+    //     $messageInstance->validate();
 
-        /**
-         * @todo There should probably be a separate class for messages and notices
-         */
-        if ($typeClaim === Claim::MESSAGE_TYPE) {
-            $this->migrate($deployment, $jwt)
-                ->cacheLaunchData(uniqid('lti1p3_launch_', true), $jwt);
-        }
-
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * Validates all aspects of an incoming LTI message launch and caches the launch if successful.
      *
      * @throws LtiException Will throw an LtiException if validation fails
      */
-    public function validate(array $message, string $typeClaim): array
+    public function validate(array $message): array
     {
         if (isset($message['state'])) {
             $this->validateState($message);
         }
 
-        $tokenKey = static::getTokenKey($typeClaim);
-
-        $jwt = $this->validateJwtFormat($message, $tokenKey);
+        $jwt = $this->validateJwtFormat($message);
         $this->validateNonce($jwt, $message);
         $registration = $this->validateRegistration($jwt);
-        $this->validateJwtSignature($registration, $jwt, $message[$tokenKey]);
+        $this->validateJwtSignature($registration, $jwt, $message);
+        $this->validateRequiredClaims($jwt);
         $deployment = $this->validateDeployment($jwt);
-        $this->validateUniversalClaims($jwt);
 
         return [$jwt, $registration, $deployment];
     }
 
-    public function createMessage(array $jwt, string $typeClaim): LtiMessage
+    public function createMessage(ILtiRegistration $registration, array $jwt): LtiMessage
     {
-        $class = $this->getMessageClass($jwt, $typeClaim);
-
-        return new $class($jwt['body']);
-    }
-
-    public function getMessageClass(array $jwt, string $typeClaim): string
-    {
-        if ($typeClaim === Claim::MESSAGE_TYPE) {
-            $type = $this->getClaim($jwt, $typeClaim)->getBody();
-        } elseif ($typeClaim === Claim::NOTICE) {
-            $type = $this->getClaim($jwt, $typeClaim)->getBody()['type'];
+        switch ($this->getTypeName($jwt)) {
+            case LtiConstants::MESSAGE_TYPE_DEEPLINK:
+                return new DeepLinkingRequest($this->serviceConnector, $registration, $jwt['body']);
+            case LtiConstants::MESSAGE_TYPE_RESOURCE:
+                return new ResourceLinkRequest($this->serviceConnector, $registration, $jwt['body']);
+            case LtiConstants::MESSAGE_TYPE_EULA:
+                return new EulaRequest($this->serviceConnector, $registration, $jwt['body']);
+            case LtiConstants::MESSAGE_TYPE_REPORTREVIEW:
+                return new ReportReviewRequest($this->serviceConnector, $registration, $jwt['body']);
+            case LtiConstants::MESSAGE_TYPE_ASSETPROCESSORSETTINGS:
+                return new AssetProcessorSettingsRequest($this->serviceConnector, $registration, $jwt['body']);
+            case LtiConstants::NOTICE_TYPE_HELLOWORLD:
+            case LtiConstants::NOTICE_TYPE_CONTEXTCOPY:
+            case LtiConstants::NOTICE_TYPE_ASSETPROCESSORSUBMISSION:
+                return new Notice($this->serviceConnector, $registration, $jwt['body']);
+            default:
+                throw new LtiException(static::ERR_INVALID_MESSAGE_TYPE);
         }
-
-        /**
-         * @todo There should probably be a separate class for messages and notices
-         */
-        $typeClaimMap = [
-            // Messages
-            LtiConstants::MESSAGE_TYPE_DEEPLINK => DeepLinkingRequest::class,
-            LtiConstants::MESSAGE_TYPE_RESOURCE => ResourceLinkRequest::class,
-            /**
-             * @todo what is this?
-             */
-            // LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW => SubmissionReviewRequest::class,
-            LtiConstants::MESSAGE_TYPE_EULA => EulaRequest::class,
-            LtiConstants::MESSAGE_TYPE_REPORTREVIEW => ReportReviewRequest::class,
-            LtiConstants::MESSAGE_TYPE_ASSETPROCESSORSETTINGS => AssetProcessorSettingRequest::class,
-            // Notices
-            LtiConstants::NOTICE_TYPE_HELLOWORLD => Notice::class,
-            LtiConstants::NOTICE_TYPE_CONTEXTCOPY => Notice::class,
-            LtiConstants::NOTICE_TYPE_ASSETPROCESSORSUBMISSION => Notice::class,
-        ];
-
-        return $typeClaimMap[$type];
     }
+
+    abstract public static function getTypeClaim(): string;
+
+    abstract public function getTypeName($jwt): string;
 
     public static function getMissingRegistrationErrorMsg(string $issuerUrl, ?string $clientId = null): string
     {
@@ -172,49 +140,20 @@ class LtiMessageBridge
         return str_replace($search, $replace, static::ERR_MISSING_REGISTRATION);
     }
 
-    public function setMessage(array $message): static
+    abstract protected function validateState(array $message): static;
+    // {
+    //     // Check State for OIDC.
+    //     if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$message['state']) !== $message['state']) {
+    //         // Error if state doesn't match
+    //         throw new LtiException(static::ERR_STATE_NOT_FOUND);
+    //     }
+
+    //     return $this;
+    // }
+
+    protected function validateJwtFormat(array $message): array
     {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    public function getServiceConnector(): ILtiServiceConnector
-    {
-        return $this->serviceConnector;
-    }
-
-    public function getRegistration(): LtiRegistration
-    {
-        return $this->registration;
-    }
-
-    protected function validateState(array $message): static
-    {
-        // Check State for OIDC.
-        if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$message['state']) !== $message['state']) {
-            // Error if state doesn't match
-            throw new LtiException(static::ERR_STATE_NOT_FOUND);
-        }
-
-        return $this;
-    }
-
-    protected function validateMessage(array $message, string $typeClaim): static
-    {
-        $validator = $this->messageValidator($this->getBody());
-
-        if (!isset($validator)) {
-            throw new LtiException(static::ERR_UNRECOGNIZED_MESSAGE_TYPE);
-        }
-
-        $validator::validate($this->getBody());
-
-        return $this;
-    }
-
-    protected function validateJwtFormat(array $message, string $tokenKey): array
-    {
+        $tokenKey = static::getTokenKey();
         if (!isset($message[$tokenKey])) {
             throw new LtiException(static::ERR_MISSING_ID_TOKEN);
         }
@@ -235,26 +174,26 @@ class LtiMessageBridge
         return $jwt;
     }
 
-    protected static function getTokenKey(string $claim): string
-    {
-        return static::$claimTokenKeyMap[$claim];
-    }
+    abstract protected static function getTokenKey(): string;
+    // {
+    //     return static::$claimTokenKeyMap[$claim];
+    // }
 
-    protected function validateNonce(array $jwt, array $message): static
-    {
-        if (!isset($jwt['body']['nonce'])) {
-            throw new LtiException(static::ERR_MISSING_NONCE);
-        }
+    abstract protected function validateNonce(array $jwt, array $message): static;
+    // {
+    //     if (!isset($jwt['body']['nonce'])) {
+    //         throw new LtiException(static::ERR_MISSING_NONCE);
+    //     }
 
-        /**
-         * @todo, how do we do this for async notifications?
-         */
-        if (isset($this->cache) && !$this->cache->checkNonceIsValid($jwt['body']['nonce'], $message['state'])) {
-            throw new LtiException(static::ERR_INVALID_NONCE);
-        }
+    //     /**
+    //      * @todo, how do we do this for async notifications?
+    //      */
+    //     if (isset($this->cache) && !$this->cache->checkNonceIsValid($jwt['body']['nonce'], $message['state'])) {
+    //         throw new LtiException(static::ERR_INVALID_NONCE);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     protected function validateRegistration(array $jwt): ILtiRegistration
     {
@@ -276,7 +215,7 @@ class LtiMessageBridge
         return $registration;
     }
 
-    protected function validateJwtSignature(ILtiRegistration $registration, array $jwt, string $encodedJwt): static
+    protected function validateJwtSignature(ILtiRegistration $registration, array $jwt, array $message): static
     {
         if (!isset($jwt['header']['kid'])) {
             throw new LtiException(static::ERR_NO_KID);
@@ -288,7 +227,7 @@ class LtiMessageBridge
 
         // Validate JWT signature
         try {
-            JWT::decode($encodedJwt, $public_key, $headers);
+            JWT::decode($message[static::getTokenKey()], $public_key, $headers);
         } catch (ExpiredException $e) {
             // Error validating signature.
             throw new LtiException(static::ERR_INVALID_SIGNATURE, previous: $e);
@@ -297,33 +236,34 @@ class LtiMessageBridge
         return $this;
     }
 
-    protected function validateDeployment(array $jwt): ?LtiDeployment
+    protected function validateRequiredClaims(array $jwt): static
     {
-        if (!isset($jwt['body'][Claim::DEPLOYMENT_ID])) {
-            throw new LtiException(static::ERR_MISSING_DEPLOYEMENT_ID);
-        }
-
-        // Find deployment.
-        $client_id = $this->getAud($jwt);
-        $deployment = $this->db->findDeployment($jwt['body']['iss'], $jwt['body'][Claim::DEPLOYMENT_ID], $client_id);
-
-        /**
-         * @todo if is launch
-         */
-        if (!$this->canMigrate()) {
-            $this->ensureDeploymentExists($deployment);
-        }
-
-        return $deployment;
-    }
-
-    protected function universallyRequiredClaims(): array
-    {
-        return [
+        $requiredClaims = [
             Claim::VERSION,
             Claim::DEPLOYMENT_ID,
             Claim::ROLES,
+            static::getTypeClaim(),
         ];
+        foreach ($requiredClaims as $claim) {
+            if (!static::hasClaimInBody($claim, $jwt['body'])) {
+                // Unable to identify message type.
+                throw new LtiException('Missing required claim: '.$claim);
+            }
+        }
+
+        return $this;
+    }
+
+    protected function validateDeployment(array $jwt): ?LtiDeployment
+    {
+        // Find deployment.
+        $client_id = $this->getAud($jwt);
+        /**
+         * @var ?LtiDeployment
+         */
+        $deployment = $this->db->findDeployment($jwt['body']['iss'], $jwt['body'][Claim::DEPLOYMENT_ID], $client_id);
+
+        return $deployment;
     }
 
     protected function getAud(array $jwt): string
@@ -409,56 +349,6 @@ class LtiMessageBridge
     }
 
     /**
-     * @todo handle migrations
-     */
-    public function migrate(?LtiDeployment $deployment, array $jwt): static
-    {
-        if (!$this->shouldMigrate()) {
-            return $this->ensureDeploymentExists($deployment);
-        }
-
-        if (!isset($jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'])) {
-            throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
-        }
-
-        if (!$this->matchingLti1p1KeyExists($jwt)) {
-            throw new LtiException(static::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED);
-        }
-
-        /**
-         * @todo figure out what to do about this
-         */
-        $deployment = $this->db->migrateFromLti1p1($this);
-
-        return $this->ensureDeploymentExists($deployment);
-    }
-
-    public function cacheLaunchData(string $launchId, array $jwt): static
-    {
-        $this->cache->cacheLaunchData($this->launch_id, $jwt['body']);
-
-        return $this;
-    }
-
-    /**
-     * Get the unique launch id for the current launch.
-     */
-    public function getLaunchId(): string
-    {
-        return $this->launch_id;
-    }
-
-    protected function hasJwtToken(array $message): bool
-    {
-        return isset($message['id_token']);
-    }
-
-    protected function getJwtToken(array $message): string
-    {
-        return $this->message['id_token'];
-    }
-
-    /**
      * @throws LtiException
      */
     protected function ensureDeploymentExists(?LtiDeployment $deployment = null): static
@@ -468,51 +358,5 @@ class LtiMessageBridge
         }
 
         return $this;
-    }
-
-    public function canMigrate(): bool
-    {
-        return $this->db instanceof IMigrationDatabase;
-    }
-
-    private function shouldMigrate(): bool
-    {
-        /**
-         * @todo figure out what to do here
-         */
-        return $this->canMigrate()
-            && $this->db->shouldMigrate($this);
-    }
-
-    private function matchingLti1p1KeyExists(array $jwt): bool
-    {
-        /**
-         * @todo figure out what to do here
-         */
-        $keys = $this->db->findLti1p1Keys($this);
-
-        foreach ($keys as $key) {
-            if ($this->oauthConsumerKeySignMatches($jwt, $key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function oauthConsumerKeySignMatches(array $jwt, Lti1p1Key $key): bool
-    {
-        return $jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key, $jwt);
-    }
-
-    private function getOauthSignature(Lti1p1Key $key, array $jwt): string
-    {
-        return $key->sign(
-            $jwt['body'][Claim::DEPLOYMENT_ID],
-            $jwt['body']['iss'],
-            $this->getAud($jwt),
-            $jwt['body']['exp'],
-            $jwt['body']['nonce']
-        );
     }
 }
