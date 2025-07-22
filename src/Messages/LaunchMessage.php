@@ -3,7 +3,6 @@
 namespace Packback\Lti1p3\Messages;
 
 use Packback\Lti1p3\Claims\Claim;
-use Packback\Lti1p3\Claims\PlatformNotificationService;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\LtiAssignmentsGradesService;
@@ -41,23 +40,6 @@ abstract class LaunchMessage extends LtiMessage
     public function hasPns(): bool
     {
         return $this->hasClaim(Claim::PLATFORMNOTIFICATIONSERVICE);
-    }
-
-    /**
-     * Fetches an instance of the platform notification service for the current launch.
-     */
-    public function getPns(): PlatformNotificationService
-    {
-        return new PlatformNotificationService(
-            $this->getClaim(Claim::PLATFORMNOTIFICATIONSERVICE)->getBody()
-        );
-    }
-    /**
-     * Returns whether or not the current launch can use the names and roles service.
-     */
-    public function hasNrps(): bool
-    {
-        return $this->hasClaim(Claim::NRPS_NAMESROLESSERVICE);
     }
 
     /**
