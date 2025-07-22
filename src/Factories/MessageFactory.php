@@ -53,7 +53,7 @@ class MessageFactory extends Factory
 
     public function getTypeName($jwt): string
     {
-        return static::getClaimFrom(getTypeClaim(), $jwt['body']);
+        return static::getClaimFrom(static::getTypeClaim(), $jwt['body']);
     }
 
     protected function validateState(array $message): static
