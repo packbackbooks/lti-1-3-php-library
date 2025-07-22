@@ -68,7 +68,7 @@ class LtiMessageBridge
         'ES512' => 'EC',
     ];
     protected static $claimTokenKeyMap = [
-        LtiConstants::MESSAGE_TYPE => 'id_token',
+        Claim::MESSAGE_TYPE => 'id_token',
         Claim::NOTICE => 'jwt',
     ];
 
@@ -90,7 +90,7 @@ class LtiMessageBridge
         /**
          * @todo There should probably be a separate class for messages and notices
          */
-        if ($typeClaim === LtiConstants::MESSAGE_TYPE) {
+        if ($typeClaim === Claim::MESSAGE_TYPE) {
             $this->migrate($deployment, $jwt)
                 ->cacheLaunchData(uniqid('lti1p3_launch_', true), $jwt);
         }
@@ -130,7 +130,7 @@ class LtiMessageBridge
 
     public function getMessageClass(array $jwt, string $typeClaim): string
     {
-        if ($typeClaim === LtiConstants::MESSAGE_TYPE) {
+        if ($typeClaim === Claim::MESSAGE_TYPE) {
             $type = $this->getClaim($jwt, $typeClaim)->getBody();
         } elseif ($typeClaim === Claim::NOTICE) {
             $type = $this->getClaim($jwt, $typeClaim)->getBody()['type'];

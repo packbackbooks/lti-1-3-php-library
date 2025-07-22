@@ -23,8 +23,8 @@ class LtiDeepLink
             'iat' => time(),
             'nonce' => LtiOidcLogin::secureRandomString('nonce-'),
             Claim::DEPLOYMENT_ID => $this->deployment_id,
-            LtiConstants::MESSAGE_TYPE => LtiConstants::MESSAGE_TYPE_DEEPLINK_RESPONSE,
-            LtiConstants::VERSION => LtiConstants::V1_3,
+            Claim::MESSAGE_TYPE => LtiConstants::MESSAGE_TYPE_DEEPLINK_RESPONSE,
+            Claim::VERSION => LtiConstants::V1_3,
             Claim::DL_CONTENT_ITEMS => array_map(function ($resource) {
                 return $resource->toArray();
             }, $resources),

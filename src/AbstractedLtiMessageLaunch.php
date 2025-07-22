@@ -149,7 +149,7 @@ class AbstractedLtiMessageLaunch // extends LaunchMessage
 
     public function isMessageType(string $type): bool
     {
-        return $this->getBody()[LtiConstants::MESSAGE_TYPE] === $type;
+        return $this->getBody()[Claim::MESSAGE_TYPE] === $type;
     }
 
     /**
