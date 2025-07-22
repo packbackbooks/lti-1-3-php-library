@@ -66,13 +66,4 @@ class NoticeFactory extends Factory
 
         return $this;
     }
-
-    protected function requiredClaims(): array
-    {
-        return [
-            LtiConstants::VERSION,
-            LtiConstants::DEPLOYMENT_ID,
-            LtiConstants::ROLES,
-        ];
-    }
 }
