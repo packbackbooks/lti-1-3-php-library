@@ -114,17 +114,17 @@ class TestMigrateDb extends TestDb implements IMigrationDatabase
     public bool $shouldMigrate;
     public LtiDeployment $createdDeployment;
 
-    public function findLti1p1Keys(LtiMessageLaunch $launch): array
+    public function findLti1p1Keys($launch): array
     {
         return $this->matchingKeys;
     }
 
-    public function shouldMigrate(LtiMessageLaunch $launch): bool
+    public function shouldMigrate($launch): bool
     {
         return $this->shouldMigrate;
     }
 
-    public function migrateFromLti1p1(LtiMessageLaunch $launch): LtiDeployment
+    public function migrateFromLti1p1($launch): LtiDeployment
     {
         return $this->createdDeployment;
     }

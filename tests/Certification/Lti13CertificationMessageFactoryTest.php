@@ -24,6 +24,7 @@ use Packback\Lti1p3\LtiException;
 use Packback\Lti1p3\LtiMessageLaunch;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\LtiRegistration;
+use Packback\Lti1p3\Messages\LaunchMessage;
 use Tests\TestCase;
 
 class TestFactoryCache implements ICache
@@ -115,17 +116,17 @@ class TestFactoryMigrateDb extends TestFactoryDb implements IMigrationDatabase
     public bool $shouldMigrate;
     public LtiDeployment $createdDeployment;
 
-    public function findLti1p1Keys(LtiMessageLaunch $launch): array
+    public function findLti1p1Keys($launch): array
     {
         return $this->matchingKeys;
     }
 
-    public function shouldMigrate(LtiMessageLaunch $launch): bool
+    public function shouldMigrate($launch): bool
     {
         return $this->shouldMigrate;
     }
 
-    public function migrateFromLti1p1(LtiMessageLaunch $launch): LtiDeployment
+    public function migrateFromLti1p1($launch): LtiDeployment
     {
         return $this->createdDeployment;
     }
@@ -393,7 +394,7 @@ class Lti13CertificationMessageFactoryTest extends TestCase
         ];
 
         $launch = $this->launch($payload, $db);
-        $this->assertInstanceOf(LtiMessageLaunch::class, $launch);
+        $this->assertInstanceOf(LaunchMessage::class, $launch);
     }
 
     public function test_does_not_migrate1p1_if_missing_oauth_key_sign()

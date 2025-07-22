@@ -48,7 +48,9 @@ abstract class LaunchMessage extends LtiMessage
      */
     public function getPns(): PlatformNotificationService
     {
-        return $this->getClaim(Claim::PLATFORMNOTIFICATIONSERVICE);
+        return new PlatformNotificationService(
+            $this->getClaim(Claim::PLATFORMNOTIFICATIONSERVICE)->getBody()
+        );
     }
     /**
      * Returns whether or not the current launch can use the names and roles service.

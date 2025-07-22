@@ -3,6 +3,7 @@
 namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Claims\Lti1p1;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -41,8 +42,8 @@ class MessageFactory extends JwtPayloadFactory
         $messageInstance = $this->createMessage($registration, $jwt);
         $messageInstance->validate();
 
-        $this->migrate($deployment, $jwt)
-            ->cacheLaunchData($messageInstance, $jwt);
+        $this->migrate($deployment, $messageInstance)
+            ->cacheLaunchData($messageInstance);
 
         return $messageInstance;
     }
@@ -103,29 +104,35 @@ class MessageFactory extends JwtPayloadFactory
     /**
      * @todo handle migrations
      */
-    public function migrate(?LtiDeployment $deployment, array $jwt): static
+    public function migrate(?LtiDeployment $deployment, LaunchMessage $message): static
     {
-        if (!$this->shouldMigrate()) {
+        if (!$this->shouldMigrate($message)) {
             return $this->ensureDeploymentExists($deployment);
         }
 
-        if (!isset($jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'])) {
+        if (!$message->hasClaim(Claim::LTI1P1)) {
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
         }
 
-        if (!$this->matchingLti1p1KeyExists($jwt)) {
+        /** @var Lti1p1 $lti1p1Claim */
+        $lti1p1Claim = $message->getClaim(Claim::LTI1P1);
+        if ($lti1p1Claim->getOauthConsumerKeySign() === null) {
+            throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
+        }
+
+        if (!$this->matchingLti1p1KeyExists($message)) {
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED);
         }
 
         // @phpstan-ignore method.notFound
-        $deployment = $this->db->migrateFromLti1p1($this);
+        $deployment = $this->db->migrateFromLti1p1($message);
 
         return $this->ensureDeploymentExists($deployment);
     }
 
-    public function cacheLaunchData(LaunchMessage $message, array $jwt): static
+    public function cacheLaunchData(LaunchMessage $message): static
     {
-        $this->cache->cacheLaunchData($message->getLaunchId(), $jwt['body']);
+        $this->cache->cacheLaunchData($message->getLaunchId(), $message->getBody());
 
         return $this;
     }
@@ -135,20 +142,20 @@ class MessageFactory extends JwtPayloadFactory
         return $this->db instanceof IMigrationDatabase;
     }
 
-    private function shouldMigrate(): bool
+    private function shouldMigrate(LaunchMessage $message): bool
     {
         return $this->canMigrate()
             // @phpstan-ignore method.notFound
-            && $this->db->shouldMigrate($this);
+            && $this->db->shouldMigrate($message);
     }
 
-    private function matchingLti1p1KeyExists(array $jwt): bool
+    private function matchingLti1p1KeyExists(LaunchMessage $message): bool
     {
         // @phpstan-ignore method.notFound
-        $keys = $this->db->findLti1p1Keys($this);
+        $keys = $this->db->findLti1p1Keys($message);
 
         foreach ($keys as $key) {
-            if ($this->oauthConsumerKeySignMatches($jwt, $key)) {
+            if ($this->oauthConsumerKeySignMatches($message, $key)) {
                 return true;
             }
         }
@@ -156,19 +163,22 @@ class MessageFactory extends JwtPayloadFactory
         return false;
     }
 
-    private function oauthConsumerKeySignMatches(array $jwt, Lti1p1Key $key): bool
+    private function oauthConsumerKeySignMatches(LaunchMessage $message, Lti1p1Key $key): bool
     {
-        return $jwt['body'][Claim::LTI1P1]['oauth_consumer_key_sign'] === $this->getOauthSignature($key, $jwt);
+        /** @var Lti1p1 $lti1p1Claim */
+        $lti1p1Claim = $message->getClaim(Claim::LTI1P1);
+
+        return $lti1p1Claim->getOauthConsumerKeySign() === $this->getOauthSignature($key, $message);
     }
 
-    private function getOauthSignature(Lti1p1Key $key, array $jwt): string
+    private function getOauthSignature(Lti1p1Key $key, LaunchMessage $message): string
     {
         return $key->sign(
-            $jwt['body'][Claim::DEPLOYMENT_ID],
-            $jwt['body']['iss'],
-            $this->getAud($jwt),
-            $jwt['body']['exp'],
-            $jwt['body']['nonce']
+            $message->getClaim(Claim::DEPLOYMENT_ID)->getBody(),
+            $message->getBody()['iss'],
+            $message->getAud(),
+            $message->getBody()['exp'],
+            $message->getBody()['nonce']
         );
     }
 }

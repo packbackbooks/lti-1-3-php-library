@@ -8,4 +8,9 @@ class Lti1p1 extends Claim
     {
         return Claim::LTI1P1;
     }
+
+    public function getOauthConsumerKeySign(): ?string
+    {
+        return $this->getBody()['oauth_consumer_key_sign'] ?? null;
+    }
 }

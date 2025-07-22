@@ -236,7 +236,6 @@ abstract class JwtPayloadFactory
         } else {
             return $jwt['body']['aud'];
         }
-
     }
 
     /**

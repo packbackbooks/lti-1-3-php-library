@@ -3,6 +3,7 @@
 namespace Packback\Lti1p3\Messages;
 
 use Firebase\JWT\JWT;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Concerns\Claimable;
 use Packback\Lti1p3\Factories\ClaimFactory;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
@@ -30,6 +31,15 @@ abstract class LtiMessage
         return $this->body;
     }
 
+    public function getAud(): string
+    {
+        if (is_array($this->body['aud'])) {
+            return $this->body['aud'][0];
+        } else {
+            return $this->body['aud'];
+        }
+    }
+
     public function validate(): static
     {
         static::messageValidator()::validate($this->getBody());
@@ -42,7 +52,7 @@ abstract class LtiMessage
         return static::hasClaimInBody($claim, $this->body);
     }
 
-    public function getClaim(string $claim)
+    public function getClaim(string $claim): Claim
     {
         return ClaimFactory::create($claim, $this);
     }
