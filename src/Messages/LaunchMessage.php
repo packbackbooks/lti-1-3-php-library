@@ -50,7 +50,7 @@ abstract class LaunchMessage extends LtiMessage
         return new LtiNamesRolesProvisioningService(
             $this->serviceConnector,
             $this->registration,
-            $this->getBody()[Claim::NRPS_NAMESROLESSERVICE]
+            $this->getClaim(Claim::NRPS_NAMESROLESSERVICE)->getBody()
         );
     }
     /**
@@ -69,7 +69,7 @@ abstract class LaunchMessage extends LtiMessage
         return new LtiCourseGroupsService(
             $this->serviceConnector,
             $this->registration,
-            $this->getBody()[Claim::GS_GROUPSSERVICE]
+            $this->getClaim(Claim::GS_GROUPSSERVICE)->getBody()
         );
     }
     /**
@@ -88,7 +88,7 @@ abstract class LaunchMessage extends LtiMessage
         return new LtiAssignmentsGradesService(
             $this->serviceConnector,
             $this->registration,
-            $this->getBody()[Claim::AGS_ENDPOINT]
+            $this->getClaim(Claim::AGS_ENDPOINT)->getBody()
         );
     }
 }
