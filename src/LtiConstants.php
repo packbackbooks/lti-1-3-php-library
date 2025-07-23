@@ -84,6 +84,10 @@ class LtiConstants
     // LTI PNS
     public const PNS_SCOPE_NOTICEHANDLERS = 'https://purl.imsglobal.org/spec/lti/scope/noticehandlers';
 
+    // EULA
+    public const EULA_SCOPE_USER = 'https://purl.imsglobal.org/spec/lti/scope/eula/user';
+    public const EULA_SCOPE_DEPLOYMENT = 'https://purl.imsglobal.org/spec/lti/scope/eula/deployment';
+
     // User Vocab
     public const SYSTEM_ADMINISTRATOR = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#Administrator';
     public const SYSTEM_NONE = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#None';
