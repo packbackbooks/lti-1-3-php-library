@@ -8,10 +8,13 @@ use Packback\Lti1p3\Claims\AssetReportType;
 use Packback\Lti1p3\Claims\ForUser;
 use Packback\Lti1p3\Claims\Submission;
 use Packback\Lti1p3\LtiConstants;
+use Packback\Lti1p3\Messages\Concerns\HasActivityClaim;
 use Packback\Lti1p3\MessageValidators\ReportReviewMessageValidator;
 
 class ReportReviewRequest extends ResourceLinkRequest
 {
+    use HasActivityClaim;
+
     public static function messageType(): string
     {
         return LtiConstants::MESSAGE_TYPE_REPORTREVIEW;
@@ -32,11 +35,6 @@ class ReportReviewRequest extends ResourceLinkRequest
     public static function messageValidator(): string
     {
         return ReportReviewMessageValidator::class;
-    }
-
-    public function activityClaim(): Activity
-    {
-        return Activity::create($this);
     }
 
     public function forUserClaim(): ForUser

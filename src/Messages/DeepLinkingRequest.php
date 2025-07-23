@@ -14,10 +14,13 @@ use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\Claims\ToolPlatform;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeepLink;
+use Packback\Lti1p3\Messages\Concerns\HasActivityClaim;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 
 class DeepLinkingRequest extends LaunchMessage
 {
+    use HasActivityClaim;
+
     public static function messageType(): string
     {
         return LtiConstants::MESSAGE_TYPE_DEEPLINK;
@@ -65,10 +68,5 @@ class DeepLinkingRequest extends LaunchMessage
     public function deepLinkSettingsClaim(): DeepLinkSettings
     {
         return DeepLinkSettings::create($this);
-    }
-
-    public function activityClaim(): Activity
-    {
-        return Activity::create($this);
     }
 }

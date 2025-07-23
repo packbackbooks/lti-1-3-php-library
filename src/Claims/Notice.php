@@ -12,11 +12,6 @@ class Notice extends Claim
         return Claim::NOTICE;
     }
 
-    public function sub()
-    {
-        return $this->getBody()['sub'] ?? null;
-    }
-
     public function type(): string
     {
         return $this->getBody()['type'];
