@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AssetProcessor;
+namespace Tests\Payloads;
 
-use Packback\Lti1p3\AssetProcessor\AssetProcessor;
+use Packback\Lti1p3\Payloads\AssetProcessor;
 use Tests\TestCase;
 
 class AssetProcessorTest extends TestCase

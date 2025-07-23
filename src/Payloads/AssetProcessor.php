@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3\AssetProcessor;
+namespace Packback\Lti1p3\Payloads;
 
 use Packback\Lti1p3\Concerns\Arrayable;
 

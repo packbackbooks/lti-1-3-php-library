@@ -1,6 +1,6 @@
 <?php
 
-namespace Packback\Lti1p3\AssetProcessor;
+namespace Packback\Lti1p3\Payloads;
 
 use Packback\Lti1p3\Concerns\Arrayable;
 
@@ -19,8 +19,6 @@ class Report
      */
     private ?string $indicationColor = null;
     private ?string $result = null;
-    private ?float $scoreGiven = null;
-    private ?float $scoreMaximum = null;
     private ?bool $visibleToOwner = null;
 
     /**
@@ -67,8 +65,6 @@ class Report
             'indicationAlt' => $this->indicationAlt,
             'indicationColor' => $this->indicationColor,
             'result' => $this->result,
-            'scoreGiven' => $this->scoreGiven,
-            'scoreMaximum' => $this->scoreMaximum,
             'visibleToOwner' => $this->visibleToOwner,
             'title' => $this->title,
             'comment' => $this->comment,
@@ -156,30 +152,6 @@ class Report
     public function setResult(string $value): self
     {
         $this->result = $value;
-
-        return $this;
-    }
-
-    public function getScoreGiven(): ?float
-    {
-        return $this->scoreGiven;
-    }
-
-    public function setScoreGiven(float $value): self
-    {
-        $this->scoreGiven = $value;
-
-        return $this;
-    }
-
-    public function getScoreMaximum(): ?float
-    {
-        return $this->scoreMaximum;
-    }
-
-    public function setScoreMaximum(float $value): self
-    {
-        $this->scoreMaximum = $value;
 
         return $this;
     }

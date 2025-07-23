@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\AssetProcessor;
+namespace Tests\Payloads;
 
-use Packback\Lti1p3\AssetProcessor\Report;
+use Packback\Lti1p3\Payloads\Report;
 use Tests\TestCase;
 
 class ReportTest extends TestCase
@@ -147,36 +147,6 @@ class ReportTest extends TestCase
         $this->assertEquals($expected, $this->report->getResult());
     }
 
-    public function test_it_gets_score_given()
-    {
-        $result = $this->report->getScoreGiven();
-        $this->assertNull($result);
-    }
-
-    public function test_it_sets_score_given()
-    {
-        $expected = 85.5;
-        $result = $this->report->setScoreGiven($expected);
-
-        $this->assertSame($this->report, $result);
-        $this->assertEquals($expected, $this->report->getScoreGiven());
-    }
-
-    public function test_it_gets_score_maximum()
-    {
-        $result = $this->report->getScoreMaximum();
-        $this->assertNull($result);
-    }
-
-    public function test_it_sets_score_maximum()
-    {
-        $expected = 100.0;
-        $result = $this->report->setScoreMaximum($expected);
-
-        $this->assertSame($this->report, $result);
-        $this->assertEquals($expected, $this->report->getScoreMaximum());
-    }
-
     public function test_it_gets_error_code()
     {
         $result = $this->report->getErrorCode();
@@ -212,16 +182,14 @@ class ReportTest extends TestCase
         $expectedComment = 'Processing successful';
         $expectedIndicationAlt = 'Success indicator';
         $expectedIndicationColor = '#00FF00';
-        $expectedScoreGiven = 95.0;
-        $expectedScoreMaximum = 100.0;
+        $expectedResult = '95.0';
         $expectedErrorCode = null;
 
         $this->report->setTitle($expectedTitle);
         $this->report->setComment($expectedComment);
         $this->report->setIndicationAlt($expectedIndicationAlt);
         $this->report->setIndicationColor($expectedIndicationColor);
-        $this->report->setScoreGiven($expectedScoreGiven);
-        $this->report->setScoreMaximum($expectedScoreMaximum);
+        $this->report->setResult($expectedResult);
 
         $expected = [
             'assetId' => self::INITIAL_ASSET_ID,
@@ -231,8 +199,7 @@ class ReportTest extends TestCase
             'timestamp' => self::INITIAL_TIMESTAMP,
             'indicationAlt' => $expectedIndicationAlt,
             'indicationColor' => $expectedIndicationColor,
-            'scoreGiven' => $expectedScoreGiven,
-            'scoreMaximum' => $expectedScoreMaximum,
+            'result' => $expectedResult,
             'title' => $expectedTitle,
             'comment' => $expectedComment,
         ];
@@ -338,18 +305,6 @@ class ReportTest extends TestCase
         foreach ($validHexColors as $color) {
             $this->report->setIndicationColor($color);
             $this->assertEquals($color, $this->report->getIndicationColor());
-        }
-    }
-
-    public function test_score_precision()
-    {
-        $preciseScores = [0.0, 0.1, 50.5, 99.99, 100.0];
-
-        foreach ($preciseScores as $score) {
-            $this->report->setScoreGiven($score);
-            $this->report->setScoreMaximum($score);
-            $this->assertEquals($score, $this->report->getScoreGiven());
-            $this->assertEquals($score, $this->report->getScoreMaximum());
         }
     }
 }
