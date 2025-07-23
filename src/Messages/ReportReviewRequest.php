@@ -7,7 +7,6 @@ use Packback\Lti1p3\Claims\Asset;
 use Packback\Lti1p3\Claims\AssetReportType;
 use Packback\Lti1p3\Claims\ForUser;
 use Packback\Lti1p3\Claims\MessageType;
-use Packback\Lti1p3\Claims\ResourceLink;
 use Packback\Lti1p3\Claims\Submission;
 use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\LtiConstants;
@@ -28,7 +27,6 @@ class ReportReviewRequest extends ResourceLinkRequest
         return [
             MessageType::claimKey(),
             TargetLinkUri::claimKey(),
-            ResourceLink::claimKey(),
             Activity::claimKey(),
             ForUser::claimKey(),
             Submission::claimKey(),

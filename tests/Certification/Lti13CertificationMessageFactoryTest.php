@@ -136,6 +136,7 @@ class Lti13CertificationMessageFactoryTest extends TestCase
     public const ISSUER_URL = 'https://ltiadvantagevalidator.imsglobal.org';
     public const JWKS_FILE = '/tmp/jwks.json';
     public const CERT_DATA_DIR = __DIR__.'/../data/certification/';
+    public const MESSAGE_DATA_DIR = __DIR__.'/../data/messages/';
     public const PRIVATE_KEY = __DIR__.'/../data/private.key';
     public const STATE = 'state';
     public TestFactoryDb $db;
@@ -535,6 +536,61 @@ class Lti13CertificationMessageFactoryTest extends TestCase
     public function test_valid_certification_cases()
     {
         $testCasesDir = static::CERT_DATA_DIR.'valid';
+
+        $testCases = scandir($testCasesDir);
+        // Remove . and ..
+        array_shift($testCases);
+        array_shift($testCases);
+
+        $casesCount = count($testCases);
+        $testedCases = 0;
+
+        foreach ($testCases as $testCase) {
+            $payload = json_decode(
+                file_get_contents($testCasesDir.DIRECTORY_SEPARATOR.$testCase.DIRECTORY_SEPARATOR.'payload.json'),
+                true
+            );
+
+            $payload['exp'] = Carbon::now()->addDay()->timestamp;
+            $payload['iat'] = Carbon::now()->subDay()->timestamp;
+            // Set a random context ID to avoid reusing the same LMS Course
+            $payload[Claim::CONTEXT]['id'] = 'lms-course-id';
+            // Set a random user ID to avoid reusing the same LmsUser
+            $payload['sub'] = 'lms-user-id';
+
+            // I couldn't find a better output function
+            echo PHP_EOL."--> TESTING VALID TEST CASE: {$testCase}";
+
+            $jwt = $this->buildJWT($payload, $this->issuer);
+            $this->cache->cacheNonce($payload['nonce'], static::STATE);
+
+            $params = [
+                'utf8' => '✓',
+                'id_token' => $jwt,
+                'state' => static::STATE,
+            ];
+
+            $request = Mockery::mock(Response::class);
+            $this->serviceConnector->shouldReceive('makeRequest')
+                ->once()->andReturn($request);
+            $this->serviceConnector->shouldReceive('getResponseBody')
+                ->once()->andReturn(json_decode(file_get_contents(static::JWKS_FILE), true));
+
+            $result = (new MessageFactory($this->db, $this->serviceConnector, $this->cache, $this->cookie))
+                ->create($params);
+
+            // Assertions
+            $this->assertInstanceOf(LaunchMessage::class, $result);
+
+            $testedCases++;
+        }
+        echo PHP_EOL;
+        $this->assertEquals($casesCount, $testedCases);
+    }
+
+    public function test_valid_message_cases()
+    {
+        $testCasesDir = static::MESSAGE_DATA_DIR.'valid';
 
         $testCases = scandir($testCasesDir);
         // Remove . and ..
