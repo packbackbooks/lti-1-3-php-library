@@ -5,10 +5,10 @@ namespace Tests\Messages;
 use Mockery;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
-use Packback\Lti1p3\Messages\Notice;
+use Packback\Lti1p3\Messages\HelloWorldNotice;
 use Tests\TestCase;
 
-class NoticeTest extends TestCase
+class HelloWorldNoticeTest extends TestCase
 {
     private $serviceConnectorMock;
     private $registrationMock;
@@ -21,11 +21,11 @@ class NoticeTest extends TestCase
 
     public function test_it_creates_new_instance()
     {
-        $notice = new Notice(
+        $helloWorldNotice = new HelloWorldNotice(
             $this->serviceConnectorMock,
             $this->registrationMock,
             []
         );
-        $this->assertInstanceOf(Notice::class, $notice);
+        $this->assertInstanceOf(HelloWorldNotice::class, $helloWorldNotice);
     }
 }

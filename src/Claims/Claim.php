@@ -42,6 +42,7 @@ abstract class Claim
     // Platform Notification Service
     public const PLATFORMNOTIFICATIONSERVICE = 'https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice';
     public const NOTICE = 'https://purl.imsglobal.org/spec/lti/claim/notice';
+    public const ORIGIN_CONTEXTS = 'https://purl.imsglobal.org/spec/lti/claim/origin_contexts';
 
     // Asset Processor
     public const ASSETSERVICE = 'https://purl.imsglobal.org/spec/lti/claim/assetservice';

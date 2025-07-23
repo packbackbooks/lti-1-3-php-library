@@ -2,7 +2,6 @@
 
 namespace Packback\Lti1p3\Messages\Concerns;
 
-use Packback\Lti1p3\Claims\Context;
 use Packback\Lti1p3\Claims\Custom;
 use Packback\Lti1p3\Claims\LaunchPresentation;
 use Packback\Lti1p3\Claims\Lis;
@@ -15,6 +14,8 @@ use Packback\Lti1p3\Claims\ToolPlatform;
 
 trait HasLaunchClaims
 {
+    use HasContextClaim;
+
     public function messageTypeClaim(): MessageType
     {
         return MessageType::create($this);
@@ -23,11 +24,6 @@ trait HasLaunchClaims
     public function targetLinkUriClaim(): TargetLinkUri
     {
         return TargetLinkUri::create($this);
-    }
-
-    public function contextClaim(): Context
-    {
-        return Context::create($this);
     }
 
     public function toolPlatformClaim(): ToolPlatform

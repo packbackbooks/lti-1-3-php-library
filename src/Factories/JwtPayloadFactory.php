@@ -19,10 +19,12 @@ use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeployment;
 use Packback\Lti1p3\LtiException;
 use Packback\Lti1p3\Messages\AssetProcessorSettingsRequest;
+use Packback\Lti1p3\Messages\AssetProcessorSubmissionNotice;
+use Packback\Lti1p3\Messages\ContextCopyNotice;
 use Packback\Lti1p3\Messages\DeepLinkingRequest;
 use Packback\Lti1p3\Messages\EulaRequest;
+use Packback\Lti1p3\Messages\HelloWorldNotice;
 use Packback\Lti1p3\Messages\LtiMessage;
-use Packback\Lti1p3\Messages\Notice;
 use Packback\Lti1p3\Messages\ReportReviewRequest;
 use Packback\Lti1p3\Messages\ResourceLinkRequest;
 use Packback\Lti1p3\ServiceRequest;
@@ -126,9 +128,11 @@ abstract class JwtPayloadFactory
             case LtiConstants::MESSAGE_TYPE_ASSETPROCESSORSETTINGS:
                 return new AssetProcessorSettingsRequest($this->serviceConnector, $registration, $jwt['body']);
             case LtiConstants::NOTICE_TYPE_HELLOWORLD:
+                return new HelloWorldNotice($this->serviceConnector, $registration, $jwt['body']);
             case LtiConstants::NOTICE_TYPE_CONTEXTCOPY:
+                return new ContextCopyNotice($this->serviceConnector, $registration, $jwt['body']);
             case LtiConstants::NOTICE_TYPE_ASSETPROCESSORSUBMISSION:
-                return new Notice($this->serviceConnector, $registration, $jwt['body']);
+                return new AssetProcessorSubmissionNotice($this->serviceConnector, $registration, $jwt['body']);
             default:
                 throw new LtiException(static::ERR_INVALID_MESSAGE_TYPE);
         }
