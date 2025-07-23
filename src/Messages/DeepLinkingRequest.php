@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\Messages;
 
+use Packback\Lti1p3\Claims\Activity;
 use Packback\Lti1p3\Claims\Context;
 use Packback\Lti1p3\Claims\Custom;
 use Packback\Lti1p3\Claims\DeepLinkSettings;
@@ -34,6 +35,7 @@ class DeepLinkingRequest extends LaunchMessage
     public static function optionalClaims(): array
     {
         return [
+            Activity::claimKey(),
             LaunchPresentation::claimKey(),
             ToolPlatform::claimKey(),
             Context::claimKey(),
@@ -63,5 +65,10 @@ class DeepLinkingRequest extends LaunchMessage
     public function deepLinkSettingsClaim(): DeepLinkSettings
     {
         return DeepLinkSettings::create($this);
+    }
+
+    public function activityClaim(): Activity
+    {
+        return Activity::create($this);
     }
 }
