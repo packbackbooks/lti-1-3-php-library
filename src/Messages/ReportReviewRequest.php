@@ -6,7 +6,10 @@ use Packback\Lti1p3\Claims\Activity;
 use Packback\Lti1p3\Claims\Asset;
 use Packback\Lti1p3\Claims\AssetReportType;
 use Packback\Lti1p3\Claims\ForUser;
+use Packback\Lti1p3\Claims\MessageType;
+use Packback\Lti1p3\Claims\ResourceLink;
 use Packback\Lti1p3\Claims\Submission;
+use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\Messages\Concerns\HasActivityClaim;
 use Packback\Lti1p3\MessageValidators\ReportReviewMessageValidator;
@@ -23,7 +26,9 @@ class ReportReviewRequest extends ResourceLinkRequest
     public static function requiredClaims(): array
     {
         return [
-            ...parent::requiredClaims(),
+            MessageType::claimKey(),
+            TargetLinkUri::claimKey(),
+            ResourceLink::claimKey(),
             Activity::claimKey(),
             ForUser::claimKey(),
             Submission::claimKey(),

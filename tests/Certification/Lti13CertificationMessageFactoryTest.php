@@ -444,12 +444,12 @@ class Lti13CertificationMessageFactoryTest extends TestCase
         $this->launch($payload, $db);
     }
 
-    public function test_launch_with_missing_resource_link_id()
+    public function test_launch_with_missing_sub()
     {
         $payload = $this->payload;
         unset($payload['sub']);
 
-        $this->expectExceptionMessage('Must have a user (sub)');
+        $this->expectExceptionMessage('Missing required claim: sub');
 
         $this->launch($payload);
     }

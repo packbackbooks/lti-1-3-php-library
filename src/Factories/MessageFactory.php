@@ -39,7 +39,6 @@ class MessageFactory extends JwtPayloadFactory
          * @var LaunchMessage
          */
         $messageInstance = $this->createMessage($registration, $jwt);
-        $messageInstance->validate();
 
         $this->migrate($deployment, $messageInstance)
             ->cacheLaunchData($messageInstance);

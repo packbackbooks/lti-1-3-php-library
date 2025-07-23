@@ -442,7 +442,7 @@ class Lti13CertificationTest extends TestCase
         $ltiMessageLaunch = $this->launch($payload, $db);
     }
 
-    public function test_launch_with_missing_resource_link_id()
+    public function test_launch_with_missing_sub()
     {
         $payload = $this->payload;
         unset($payload['sub']);
