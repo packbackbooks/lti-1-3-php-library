@@ -214,6 +214,10 @@ abstract class JwtPayloadFactory
             throw new LtiException('Incorrect version, expected 1.3.0');
         }
 
+        if ($jwt['body']['sub'] === '') {
+            throw new LtiException('Invalid claim: sub cannot be empty');
+        }
+
         return $this;
     }
 
