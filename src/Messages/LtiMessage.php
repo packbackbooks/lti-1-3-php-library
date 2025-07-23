@@ -43,7 +43,12 @@ abstract class LtiMessage
 
     public function validate(): static
     {
-        static::messageValidator()::validate($this->getBody());
+        foreach (static::requiredClaims() as $claim) {
+            if (!static::hasClaimInBody($claim, $this->getBody())) {
+                // Unable to identify message type.
+                throw new LtiException('Missing required claim: '.$claim);
+            }
+        }
 
         return $this;
     }

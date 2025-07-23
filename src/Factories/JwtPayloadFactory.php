@@ -209,15 +209,21 @@ abstract class JwtPayloadFactory
             'sub',
         ];
 
-        foreach ($requiredClaims as $claim) {
-            if (!static::hasClaimInBody($claim, $jwt['body'])) {
-                // Unable to identify message type.
-                throw new LtiException('Missing required claim: '.$claim);
-            }
-        }
+        $this->validateClaims($requiredClaims, $jwt['body']);
 
         if ($jwt['body'][Version::claimKey()] !== LtiConstants::V1_3) {
             throw new LtiException('Incorrect version, expected 1.3.0');
+        }
+
+        return $this;
+    }
+
+    protected function validateClaims(array $claims, array $body): static
+    {
+        foreach ($claims as $claim) {
+            if (!static::hasClaimInBody($claim, $body)) {
+                throw new LtiException('Missing required claim: '.$claim);
+            }
         }
 
         return $this;
