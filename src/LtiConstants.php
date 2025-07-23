@@ -84,6 +84,10 @@ class LtiConstants
     // LTI PNS
     public const PNS_SCOPE_NOTICEHANDLERS = 'https://purl.imsglobal.org/spec/lti/scope/noticehandlers';
 
+    // LTI AP
+    public const AP_SCOPE_REPORT = 'https://purl.imsglobal.org/spec/lti/scope/report';
+    public const AP_SCOPE_ASSET_READONLY = 'https://purl.imsglobal.org/spec/lti/scope/asset.readonly';
+
     // EULA
     public const EULA_SCOPE_USER = 'https://purl.imsglobal.org/spec/lti/scope/eula/user';
     public const EULA_SCOPE_DEPLOYMENT = 'https://purl.imsglobal.org/spec/lti/scope/eula/deployment';
