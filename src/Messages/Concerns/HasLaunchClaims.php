@@ -8,6 +8,7 @@ use Packback\Lti1p3\Claims\LaunchPresentation;
 use Packback\Lti1p3\Claims\Lis;
 use Packback\Lti1p3\Claims\Lti1p1;
 use Packback\Lti1p3\Claims\MessageType;
+use Packback\Lti1p3\Claims\PlatformNotificationService;
 use Packback\Lti1p3\Claims\RoleScopeMentor;
 use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\Claims\ToolPlatform;
@@ -57,5 +58,10 @@ trait HasLaunchClaims
     public function ltiClaim1p1(): Lti1p1
     {
         return Lti1p1::create($this);
+    }
+
+    public function platformNotificationServiceClaim(): PlatformNotificationService
+    {
+        return PlatformNotificationService::create($this);
     }
 }
