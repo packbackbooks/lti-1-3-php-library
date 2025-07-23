@@ -53,7 +53,7 @@ abstract class LtiMessage
      */
     public function hasClaim(string $claim): bool
     {
-        return static::hasClaimInBody($claim::getClaimKey(), $this->body);
+        return static::hasClaimInBody($claim::claimKey(), $this->body);
     }
 
     public function deploymentIdClaim(): DeploymentId
