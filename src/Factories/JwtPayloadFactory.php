@@ -132,7 +132,6 @@ abstract class JwtPayloadFactory
             default:
                 throw new LtiException(static::ERR_INVALID_MESSAGE_TYPE);
         }
-
     }
 
     protected function validateJwtFormat(array $message): array

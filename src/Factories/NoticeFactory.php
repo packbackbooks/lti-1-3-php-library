@@ -20,7 +20,7 @@ class NoticeFactory extends JwtPayloadFactory
          * @var Notice
          */
         $messageInstance = $this->createMessage($registration, $jwt);
-        $messageInstance->validate();
+        $this->validateClaims($messageInstance::requiredClaims(), $messageInstance->getBody());
 
         return $messageInstance;
     }

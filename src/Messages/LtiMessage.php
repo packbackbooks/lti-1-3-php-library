@@ -39,17 +39,6 @@ abstract class LtiMessage
         }
     }
 
-    public function validate(): static
-    {
-        foreach (static::requiredClaims() as $claim) {
-            if (!static::hasClaimInBody($claim, $this->getBody())) {
-                throw new LtiException('Missing required claim: '.$claim);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @param  class-string<Claim>  $claim
      */
