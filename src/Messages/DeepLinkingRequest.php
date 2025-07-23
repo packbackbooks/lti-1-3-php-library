@@ -2,16 +2,9 @@
 
 namespace Packback\Lti1p3\Messages;
 
-use Packback\Lti1p3\Claims\Activity;
-use Packback\Lti1p3\Claims\Context;
-use Packback\Lti1p3\Claims\Custom;
 use Packback\Lti1p3\Claims\DeepLinkSettings;
-use Packback\Lti1p3\Claims\LaunchPresentation;
 use Packback\Lti1p3\Claims\MessageType;
-use Packback\Lti1p3\Claims\Roles;
-use Packback\Lti1p3\Claims\RoleScopeMentor;
 use Packback\Lti1p3\Claims\TargetLinkUri;
-use Packback\Lti1p3\Claims\ToolPlatform;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeepLink;
 use Packback\Lti1p3\Messages\Concerns\HasActivityClaim;
@@ -32,19 +25,6 @@ class DeepLinkingRequest extends LaunchMessage
             MessageType::claimKey(),
             TargetLinkUri::claimKey(),
             DeepLinkSettings::claimKey(),
-        ];
-    }
-
-    public static function optionalClaims(): array
-    {
-        return [
-            Activity::claimKey(),
-            LaunchPresentation::claimKey(),
-            ToolPlatform::claimKey(),
-            Context::claimKey(),
-            Roles::claimKey(),
-            RoleScopeMentor::claimKey(),
-            Custom::claimKey(),
         ];
     }
 

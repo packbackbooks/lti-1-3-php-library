@@ -15,8 +15,6 @@ abstract class LtiMessage
     use Claimable;
 
     abstract public static function requiredClaims(): array;
-    // abstract public static function optionalClaims(): array;
-    abstract public static function messageValidator(): string;
 
     public function __construct(
         protected ILtiServiceConnector $serviceConnector,
@@ -45,7 +43,6 @@ abstract class LtiMessage
     {
         foreach (static::requiredClaims() as $claim) {
             if (!static::hasClaimInBody($claim, $this->getBody())) {
-                // Unable to identify message type.
                 throw new LtiException('Missing required claim: '.$claim);
             }
         }
