@@ -4,17 +4,17 @@ namespace Packback\Lti1p3\Claims;
 
 use Packback\Lti1p3\Claims\Concerns\HasScope;
 
-class AssignmentGradeService extends Claim
+class AssetReport extends Claim
 {
     use HasScope;
 
     public static function key(): string
     {
-        return Claim::AGS_ENDPOINT;
+        return Claim::ASSETREPORT;
     }
 
-    public function lineitems(): string
+    public function reportUrl(): string
     {
-        return $this->getBody()['lineitems'];
+        return $this->getBody()['report_url'];
     }
 }

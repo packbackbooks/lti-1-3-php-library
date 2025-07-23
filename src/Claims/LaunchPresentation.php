@@ -8,4 +8,9 @@ class LaunchPresentation extends Claim
     {
         return Claim::LAUNCH_PRESENTATION;
     }
+
+    public function returnUrl(): string
+    {
+        return $this->getBody()['return_url'];
+    }
 }

@@ -2,8 +2,11 @@
 
 namespace Packback\Lti1p3\Claims;
 
+use Packback\Lti1p3\Claims\Concerns\HasScope;
+
 class PlatformNotificationService extends Claim
 {
+    use HasScope;
     public static function key(): string
     {
         return Claim::PLATFORMNOTIFICATIONSERVICE;
@@ -17,11 +20,6 @@ class PlatformNotificationService extends Claim
     public function serviceVersions(): array
     {
         return $this->getBody()['service_versions'];
-    }
-
-    public function scope(): array
-    {
-        return $this->getBody()['scope'];
     }
 
     public function noticeTypesSupported(): array

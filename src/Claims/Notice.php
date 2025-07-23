@@ -8,4 +8,9 @@ class Notice extends Claim
     {
         return Claim::NOTICE;
     }
+
+    public function sub()
+    {
+        return $this->getBody()['sub'] ?? null;
+    }
 }

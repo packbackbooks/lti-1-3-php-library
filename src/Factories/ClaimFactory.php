@@ -4,7 +4,9 @@ namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Activity;
 use Packback\Lti1p3\Claims\Asset;
-use Packback\Lti1p3\Claims\AssetProcessorService;
+use Packback\Lti1p3\Claims\AssetReport;
+use Packback\Lti1p3\Claims\AssetReportType;
+use Packback\Lti1p3\Claims\AssetService;
 use Packback\Lti1p3\Claims\AssignmentGradeService;
 use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Claims\ContentItems;
@@ -88,8 +90,12 @@ class ClaimFactory
                 return new AssignmentGradeService(static::getClaimFrom($claim, $message->getBody()));
             case Claim::GS_GROUPSSERVICE:
                 return new GroupService(static::getClaimFrom($claim, $message->getBody()));
+            case Claim::ASSETREPORT:
+                return new AssetReport(static::getClaimFrom($claim, $message->getBody()));
+            case Claim::ASSETREPORT_TYPE:
+                return new AssetReportType(static::getClaimFrom($claim, $message->getBody()));
             case Claim::ASSETSERVICE:
-                return new AssetProcessorService(static::getClaimFrom($claim, $message->getBody()));
+                return new AssetService(static::getClaimFrom($claim, $message->getBody()));
             case Claim::ASSETREPORT:
                 return new Report(static::getClaimFrom($claim, $message->getBody()));
             case Claim::SUBMISSION:
