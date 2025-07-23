@@ -45,71 +45,227 @@ class ClaimFactory
     {
         switch ($claim) {
             case Claim::NOTICE:
-                return new Notice(static::getClaimFrom($claim, $message->getBody()));
+                static::createNotice($message);
             case Claim::ACTIVITY:
-                return new Activity(static::getClaimFrom($claim, $message->getBody()));
+                static::createActivity($message);
             case Claim::PLATFORMNOTIFICATIONSERVICE:
-                return new PlatformNotificationService(static::getClaimFrom($claim, $message->getBody()));
+                static::createPlatformNotificationService($message);
             case Claim::DL_DEEP_LINK_SETTINGS:
-                return new DeepLinkSettings(static::getClaimFrom($claim, $message->getBody()));
+                static::createDeepLinkSettings($message);
             case Claim::DEPLOYMENT_ID:
-                return new DeploymentId(static::getClaimFrom($claim, $message->getBody()));
+                static::createDeploymentId($message);
             case Claim::MESSAGE_TYPE:
-                return new MessageType(static::getClaimFrom($claim, $message->getBody()));
+                static::createMessageType($message);
             case Claim::VERSION:
-                return new Version(static::getClaimFrom($claim, $message->getBody()));
+                static::createVersion($message);
             case Claim::ROLES:
-                return new Roles(static::getClaimFrom($claim, $message->getBody()));
+                static::createRoles($message);
             case Claim::FOR_USER:
-                return new ForUser(static::getClaimFrom($claim, $message->getBody()));
+                static::createForUser($message);
             case Claim::TARGET_LINK_URI:
-                return new TargetLinkUri(static::getClaimFrom($claim, $message->getBody()));
+                static::createTargetLinkUri($message);
             case Claim::RESOURCE_LINK:
-                return new ResourceLink(static::getClaimFrom($claim, $message->getBody()));
+                static::createResourceLink($message);
             case Claim::CONTEXT:
-                return new Context(static::getClaimFrom($claim, $message->getBody()));
+                static::createContext($message);
             case Claim::CUSTOM:
-                return new Custom(static::getClaimFrom($claim, $message->getBody()));
+                static::createCustom($message);
             case Claim::LAUNCH_PRESENTATION:
-                return new LaunchPresentation(static::getClaimFrom($claim, $message->getBody()));
+                static::createLaunchPresentation($message);
             case Claim::LIS:
-                return new Lis(static::getClaimFrom($claim, $message->getBody()));
+                static::createLis($message);
             case Claim::LTI1P1:
-                return new Lti1p1(static::getClaimFrom($claim, $message->getBody()));
+                static::createLti1p1($message);
             case Claim::ROLE_SCOPE_MENTOR:
-                return new RoleScopeMentor(static::getClaimFrom($claim, $message->getBody()));
+                static::createRoleScopeMentor($message);
             case Claim::TOOL_PLATFORM:
-                return new ToolPlatform(static::getClaimFrom($claim, $message->getBody()));
+                static::createToolPlatform($message);
             case Claim::DL_CONTENT_ITEMS:
-                return new ContentItems(static::getClaimFrom($claim, $message->getBody()));
+                static::createContentItems($message);
             case Claim::DL_DATA:
-                return new Data(static::getClaimFrom($claim, $message->getBody()));
+                static::createData($message);
             case Claim::NRPS_NAMESROLESSERVICE:
-                return new NamesRoleProvisioningService(static::getClaimFrom($claim, $message->getBody()));
+                static::createNamesRoleProvisioningService($message);
             case Claim::AGS_ENDPOINT:
-                return new AssignmentGradeService(static::getClaimFrom($claim, $message->getBody()));
+                static::createAssignmentGradeService($message);
             case Claim::GS_GROUPSSERVICE:
-                return new GroupService(static::getClaimFrom($claim, $message->getBody()));
+                static::createGroupService($message);
             case Claim::ASSETREPORT:
-                return new AssetReport(static::getClaimFrom($claim, $message->getBody()));
+                static::createAssetReport($message);
             case Claim::ASSETREPORT_TYPE:
-                return new AssetReportType(static::getClaimFrom($claim, $message->getBody()));
+                static::createAssetReportType($message);
             case Claim::ASSETSERVICE:
-                return new AssetService(static::getClaimFrom($claim, $message->getBody()));
+                static::createAssetService($message);
             case Claim::ASSETREPORT:
-                return new Report(static::getClaimFrom($claim, $message->getBody()));
+                static::createReport($message);
             case Claim::SUBMISSION:
-                return new Submission(static::getClaimFrom($claim, $message->getBody()));
+                static::createSubmission($message);
             case Claim::ASSETREPORT_TYPE:
-                return new ReportType(static::getClaimFrom($claim, $message->getBody()));
+                static::createReportType($message);
             case Claim::ASSET:
-                return new Asset(static::getClaimFrom($claim, $message->getBody()));
+                static::createAsset($message);
             case Claim::EULASERVICE:
-                return new EulaService(static::getClaimFrom($claim, $message->getBody()));
+                static::createEulaService($message);
             default:
                 throw new \InvalidArgumentException(
                     "Claim type '$claim' is not recognized or not implemented."
                 );
         }
     }
+
+    public static function createNotice(LtiMessage $message): Notice
+    {
+        return new Notice(static::getClaimFrom(Claim::NOTICE, $message->getBody()));
+    }
+
+    public static function createActivity(LtiMessage $message): Activity
+    {
+        return new Activity(static::getClaimFrom(Claim::ACTIVITY, $message->getBody()));
+    }
+
+    public static function createPlatformNotificationService(LtiMessage $message): PlatformNotificationService
+    {
+        return new PlatformNotificationService(static::getClaimFrom(Claim::PLATFORMNOTIFICATIONSERVICE, $message->getBody()));
+    }
+
+    public static function createDeepLinkSettings(LtiMessage $message): DeepLinkSettings
+    {
+        return new DeepLinkSettings(static::getClaimFrom(Claim::DL_DEEP_LINK_SETTINGS, $message->getBody()));
+    }
+
+    public static function createDeploymentId(LtiMessage $message): DeploymentId
+    {
+        return new DeploymentId(static::getClaimFrom(Claim::DEPLOYMENT_ID, $message->getBody()));
+    }
+
+    public static function createMessageType(LtiMessage $message): MessageType
+    {
+        return new MessageType(static::getClaimFrom(Claim::MESSAGE_TYPE, $message->getBody()));
+    }
+
+    public static function createVersion(LtiMessage $message): Version
+    {
+        return new Version(static::getClaimFrom(Claim::VERSION, $message->getBody()));
+    }
+
+    public static function createRoles(LtiMessage $message): Roles
+    {
+        return new Roles(static::getClaimFrom(Claim::ROLES, $message->getBody()));
+    }
+
+    public static function createForUser(LtiMessage $message): ForUser
+    {
+        return new ForUser(static::getClaimFrom(Claim::FOR_USER, $message->getBody()));
+    }
+
+    public static function createTargetLinkUri(LtiMessage $message): TargetLinkUri
+    {
+        return new TargetLinkUri(static::getClaimFrom(Claim::TARGET_LINK_URI, $message->getBody()));
+    }
+
+    public static function createResourceLink(LtiMessage $message): ResourceLink
+    {
+        return new ResourceLink(static::getClaimFrom(Claim::RESOURCE_LINK, $message->getBody()));
+    }
+
+    public static function createContext(LtiMessage $message): Context
+    {
+        return new Context(static::getClaimFrom(Claim::CONTEXT, $message->getBody()));
+    }
+
+    public static function createCustom(LtiMessage $message): Custom
+    {
+        return new Custom(static::getClaimFrom(Claim::CUSTOM, $message->getBody()));
+    }
+
+    public static function createLaunchPresentation(LtiMessage $message): LaunchPresentation
+    {
+        return new LaunchPresentation(static::getClaimFrom(Claim::LAUNCH_PRESENTATION, $message->getBody()));
+    }
+
+    public static function createLis(LtiMessage $message): Lis
+    {
+        return new Lis(static::getClaimFrom(Claim::LIS, $message->getBody()));
+    }
+
+    public static function createLti1p1(LtiMessage $message): Lti1p1
+    {
+        return new Lti1p1(static::getClaimFrom(Claim::LTI1P1, $message->getBody()));
+    }
+
+    public static function createRoleScopeMentor(LtiMessage $message): RoleScopeMentor
+    {
+        return new RoleScopeMentor(static::getClaimFrom(Claim::ROLE_SCOPE_MENTOR, $message->getBody()));
+    }
+
+    public static function createToolPlatform(LtiMessage $message): ToolPlatform
+    {
+        return new ToolPlatform(static::getClaimFrom(Claim::TOOL_PLATFORM, $message->getBody()));
+    }
+
+    public static function createContentItems(LtiMessage $message): ContentItems
+    {
+        return new ContentItems(static::getClaimFrom(Claim::DL_CONTENT_ITEMS, $message->getBody()));
+    }
+
+    public static function createData(LtiMessage $message): Data
+    {
+        return new Data(static::getClaimFrom(Claim::DL_DATA, $message->getBody()));
+    }
+
+    public static function createNamesRoleProvisioningService(LtiMessage $message): NamesRoleProvisioningService
+    {
+        return new NamesRoleProvisioningService(static::getClaimFrom(Claim::NRPS_NAMESROLESSERVICE, $message->getBody()));
+    }
+
+    public static function createAssignmentGradeService(LtiMessage $message): AssignmentGradeService
+    {
+        return new AssignmentGradeService(static::getClaimFrom(Claim::AGS_ENDPOINT, $message->getBody()));
+    }
+
+    public static function createGroupService(LtiMessage $message): GroupService
+    {
+        return new GroupService(static::getClaimFrom(Claim::GS_GROUPSSERVICE, $message->getBody()));
+    }
+
+    public static function createAssetReport(LtiMessage $message): AssetReport
+    {
+        return new AssetReport(static::getClaimFrom(Claim::ASSETREPORT, $message->getBody()));
+    }
+
+    public static function createAssetReportType(LtiMessage $message): AssetReportType
+    {
+        return new AssetReportType(static::getClaimFrom(Claim::ASSETREPORT_TYPE, $message->getBody()));
+    }
+
+    public static function createAssetService(LtiMessage $message): AssetService
+    {
+        return new AssetService(static::getClaimFrom(Claim::ASSETSERVICE, $message->getBody()));
+    }
+
+    public static function createReport(LtiMessage $message): Report
+    {
+        return new Report(static::getClaimFrom(Claim::ASSETREPORT, $message->getBody()));
+    }
+
+    public static function createSubmission(LtiMessage $message): Submission
+    {
+        return new Submission(static::getClaimFrom(Claim::SUBMISSION, $message->getBody()));
+    }
+
+    public static function createReportType(LtiMessage $message): ReportType
+    {
+        return new ReportType(static::getClaimFrom(Claim::ASSETREPORT_TYPE, $message->getBody()));
+    }
+
+    public static function createAsset(LtiMessage $message): Asset
+    {
+        return new Asset(static::getClaimFrom(Claim::ASSET, $message->getBody()));
+    }
+
+    public static function createEulaService(LtiMessage $message): EulaService
+    {
+        return new EulaService(static::getClaimFrom(Claim::EULASERVICE, $message->getBody()));
+    }
+
 }

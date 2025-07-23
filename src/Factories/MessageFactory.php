@@ -3,7 +3,6 @@
 namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Claim;
-use Packback\Lti1p3\Claims\Lti1p1;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -114,8 +113,7 @@ class MessageFactory extends JwtPayloadFactory
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
         }
 
-        /** @var Lti1p1 $lti1p1Claim */
-        $lti1p1Claim = $message->getClaim(Claim::LTI1P1);
+        $lti1p1Claim = ClaimFactory::createLti1p1($message);
         if ($lti1p1Claim->getOauthConsumerKeySign() === null) {
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
         }
@@ -165,8 +163,7 @@ class MessageFactory extends JwtPayloadFactory
 
     private function oauthConsumerKeySignMatches(LaunchMessage $message, Lti1p1Key $key): bool
     {
-        /** @var Lti1p1 $lti1p1Claim */
-        $lti1p1Claim = $message->getClaim(Claim::LTI1P1);
+        $lti1p1Claim = ClaimFactory::createLti1p1($message);
 
         return $lti1p1Claim->getOauthConsumerKeySign() === $this->getOauthSignature($key, $message);
     }
@@ -174,7 +171,7 @@ class MessageFactory extends JwtPayloadFactory
     private function getOauthSignature(Lti1p1Key $key, LaunchMessage $message): string
     {
         return $key->sign(
-            $message->getClaim(Claim::DEPLOYMENT_ID)->getBody(),
+            ClaimFactory::createDeploymentId($message)->getBody(),
             $message->getBody()['iss'],
             $message->getAud(),
             $message->getBody()['exp'],

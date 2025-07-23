@@ -3,6 +3,7 @@
 namespace Packback\Lti1p3\Messages;
 
 use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Factories\ClaimFactory;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeepLink;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
@@ -45,8 +46,8 @@ class DeepLinkingRequest extends LaunchMessage
     {
         return new LtiDeepLink(
             $this->registration,
-            $this->getClaim(Claim::DEPLOYMENT_ID)->getBody(),
-            $this->getClaim(Claim::DL_DEEP_LINK_SETTINGS)->getBody()
+            ClaimFactory::createDeploymentId($this)->getBody(),
+            ClaimFactory::createDeepLinkSettings($this)->getBody()
         );
     }
 }

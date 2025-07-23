@@ -4,7 +4,7 @@ namespace Packback\Lti1p3\Claims\Concerns;
 
 trait HasId
 {
-    abstract public function getBody(): array;
+    abstract public function getBody();
 
     public function id()
     {
