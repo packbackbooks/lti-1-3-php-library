@@ -25,7 +25,7 @@ use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\LtiRegistration;
 use Tests\TestCase;
 
-class TestCache implements ICache
+class DeprecatedTestCache implements ICache
 {
     private $launchData = [];
     private $nonce;
@@ -66,7 +66,7 @@ class TestCache implements ICache
     }
 }
 
-class TestCookie implements ICookie
+class DeprecatedTestCookie implements ICookie
 {
     private $cookies = [];
 
@@ -81,7 +81,7 @@ class TestCookie implements ICookie
     }
 }
 
-class TestDb implements IDatabase
+class DeprecatedTestDb implements IDatabase
 {
     private $registrations = [];
     private $deployments = [];
@@ -108,7 +108,7 @@ class TestDb implements IDatabase
     }
 }
 
-class TestMigrateDb extends TestDb implements IMigrationDatabase
+class DeprecatedTestMigrateDb extends DeprecatedTestDb implements IMigrationDatabase
 {
     public array $matchingKeys;
     public bool $shouldMigrate;
@@ -130,15 +130,15 @@ class TestMigrateDb extends TestDb implements IMigrationDatabase
     }
 }
 
-class Lti13CertificationTest extends TestCase
+class Lti13CertificationDeprecatedTest extends TestCase
 {
     public const ISSUER_URL = 'https://ltiadvantagevalidator.imsglobal.org';
     public const JWKS_FILE = '/tmp/jwks.json';
     public const CERT_DATA_DIR = __DIR__.'/../data/certification/';
     public const PRIVATE_KEY = __DIR__.'/../data/private.key';
     public const STATE = 'state';
-    public TestDb $db;
-    public TestMigrateDb $migrateDb;
+    public DeprecatedTestDb $db;
+    public DeprecatedTestMigrateDb $migrateDb;
     private $issuer;
     private $key;
     private array $payload;
@@ -235,7 +235,7 @@ class Lti13CertificationTest extends TestCase
             ],
         ];
 
-        $this->db = new TestDb(
+        $this->db = new DeprecatedTestDb(
             new LtiRegistration([
                 'issuer' => static::ISSUER_URL,
                 'clientId' => $this->issuer['client_id'],
@@ -243,7 +243,7 @@ class Lti13CertificationTest extends TestCase
             ]),
             new LtiDeployment(static::ISSUER_URL)
         );
-        $this->migrateDb = new TestMigrateDb(
+        $this->migrateDb = new DeprecatedTestMigrateDb(
             new LtiRegistration([
                 'issuer' => static::ISSUER_URL,
                 'clientId' => $this->issuer['client_id'],
@@ -251,8 +251,8 @@ class Lti13CertificationTest extends TestCase
             ]),
             new LtiDeployment(static::ISSUER_URL)
         );
-        $this->cache = new TestCache;
-        $this->cookie = new TestCookie;
+        $this->cache = new DeprecatedTestCache;
+        $this->cookie = new DeprecatedTestCookie;
         $this->cookie->setCookie(
             LtiOidcLogin::COOKIE_PREFIX.static::STATE,
             static::STATE
