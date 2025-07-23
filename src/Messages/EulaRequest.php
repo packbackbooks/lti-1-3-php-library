@@ -7,7 +7,7 @@ use Packback\Lti1p3\Claims\MessageType;
 use Packback\Lti1p3\Claims\Roles;
 use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\LtiConstants;
-use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
+use Packback\Lti1p3\MessageValidators\EulaMessageValidator;
 
 class EulaRequest extends LaunchMessage
 {
@@ -28,7 +28,7 @@ class EulaRequest extends LaunchMessage
 
     public static function messageValidator(): string
     {
-        return AssetProcessorSettingsValidator::class;
+        return EulaMessageValidator::class;
     }
 
     public function eulaServiceClaim(): EulaService
