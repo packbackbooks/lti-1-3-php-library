@@ -55,12 +55,12 @@ class DeepLinkingRequest extends LaunchMessage
     {
         return new LtiDeepLink(
             $this->registration,
-            $this->claimDeploymentId()->getBody(),
-            $this->claimDeepLinkSettings()->getBody()
+            $this->deploymentIdClaim()->getBody(),
+            $this->deepLinkSettingsClaim()->getBody()
         );
     }
 
-    public function claimDeepLinkSettings(): DeepLinkSettings
+    public function deepLinkSettingsClaim(): DeepLinkSettings
     {
         return DeepLinkSettings::create($this);
     }

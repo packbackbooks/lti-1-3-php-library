@@ -14,47 +14,47 @@ use Packback\Lti1p3\Claims\ToolPlatform;
 
 trait HasLaunchClaims
 {
-    public function claimMessageType(): MessageType
+    public function messageTypeClaim(): MessageType
     {
         return MessageType::create($this);
     }
 
-    public function claimTargetLinkUri(): TargetLinkUri
+    public function targetLinkUriClaim(): TargetLinkUri
     {
         return TargetLinkUri::create($this);
     }
 
-    public function claimContext(): Context
+    public function contextClaim(): Context
     {
         return Context::create($this);
     }
 
-    public function claimToolPlatform(): ToolPlatform
+    public function toolPlatformClaim(): ToolPlatform
     {
         return ToolPlatform::create($this);
     }
 
-    public function claimRoleScopeMentor(): RoleScopeMentor
+    public function roleScopeMentorClaim(): RoleScopeMentor
     {
         return RoleScopeMentor::create($this);
     }
 
-    public function claimLaunchPresentation(): LaunchPresentation
+    public function launchPresentationClaim(): LaunchPresentation
     {
         return LaunchPresentation::create($this);
     }
 
-    public function claimLis(): Lis
+    public function lisClaim(): Lis
     {
         return Lis::create($this);
     }
 
-    public function claimCustom(): Custom
+    public function customClaim(): Custom
     {
         return Custom::create($this);
     }
 
-    public function claimLti1p1(): Lti1p1
+    public function ltiClaim1p1(): Lti1p1
     {
         return Lti1p1::create($this);
     }

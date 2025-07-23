@@ -31,7 +31,7 @@ class EulaRequest extends LaunchMessage
         return AssetProcessorSettingsValidator::class;
     }
 
-    public function claimEulaService(): EulaService
+    public function eulaServiceClaim(): EulaService
     {
         return EulaService::create($this);
     }

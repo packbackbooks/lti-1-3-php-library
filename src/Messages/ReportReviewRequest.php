@@ -34,27 +34,27 @@ class ReportReviewRequest extends ResourceLinkRequest
         return ReportReviewMessageValidator::class;
     }
 
-    public function claimActivity(): Activity
+    public function activityClaim(): Activity
     {
         return Activity::create($this);
     }
 
-    public function claimForUser(): ForUser
+    public function forUserClaim(): ForUser
     {
         return ForUser::create($this);
     }
 
-    public function claimSubmission(): Submission
+    public function submissionClaim(): Submission
     {
         return Submission::create($this);
     }
 
-    public function claimAsset(): Asset
+    public function assetClaim(): Asset
     {
         return Asset::create($this);
     }
 
-    public function claimAssetReportType(): AssetReportType
+    public function assetReportTypeClaim(): AssetReportType
     {
         return AssetReportType::create($this);
     }

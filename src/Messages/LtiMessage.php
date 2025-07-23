@@ -52,12 +52,12 @@ abstract class LtiMessage
         return static::hasClaimInBody($claim, $this->body);
     }
 
-    public function claimDeploymentId(): DeploymentId
+    public function deploymentIdClaim(): DeploymentId
     {
         return DeploymentId::create($this);
     }
 
-    public function claimVersion(): Version
+    public function versionClaim(): Version
     {
         return Version::create($this);
     }

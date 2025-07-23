@@ -49,12 +49,12 @@ class AssetProcessorSettingsRequest extends LaunchMessage
         return AssetProcessorSettingsValidator::class;
     }
 
-    public function claimRoles(): Roles
+    public function rolesClaim(): Roles
     {
         return Roles::create($this);
     }
 
-    public function claimActivity(): Activity
+    public function activityClaim(): Activity
     {
         return Activity::create($this);
     }

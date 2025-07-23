@@ -47,7 +47,7 @@ class ResourceLinkRequest extends LaunchMessage
         return ResourceMessageValidator::class;
     }
 
-    public function claimResourceLink(): ResourceLink
+    public function resourceLinkClaim(): ResourceLink
     {
         return ResourceLink::create($this);
     }
