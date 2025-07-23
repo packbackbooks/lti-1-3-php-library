@@ -4,7 +4,6 @@ namespace Packback\Lti1p3\Messages;
 
 use Packback\Lti1p3\Claims\DeepLinkSettings;
 use Packback\Lti1p3\Claims\MessageType;
-use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeepLink;
 use Packback\Lti1p3\Messages\Concerns\HasActivityClaim;
@@ -23,7 +22,6 @@ class DeepLinkingRequest extends LaunchMessage
     {
         return [
             MessageType::claimKey(),
-            TargetLinkUri::claimKey(),
             DeepLinkSettings::claimKey(),
         ];
     }

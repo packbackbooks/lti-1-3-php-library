@@ -21,7 +21,6 @@ use Packback\Lti1p3\Lti1p1Key;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeployment;
 use Packback\Lti1p3\LtiException;
-use Packback\Lti1p3\LtiMessageLaunch;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\LtiRegistration;
 use Packback\Lti1p3\Messages\LaunchMessage;
@@ -321,8 +320,8 @@ class Lti13CertificationMessageFactoryTest extends TestCase
 
         $this->expectExceptionMessage('Invalid id_token, JWT must contain 3 parts');
 
-        LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
-            ->initialize($params);
+        (new MessageFactory($this->db, $this->serviceConnector, $this->cache, $this->cookie))
+            ->create($params);
     }
 
     public function test_exp_and_iat_fields_invalid()
@@ -415,7 +414,7 @@ class Lti13CertificationMessageFactoryTest extends TestCase
             'oauth_consumer_key' => 'somekey',
         ];
 
-        $this->expectExceptionMessage(LtiMessageLaunch::ERR_OAUTH_KEY_SIGN_MISSING);
+        $this->expectExceptionMessage(MessageFactory::ERR_OAUTH_KEY_SIGN_MISSING);
 
         $this->launch($payload, $db);
     }
@@ -439,7 +438,7 @@ class Lti13CertificationMessageFactoryTest extends TestCase
             'oauth_consumer_key_sign' => 'badsignature',
         ];
 
-        $this->expectExceptionMessage(LtiMessageLaunch::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED);
+        $this->expectExceptionMessage(MessageFactory::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED);
 
         $this->launch($payload, $db);
     }
@@ -521,8 +520,8 @@ class Lti13CertificationMessageFactoryTest extends TestCase
             ];
 
             try {
-                LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
-                    ->initialize($params);
+                (new MessageFactory($this->db, $this->serviceConnector, $this->cache, $this->cookie))
+                    ->create($params);
             } catch (Exception $e) {
                 $this->assertInstanceOf(LtiException::class, $e);
             }
@@ -576,11 +575,11 @@ class Lti13CertificationMessageFactoryTest extends TestCase
             $this->serviceConnector->shouldReceive('getResponseBody')
                 ->once()->andReturn(json_decode(file_get_contents(static::JWKS_FILE), true));
 
-            $result = LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
-                ->initialize($params);
+            $result = (new MessageFactory($this->db, $this->serviceConnector, $this->cache, $this->cookie))
+                ->create($params);
 
             // Assertions
-            $this->assertInstanceOf(LtiMessageLaunch::class, $result);
+            $this->assertInstanceOf(LaunchMessage::class, $result);
 
             $testedCases++;
         }
