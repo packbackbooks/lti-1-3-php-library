@@ -3,6 +3,7 @@
 namespace Packback\Lti1p3\Messages;
 
 use Firebase\JWT\JWT;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Claims\DeploymentId;
 use Packback\Lti1p3\Claims\Version;
 use Packback\Lti1p3\Concerns\Claimable;
@@ -47,9 +48,12 @@ abstract class LtiMessage
         return $this;
     }
 
+    /**
+     * @param  class-string<Claim>  $claim
+     */
     public function hasClaim(string $claim): bool
     {
-        return static::hasClaimInBody($claim, $this->body);
+        return static::hasClaimInBody($claim::getClaimKey(), $this->body);
     }
 
     public function deploymentIdClaim(): DeploymentId

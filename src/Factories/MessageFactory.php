@@ -2,7 +2,7 @@
 
 namespace Packback\Lti1p3\Factories;
 
-use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Claims\Lti1p1;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -109,7 +109,7 @@ class MessageFactory extends JwtPayloadFactory
             return $this->ensureDeploymentExists($deployment);
         }
 
-        if (!$message->hasClaim(Claim::LTI1P1)) {
+        if (!$message->hasClaim(Lti1p1::class)) {
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
         }
 
