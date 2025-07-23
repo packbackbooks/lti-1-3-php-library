@@ -81,6 +81,9 @@ class LtiConstants
     #[\Deprecated(message: 'use Packback\Lti1p3\Claims\Claim::GS_GROUPSSERVICE instead', since: '6.4')]
     public const GS_CLAIM_SERVICE = Claim::GS_GROUPSSERVICE;
 
+    // LTI PNS
+    public const PNS_SCOPE_NOTICEHANDLERS = 'https://purl.imsglobal.org/spec/lti/scope/noticehandlers';
+
     // User Vocab
     public const SYSTEM_ADMINISTRATOR = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#Administrator';
     public const SYSTEM_NONE = 'http://purl.imsglobal.org/vocab/lis/v2/system/person#None';
