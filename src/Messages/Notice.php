@@ -31,13 +31,33 @@ class Notice extends LtiMessage
         return NoticeMessageValidator::class;
     }
 
+    public function sub()
+    {
+        return $this->getBody()['sub'] ?? null;
+    }
+
     public function noticeClaim(): NoticeClaim
     {
         return NoticeClaim::create($this);
     }
 
-    public function sub()
+    public function assetReportClaim(): AssetReport
     {
-        return $this->getBody()['sub'] ?? null;
+        return AssetReport::create($this);
+    }
+
+    public function assetServiceClaim(): AssetService
+    {
+        return AssetService::create($this);
+    }
+
+    public function submissionClaim(): Submission
+    {
+        return Submission::create($this);
+    }
+
+    public function customClaim(): Custom
+    {
+        return Custom::create($this);
     }
 }
