@@ -2,8 +2,15 @@
 
 namespace Packback\Lti1p3\Messages;
 
-use Packback\Lti1p3\Claims\Claim;
-use Packback\Lti1p3\Factories\ClaimFactory;
+use Packback\Lti1p3\Claims\Context;
+use Packback\Lti1p3\Claims\Custom;
+use Packback\Lti1p3\Claims\DeepLinkSettings;
+use Packback\Lti1p3\Claims\LaunchPresentation;
+use Packback\Lti1p3\Claims\MessageType;
+use Packback\Lti1p3\Claims\Roles;
+use Packback\Lti1p3\Claims\RoleScopeMentor;
+use Packback\Lti1p3\Claims\TargetLinkUri;
+use Packback\Lti1p3\Claims\ToolPlatform;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeepLink;
 use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
@@ -18,19 +25,21 @@ class DeepLinkingRequest extends LaunchMessage
     public static function requiredClaims(): array
     {
         return [
-            LtiConstants::MESSAGE_TYPE,
-            Claim::DL_DEEP_LINK_SETTINGS,
+            MessageType::claimKey(),
+            TargetLinkUri::claimKey(),
+            DeepLinkSettings::claimKey(),
         ];
     }
 
     public static function optionalClaims(): array
     {
         return [
-            Claim::LAUNCH_PRESENTATION,
-            Claim::TOOL_PLATFORM,
-            Claim::CONTEXT,
-            Claim::ROLE_SCOPE_MENTOR,
-            Claim::CUSTOM,
+            LaunchPresentation::claimKey(),
+            ToolPlatform::claimKey(),
+            Context::claimKey(),
+            Roles::claimKey(),
+            RoleScopeMentor::claimKey(),
+            Custom::claimKey(),
         ];
     }
 
@@ -46,8 +55,13 @@ class DeepLinkingRequest extends LaunchMessage
     {
         return new LtiDeepLink(
             $this->registration,
-            ClaimFactory::createDeploymentId($this)->getBody(),
-            ClaimFactory::createDeepLinkSettings($this)->getBody()
+            $this->claimDeploymentId()->getBody(),
+            $this->claimDeepLinkSettings()->getBody()
         );
+    }
+
+    public function claimDeepLinkSettings(): DeepLinkSettings
+    {
+        return DeepLinkSettings::create($this);
     }
 }

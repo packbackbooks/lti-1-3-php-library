@@ -2,7 +2,10 @@
 
 namespace Packback\Lti1p3\Messages;
 
-use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Claims\EulaService;
+use Packback\Lti1p3\Claims\MessageType;
+use Packback\Lti1p3\Claims\Roles;
+use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
 
@@ -16,25 +19,20 @@ class EulaRequest extends LaunchMessage
     public static function requiredClaims(): array
     {
         return [
-            LtiConstants::MESSAGE_TYPE,
-            Claim::TARGET_LINK_URI,
-            Claim::EULASERVICE,
-        ];
-    }
-
-    public static function optionalClaims(): array
-    {
-        return [
-            Claim::CONTEXT,
-            Claim::TOOL_PLATFORM,
-            Claim::LAUNCH_PRESENTATION,
-            Claim::CUSTOM,
-            Claim::LIS,
+            MessageType::claimKey(),
+            TargetLinkUri::claimKey(),
+            Roles::claimKey(),
+            EulaService::claimKey(),
         ];
     }
 
     public static function messageValidator(): string
     {
         return AssetProcessorSettingsValidator::class;
+    }
+
+    public function claimEulaService(): EulaService
+    {
+        return EulaService::create($this);
     }
 }

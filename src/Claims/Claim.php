@@ -2,8 +2,13 @@
 
 namespace Packback\Lti1p3\Claims;
 
+use Packback\Lti1p3\Concerns\Claimable;
+use Packback\Lti1p3\Messages\LtiMessage;
+
 abstract class Claim
 {
+    use Claimable;
+
     // Basic LTI claims
     public const VERSION = 'https://purl.imsglobal.org/spec/lti/claim/version';
     public const DEPLOYMENT_ID = 'https://purl.imsglobal.org/spec/lti/claim/deployment_id';
@@ -49,11 +54,16 @@ abstract class Claim
     // EULA Service
     public const EULASERVICE = 'https://purl.imsglobal.org/spec/lti/claim/eulaservice';
 
-    abstract public static function key(): string;
+    abstract public static function claimKey(): string;
 
-    public function __construct(
+    final public function __construct(
         private $body
     ) {}
+
+    public static function create(LtiMessage $message): static
+    {
+        return new static(static::getClaimFrom(static::claimKey(), $message->getBody()));
+    }
 
     public function getBody()
     {

@@ -2,7 +2,15 @@
 
 namespace Packback\Lti1p3\Messages;
 
-use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Claims\Context;
+use Packback\Lti1p3\Claims\Custom;
+use Packback\Lti1p3\Claims\LaunchPresentation;
+use Packback\Lti1p3\Claims\Lis;
+use Packback\Lti1p3\Claims\MessageType;
+use Packback\Lti1p3\Claims\ResourceLink;
+use Packback\Lti1p3\Claims\RoleScopeMentor;
+use Packback\Lti1p3\Claims\TargetLinkUri;
+use Packback\Lti1p3\Claims\ToolPlatform;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 
@@ -16,26 +24,31 @@ class ResourceLinkRequest extends LaunchMessage
     public static function requiredClaims(): array
     {
         return [
-            LtiConstants::MESSAGE_TYPE,
-            Claim::TARGET_LINK_URI,
-            Claim::RESOURCE_LINK,
+            MessageType::claimKey(),
+            TargetLinkUri::claimKey(),
+            ResourceLink::claimKey(),
         ];
     }
 
     public static function optionalClaims(): array
     {
         return [
-            Claim::CONTEXT,
-            Claim::TOOL_PLATFORM,
-            Claim::ROLE_SCOPE_MENTOR,
-            Claim::LAUNCH_PRESENTATION,
-            Claim::LIS,
-            Claim::CUSTOM,
+            Context::claimKey(),
+            ToolPlatform::claimKey(),
+            RoleScopeMentor::claimKey(),
+            LaunchPresentation::claimKey(),
+            Lis::claimKey(),
+            Custom::claimKey(),
         ];
     }
 
     public static function messageValidator(): string
     {
         return ResourceMessageValidator::class;
+    }
+
+    public function claimResourceLink(): ResourceLink
+    {
+        return ResourceLink::create($this);
     }
 }

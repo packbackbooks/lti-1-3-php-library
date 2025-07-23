@@ -8,7 +8,7 @@ class AssetReport extends Claim
 {
     use HasScope;
 
-    public static function key(): string
+    public static function claimKey(): string
     {
         return Claim::ASSETREPORT;
     }

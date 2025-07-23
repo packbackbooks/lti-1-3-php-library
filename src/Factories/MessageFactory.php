@@ -113,8 +113,7 @@ class MessageFactory extends JwtPayloadFactory
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
         }
 
-        $lti1p1Claim = ClaimFactory::createLti1p1($message);
-        if ($lti1p1Claim->getOauthConsumerKeySign() === null) {
+        if ($message->claimLti1p1()->getOauthConsumerKeySign() === null) {
             throw new LtiException(static::ERR_OAUTH_KEY_SIGN_MISSING);
         }
 
@@ -163,15 +162,13 @@ class MessageFactory extends JwtPayloadFactory
 
     private function oauthConsumerKeySignMatches(LaunchMessage $message, Lti1p1Key $key): bool
     {
-        $lti1p1Claim = ClaimFactory::createLti1p1($message);
-
-        return $lti1p1Claim->getOauthConsumerKeySign() === $this->getOauthSignature($key, $message);
+        return $message->claimLti1p1()->getOauthConsumerKeySign() === $this->getOauthSignature($key, $message);
     }
 
     private function getOauthSignature(Lti1p1Key $key, LaunchMessage $message): string
     {
         return $key->sign(
-            ClaimFactory::createDeploymentId($message)->getBody(),
+            $message->claimDeploymentId()->getBody(),
             $message->getBody()['iss'],
             $message->getAud(),
             $message->getBody()['exp'],

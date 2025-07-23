@@ -8,7 +8,7 @@ class Asset extends Claim
 {
     use HasId;
 
-    public static function key(): string
+    public static function claimKey(): string
     {
         return Claim::ASSET;
     }
