@@ -12,19 +12,28 @@ class HelloWorldNoticeTest extends TestCase
 {
     private $serviceConnectorMock;
     private $registrationMock;
+
     protected function setUp(): void
     {
+        parent::setUp();
         $this->serviceConnectorMock = Mockery::mock(ILtiServiceConnector::class);
         $this->registrationMock = Mockery::mock(ILtiRegistration::class);
     }
 
-    public function test_it_creates_new_instance()
+    public function test_required_claims_returns_empty_array()
     {
-        $helloWorldNotice = new HelloWorldNotice(
-            $this->serviceConnectorMock,
-            $this->registrationMock,
-            []
-        );
-        $this->assertInstanceOf(HelloWorldNotice::class, $helloWorldNotice);
+        $expectedClaims = [];
+
+        $this->assertEquals($expectedClaims, HelloWorldNotice::requiredClaims());
+    }
+
+    public function test_sub_method_returns_notice_type_from_body()
+    {
+        $body = ['sub' => 'LtiHelloWorldNotice'];
+        $message = new HelloWorldNotice($this->serviceConnectorMock, $this->registrationMock, $body);
+
+        $sub = $message->sub();
+
+        $this->assertEquals('LtiHelloWorldNotice', $sub);
     }
 }

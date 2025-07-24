@@ -62,44 +62,6 @@ class MessageFactory extends JwtPayloadFactory
         return static::getClaimFrom(static::getTypeClaim(), $jwt['body']);
     }
 
-    protected function validateState(array $message): static
-    {
-        // Check State for OIDC.
-        if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$message['state']) !== $message['state']) {
-            // Error if state doesn't match
-            throw new LtiException(static::ERR_STATE_NOT_FOUND);
-        }
-
-        return $this;
-    }
-
-    protected function validateNonce(array $jwt, array $message): static
-    {
-        if (!isset($jwt['body']['nonce'])) {
-            throw new LtiException(static::ERR_MISSING_NONCE);
-        }
-
-        if (!$this->cache->checkNonceIsValid($jwt['body']['nonce'], $message['state'])) {
-            throw new LtiException(static::ERR_INVALID_NONCE);
-        }
-
-        return $this;
-    }
-
-    protected function validateDeployment(array $jwt): ?LtiDeployment
-    {
-        $deployment = parent::validateDeployment($jwt);
-
-        /**
-         * @todo if is launch
-         */
-        if (!$this->canMigrate()) {
-            $this->ensureDeploymentExists($deployment);
-        }
-
-        return $deployment;
-    }
-
     /**
      * @todo handle migrations
      */
@@ -137,6 +99,44 @@ class MessageFactory extends JwtPayloadFactory
     public function canMigrate(): bool
     {
         return $this->db instanceof IMigrationDatabase;
+    }
+
+    protected function validateState(array $message): static
+    {
+        // Check State for OIDC.
+        if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$message['state']) !== $message['state']) {
+            // Error if state doesn't match
+            throw new LtiException(static::ERR_STATE_NOT_FOUND);
+        }
+
+        return $this;
+    }
+
+    protected function validateNonce(array $jwt, array $message): static
+    {
+        if (!isset($jwt['body']['nonce'])) {
+            throw new LtiException(static::ERR_MISSING_NONCE);
+        }
+
+        if (!$this->cache->checkNonceIsValid($jwt['body']['nonce'], $message['state'])) {
+            throw new LtiException(static::ERR_INVALID_NONCE);
+        }
+
+        return $this;
+    }
+
+    protected function validateDeployment(array $jwt): ?LtiDeployment
+    {
+        $deployment = parent::validateDeployment($jwt);
+
+        /**
+         * @todo if is launch
+         */
+        if (!$this->canMigrate()) {
+            $this->ensureDeploymentExists($deployment);
+        }
+
+        return $deployment;
     }
 
     private function shouldMigrate(LaunchMessage $message): bool

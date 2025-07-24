@@ -25,6 +25,9 @@
                 "property_protected_readonly",
                 "property_private_static",
                 "property_private_readonly",
+                "private_public",
+                "private_protected",
+                "private_private",
                 "property",
                 "construct",
                 "destruct",
@@ -39,6 +42,9 @@
                 "method_public_static",
                 "method_protected_static",
                 "method_private_static",
+                "method_public",
+                "method_protected",
+                "method_private",
                 "method"
             ]
         }

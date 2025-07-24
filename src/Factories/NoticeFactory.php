@@ -63,9 +63,9 @@ class NoticeFactory extends JwtPayloadFactory
         /**
          * @todo, how do we do this for async notifications?
          */
-        if (isset($this->cache) && !$this->cache->checkNonceIsValid($jwt['body']['nonce'], $message['state'])) {
-            throw new LtiException(static::ERR_INVALID_NONCE);
-        }
+        // if (isset($this->cache) && !$this->cache->checkNonceIsValid($jwt['body']['nonce'], $message['state'])) {
+        //     throw new LtiException(static::ERR_INVALID_NONCE);
+        // }
 
         return $this;
     }

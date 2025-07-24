@@ -25,17 +25,6 @@ class LtiMessageTest extends TestCase
         $this->registrationMock = Mockery::mock(ILtiRegistration::class);
     }
 
-    private function createTestMessage(array $body = []): LtiMessage
-    {
-        return new class($this->serviceConnectorMock, $this->registrationMock, $body) extends LtiMessage
-        {
-            public static function requiredClaims(): array
-            {
-                return [Claim::VERSION, Claim::DEPLOYMENT_ID];
-            }
-        };
-    }
-
     public function test_get_body_returns_body()
     {
         $body = [
@@ -104,5 +93,16 @@ class LtiMessageTest extends TestCase
 
         $this->assertInstanceOf(Version::class, $versionClaim);
         $this->assertEquals($version, $versionClaim->getBody());
+    }
+
+    private function createTestMessage(array $body = []): LtiMessage
+    {
+        return new class($this->serviceConnectorMock, $this->registrationMock, $body) extends LtiMessage
+        {
+            public static function requiredClaims(): array
+            {
+                return [Claim::VERSION, Claim::DEPLOYMENT_ID];
+            }
+        };
     }
 }

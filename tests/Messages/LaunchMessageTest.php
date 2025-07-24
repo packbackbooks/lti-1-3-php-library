@@ -31,17 +31,6 @@ class LaunchMessageTest extends TestCase
         $this->registrationMock = Mockery::mock(ILtiRegistration::class);
     }
 
-    private function createTestLaunchMessage(array $body = []): LaunchMessage
-    {
-        return new class($this->serviceConnectorMock, $this->registrationMock, $body) extends LaunchMessage
-        {
-            public static function requiredClaims(): array
-            {
-                return [Claim::VERSION, Claim::DEPLOYMENT_ID, Claim::MESSAGE_TYPE];
-            }
-        };
-    }
-
     public function test_get_launch_id_returns_unique_string()
     {
         $message1 = $this->createTestLaunchMessage();
@@ -174,5 +163,16 @@ class LaunchMessageTest extends TestCase
 
         $this->assertInstanceOf(Context::class, $contextClaim);
         $this->assertEquals($context, $contextClaim->getBody());
+    }
+
+    private function createTestLaunchMessage(array $body = []): LaunchMessage
+    {
+        return new class($this->serviceConnectorMock, $this->registrationMock, $body) extends LaunchMessage
+        {
+            public static function requiredClaims(): array
+            {
+                return [Claim::VERSION, Claim::DEPLOYMENT_ID, Claim::MESSAGE_TYPE];
+            }
+        };
     }
 }

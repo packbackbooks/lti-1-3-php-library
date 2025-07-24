@@ -260,6 +260,18 @@ abstract class JwtPayloadFactory
     /**
      * @throws LtiException
      */
+    protected function ensureDeploymentExists(?LtiDeployment $deployment = null): static
+    {
+        if (!isset($deployment)) {
+            throw new LtiException(static::ERR_NO_DEPLOYMENT);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @throws LtiException
+     */
     private function getPublicKey(ILtiRegistration $registration, array $jwt): Key
     {
         $request = new ServiceRequest(
@@ -329,17 +341,5 @@ abstract class JwtPayloadFactory
 
         return isset(static::$ltiSupportedAlgs[$jwtAlg]) &&
             static::$ltiSupportedAlgs[$jwtAlg] === $key['kty'];
-    }
-
-    /**
-     * @throws LtiException
-     */
-    protected function ensureDeploymentExists(?LtiDeployment $deployment = null): static
-    {
-        if (!isset($deployment)) {
-            throw new LtiException(static::ERR_NO_DEPLOYMENT);
-        }
-
-        return $this;
     }
 }
