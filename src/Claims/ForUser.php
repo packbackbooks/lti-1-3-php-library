@@ -8,6 +8,7 @@ class ForUser extends Claim
     {
         return Claim::FOR_USER;
     }
+
     public function userId()
     {
         return $this->getBody()['user_id'];

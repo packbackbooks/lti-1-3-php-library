@@ -12,4 +12,19 @@ class Context extends Claim
     {
         return Claim::CONTEXT;
     }
+
+    public function label()
+    {
+        return $this->getBody()['label'];
+    }
+
+    public function title()
+    {
+        return $this->getBody()['title'];
+    }
+
+    public function type()
+    {
+        return $this->getBody()['type'];
+    }
 }
