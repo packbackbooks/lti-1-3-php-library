@@ -12,10 +12,11 @@
         "ordered_class_elements": {
             "order": [
                 "use_trait",
-                "case",
                 "public",
                 "protected",
                 "private",
+                "case",
+                "constant",
                 "property_public_abstract",
                 "property_protected_abstract",
                 "property_public_static",
