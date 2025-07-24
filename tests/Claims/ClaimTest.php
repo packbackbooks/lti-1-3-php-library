@@ -10,19 +10,11 @@ use Tests\TestCase;
 class ClaimTest extends TestCase
 {
     private $messageMock;
-    private $testClaim;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->messageMock = Mockery::mock(LtiMessage::class);
-        $this->testClaim = new class(['test' => 'value']) extends Claim
-        {
-            public static function claimKey(): string
-            {
-                return 'test_claim';
-            }
-        };
     }
 
     public function test_get_body_returns_body()

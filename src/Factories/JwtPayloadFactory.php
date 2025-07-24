@@ -272,7 +272,7 @@ abstract class JwtPayloadFactory
     /**
      * @throws LtiException
      */
-    private function getPublicKey(ILtiRegistration $registration, array $jwt): Key
+    protected function getPublicKey(ILtiRegistration $registration, array $jwt): Key
     {
         $request = new ServiceRequest(
             ServiceRequest::METHOD_GET,

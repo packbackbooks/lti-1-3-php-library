@@ -16,7 +16,6 @@ class LtiMessageTest extends TestCase
 {
     private $serviceConnectorMock;
     private $registrationMock;
-    private $testMessage;
 
     protected function setUp(): void
     {

@@ -391,6 +391,335 @@ class JwtPayloadFactoryTest extends TestCase
         $this->assertSame($this->factoryMock, $result);
     }
 
+    public function test_get_public_key_throws_exception_for_transfer_error()
+    {
+        $jwt = [
+            'header' => ['kid' => 'test-kid', 'alg' => 'RS256'],
+            'body' => ['iss' => 'test-issuer'],
+        ];
+
+        $this->registrationMock->shouldReceive('getKeySetUrl')
+            ->andReturn('https://example.com/jwks');
+
+        $this->serviceConnectorMock->shouldReceive('makeRequest')
+            ->andThrow(new \GuzzleHttp\Exception\TransferException('Network error'));
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage(JwtPayloadFactory::ERR_NO_PUBLIC_KEY);
+
+        $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
+    }
+
+    public function test_get_public_key_throws_exception_for_empty_key_set()
+    {
+        $jwt = [
+            'header' => ['kid' => 'test-kid', 'alg' => 'RS256'],
+            'body' => ['iss' => 'test-issuer'],
+        ];
+
+        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+
+        $this->registrationMock->shouldReceive('getKeySetUrl')
+            ->andReturn('https://example.com/jwks');
+
+        $this->serviceConnectorMock->shouldReceive('makeRequest')
+            ->andReturn($responseMock);
+
+        $this->serviceConnectorMock->shouldReceive('getResponseBody')
+            ->with($responseMock)
+            ->andReturn([]);
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage(JwtPayloadFactory::ERR_FETCH_PUBLIC_KEY);
+
+        $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
+    }
+
+    public function test_get_public_key_throws_exception_for_no_matching_kid()
+    {
+        $jwt = [
+            'header' => ['kid' => 'missing-kid', 'alg' => 'RS256'],
+            'body' => ['iss' => 'test-issuer'],
+        ];
+
+        $keySet = [
+            'keys' => [
+                [
+                    'kid' => 'different-kid',
+                    'kty' => 'RSA',
+                    'use' => 'sig',
+                    'n' => 'test-n',
+                    'e' => 'AQAB',
+                ],
+            ],
+        ];
+
+        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+
+        $this->registrationMock->shouldReceive('getKeySetUrl')
+            ->andReturn('https://example.com/jwks');
+
+        $this->serviceConnectorMock->shouldReceive('makeRequest')
+            ->andReturn($responseMock);
+
+        $this->serviceConnectorMock->shouldReceive('getResponseBody')
+            ->with($responseMock)
+            ->andReturn($keySet);
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage(JwtPayloadFactory::ERR_NO_MATCHING_PUBLIC_KEY);
+
+        $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
+    }
+
+    public function test_get_public_key_succeeds_with_matching_kid_and_explicit_alg()
+    {
+        $jwt = [
+            'header' => ['kid' => 'test-kid', 'alg' => 'RS256'],
+            'body' => ['iss' => 'test-issuer'],
+        ];
+
+        $keySet = [
+            'keys' => [
+                [
+                    'kid' => 'test-kid',
+                    'kty' => 'RSA',
+                    'alg' => 'RS256',
+                    'use' => 'sig',
+                    'n' => 'test-modulus-value',
+                    'e' => 'AQAB',
+                ],
+            ],
+        ];
+
+        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+
+        $this->registrationMock->shouldReceive('getKeySetUrl')
+            ->andReturn('https://example.com/jwks');
+
+        $this->serviceConnectorMock->shouldReceive('makeRequest')
+            ->andReturn($responseMock);
+
+        $this->serviceConnectorMock->shouldReceive('getResponseBody')
+            ->with($responseMock)
+            ->andReturn($keySet);
+
+        $result = $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
+
+        $this->assertInstanceOf(\Firebase\JWT\Key::class, $result);
+    }
+
+    public function test_get_public_key_succeeds_with_matching_kid_and_inferred_alg()
+    {
+        $jwt = [
+            'header' => ['kid' => 'test-kid', 'alg' => 'RS256'],
+            'body' => ['iss' => 'test-issuer'],
+        ];
+
+        $keySet = [
+            'keys' => [
+                [
+                    'kid' => 'test-kid',
+                    'kty' => 'RSA',
+                    'use' => 'sig',
+                    'n' => 'test-modulus-value',
+                    'e' => 'AQAB',
+                ],
+            ],
+        ];
+
+        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+
+        $this->registrationMock->shouldReceive('getKeySetUrl')
+            ->andReturn('https://example.com/jwks');
+
+        $this->serviceConnectorMock->shouldReceive('makeRequest')
+            ->andReturn($responseMock);
+
+        $this->serviceConnectorMock->shouldReceive('getResponseBody')
+            ->with($responseMock)
+            ->andReturn($keySet);
+
+        $result = $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
+
+        $this->assertInstanceOf(\Firebase\JWT\Key::class, $result);
+    }
+
+    public function test_get_public_key_with_multiple_keys_finds_correct_one()
+    {
+        $jwt = [
+            'header' => ['kid' => 'correct-kid', 'alg' => 'RS256'],
+            'body' => ['iss' => 'test-issuer'],
+        ];
+
+        $keySet = [
+            'keys' => [
+                [
+                    'kid' => 'wrong-kid',
+                    'kty' => 'RSA',
+                    'alg' => 'RS256',
+                    'use' => 'sig',
+                    'n' => 'wrong-modulus',
+                    'e' => 'AQAB',
+                ],
+                [
+                    'kid' => 'correct-kid',
+                    'kty' => 'RSA',
+                    'alg' => 'RS256',
+                    'use' => 'sig',
+                    'n' => 'correct-modulus',
+                    'e' => 'AQAB',
+                ],
+            ],
+        ];
+
+        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+
+        $this->registrationMock->shouldReceive('getKeySetUrl')
+            ->andReturn('https://example.com/jwks');
+
+        $this->serviceConnectorMock->shouldReceive('makeRequest')
+            ->andReturn($responseMock);
+
+        $this->serviceConnectorMock->shouldReceive('getResponseBody')
+            ->with($responseMock)
+            ->andReturn($keySet);
+
+        $result = $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
+
+        $this->assertInstanceOf(\Firebase\JWT\Key::class, $result);
+    }
+
+    public function test_get_public_key_with_ec_algorithm()
+    {
+        $jwt = [
+            'header' => ['kid' => 'ec-key', 'alg' => 'ES256'],
+            'body' => ['iss' => 'test-issuer'],
+        ];
+
+        $keySet = [
+            'keys' => [
+                [
+                    'kid' => 'ec-key',
+                    'kty' => 'EC',
+                    'alg' => 'ES256',
+                    'use' => 'sig',
+                    'crv' => 'P-256',
+                    'x' => 'test-x-coordinate',
+                    'y' => 'test-y-coordinate',
+                ],
+            ],
+        ];
+
+        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+
+        $this->registrationMock->shouldReceive('getKeySetUrl')
+            ->andReturn('https://example.com/jwks');
+
+        $this->serviceConnectorMock->shouldReceive('makeRequest')
+            ->andReturn($responseMock);
+
+        $this->serviceConnectorMock->shouldReceive('getResponseBody')
+            ->with($responseMock)
+            ->andReturn($keySet);
+
+        $result = $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
+
+        $this->assertInstanceOf(\Firebase\JWT\Key::class, $result);
+    }
+
+    public function test_get_key_algorithm_returns_explicit_alg_from_key()
+    {
+        $key = ['alg' => 'RS512', 'kty' => 'RSA'];
+        $jwt = ['header' => ['alg' => 'RS256']];
+
+        $result = $this->invokeMethod($this->factoryMock, 'getKeyAlgorithm', [$key, $jwt]);
+
+        $this->assertEquals('RS512', $result);
+    }
+
+    public function test_get_key_algorithm_infers_alg_from_jwt_header_when_missing()
+    {
+        $key = ['kty' => 'RSA'];
+        $jwt = ['header' => ['alg' => 'RS256']];
+
+        $result = $this->invokeMethod($this->factoryMock, 'getKeyAlgorithm', [$key, $jwt]);
+
+        $this->assertEquals('RS256', $result);
+    }
+
+    public function test_get_key_algorithm_throws_exception_for_mismatched_alg_key()
+    {
+        $key = ['kty' => 'EC'];
+        $jwt = ['header' => ['alg' => 'RS256']];
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage(JwtPayloadFactory::ERR_MISMATCHED_ALG_KEY);
+
+        $this->invokeMethod($this->factoryMock, 'getKeyAlgorithm', [$key, $jwt]);
+    }
+
+    public function test_jwt_alg_matches_jwk_kty_returns_true_for_rsa_match()
+    {
+        $jwt = ['header' => ['alg' => 'RS256']];
+        $key = ['kty' => 'RSA'];
+
+        $result = $this->invokeMethod($this->factoryMock, 'jwtAlgMatchesJwkKty', [$jwt, $key]);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_jwt_alg_matches_jwk_kty_returns_true_for_ec_match()
+    {
+        $jwt = ['header' => ['alg' => 'ES256']];
+        $key = ['kty' => 'EC'];
+
+        $result = $this->invokeMethod($this->factoryMock, 'jwtAlgMatchesJwkKty', [$jwt, $key]);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_jwt_alg_matches_jwk_kty_returns_false_for_mismatch()
+    {
+        $jwt = ['header' => ['alg' => 'RS256']];
+        $key = ['kty' => 'EC'];
+
+        $result = $this->invokeMethod($this->factoryMock, 'jwtAlgMatchesJwkKty', [$jwt, $key]);
+
+        $this->assertFalse($result);
+    }
+
+    public function test_jwt_alg_matches_jwk_kty_returns_false_for_unsupported_alg()
+    {
+        $jwt = ['header' => ['alg' => 'HS256']];
+        $key = ['kty' => 'oct'];
+
+        $result = $this->invokeMethod($this->factoryMock, 'jwtAlgMatchesJwkKty', [$jwt, $key]);
+
+        $this->assertFalse($result);
+    }
+
+    public function test_jwt_alg_matches_jwk_kty_handles_all_supported_algorithms()
+    {
+        $supportedMappings = [
+            'RS256' => 'RSA',
+            'RS384' => 'RSA',
+            'RS512' => 'RSA',
+            'ES256' => 'EC',
+            'ES384' => 'EC',
+            'ES512' => 'EC',
+        ];
+
+        foreach ($supportedMappings as $alg => $expectedKty) {
+            $jwt = ['header' => ['alg' => $alg]];
+            $key = ['kty' => $expectedKty];
+
+            $result = $this->invokeMethod($this->factoryMock, 'jwtAlgMatchesJwkKty', [$jwt, $key]);
+
+            $this->assertTrue($result, "Algorithm $alg should match key type $expectedKty");
+        }
+    }
+
     private function createJwtToken(array $body, ?array $header = null): string
     {
         $defaultHeader = ['typ' => 'JWT', 'alg' => 'RS256', 'kid' => 'test-kid'];

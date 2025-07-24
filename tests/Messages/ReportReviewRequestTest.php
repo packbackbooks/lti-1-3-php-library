@@ -116,7 +116,6 @@ class ReportReviewRequestTest extends TestCase
 
         $launchId = $message->getLaunchId();
 
-        $this->assertIsString($launchId);
         $this->assertStringStartsWith('lti1p3_launch_', $launchId);
     }
 }

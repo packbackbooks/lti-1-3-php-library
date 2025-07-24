@@ -39,8 +39,6 @@ class LaunchMessageTest extends TestCase
         $launchId1 = $message1->getLaunchId();
         $launchId2 = $message2->getLaunchId();
 
-        $this->assertIsString($launchId1);
-        $this->assertIsString($launchId2);
         $this->assertNotEquals($launchId1, $launchId2);
         $this->assertStringStartsWith('lti1p3_launch_', $launchId1);
     }

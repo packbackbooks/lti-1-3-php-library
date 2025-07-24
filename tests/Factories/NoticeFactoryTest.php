@@ -8,7 +8,6 @@ use Packback\Lti1p3\Claims\DeploymentId;
 use Packback\Lti1p3\Claims\Roles;
 use Packback\Lti1p3\Claims\Version;
 use Packback\Lti1p3\Factories\NoticeFactory;
-use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
@@ -22,7 +21,6 @@ class NoticeFactoryTest extends TestCase
     private NoticeFactory $noticeFactory;
     private $databaseMock;
     private $serviceConnectorMock;
-    private $cacheMock;
     private $registrationMock;
 
     protected function setUp(): void
@@ -30,7 +28,6 @@ class NoticeFactoryTest extends TestCase
         parent::setUp();
         $this->databaseMock = Mockery::mock(IDatabase::class);
         $this->serviceConnectorMock = Mockery::mock(ILtiServiceConnector::class);
-        $this->cacheMock = Mockery::mock(ICache::class);
         $this->registrationMock = Mockery::mock(ILtiRegistration::class);
 
         $this->noticeFactory = new NoticeFactory(
