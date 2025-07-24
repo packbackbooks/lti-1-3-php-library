@@ -34,4 +34,8 @@ class AssetProcessorSettingsRequest extends LaunchMessage
     {
         return Roles::create($this);
     }
+
+    /**
+     * @todo build methods for the remaining required claims
+     */
 }
