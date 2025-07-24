@@ -11,13 +11,13 @@ class WindowTest extends TestCase
     public const INITIAL_WIDTH = 1;
     public const INITIAL_HEIGHT = 2;
     public const INITIAL_WINDOW_FEATURES = 'example-feature=value';
+    private Window $window;
 
     protected function setUp(): void
     {
         $this->window = new Window(self::INITIAL_TARGET_NAME,
             self::INITIAL_WIDTH, self::INITIAL_HEIGHT, self::INITIAL_WINDOW_FEATURES);
     }
-    private Window $window;
 
     public function test_it_instantiates()
     {

@@ -9,15 +9,15 @@ use Tests\TestCase;
 
 class DateTimeIntervalTest extends TestCase
 {
+    private DateTime $initialStart;
+    private DateTime $initialEnd;
+    private DateTimeInterval $dateTimeInterval;
     protected function setUp(): void
     {
         $this->initialStart = date_create();
         $this->initialEnd = date_create();
         $this->dateTimeInterval = new DateTimeInterval($this->initialStart, $this->initialEnd);
     }
-    private DateTime $initialStart;
-    private DateTime $initialEnd;
-    private DateTimeInterval $dateTimeInterval;
 
     public function test_it_instantiates()
     {

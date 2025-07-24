@@ -82,13 +82,13 @@ class TestCookie implements ICookie
 
 class TestDb implements IDatabase
 {
+    private $registrations = [];
+    private $deployments = [];
     public function __construct($registration, $deployment)
     {
         $this->registrations[$registration->getIssuer()] = $registration;
         $this->deployments[$deployment->getDeploymentId()] = $deployment;
     }
-    private $registrations = [];
-    private $deployments = [];
 
     public function findRegistrationByIssuer(string $iss, ?string $client_id = null): ?ILtiRegistration
     {
@@ -135,6 +135,14 @@ class Lti13CertificationTest extends TestCase
     public const CERT_DATA_DIR = __DIR__.'/../data/certification/';
     public const PRIVATE_KEY = __DIR__.'/../data/private.key';
     public const STATE = 'state';
+    public TestDb $db;
+    public TestMigrateDb $migrateDb;
+    private $issuer;
+    private $key;
+    private array $payload;
+    private $cache;
+    private $cookie;
+    private $serviceConnector;
 
     protected function setUp(): void
     {
@@ -249,14 +257,6 @@ class Lti13CertificationTest extends TestCase
         );
         $this->serviceConnector = Mockery::mock(ILtiServiceConnector::class);
     }
-    public TestDb $db;
-    public TestMigrateDb $migrateDb;
-    private $issuer;
-    private $key;
-    private array $payload;
-    private $cache;
-    private $cookie;
-    private $serviceConnector;
 
     public function buildJWT($data, $header)
     {

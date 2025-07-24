@@ -7,6 +7,15 @@ use Packback\Lti1p3\Concerns\JsonStringable;
 class LtiLineitem
 {
     use JsonStringable;
+    private $id;
+    private $score_maximum;
+    private $label;
+    private $resource_id;
+    private $resource_link_id;
+    private $tag;
+    private $start_date_time;
+    private $end_date_time;
+    private ?bool $grades_released;
 
     public function __construct(?array $lineitem = null)
     {
@@ -28,15 +37,6 @@ class LtiLineitem
     {
         return new LtiLineitem($lineItem);
     }
-    private $id;
-    private $score_maximum;
-    private $label;
-    private $resource_id;
-    private $resource_link_id;
-    private $tag;
-    private $start_date_time;
-    private $end_date_time;
-    private ?bool $grades_released;
 
     public function getArray(): array
     {

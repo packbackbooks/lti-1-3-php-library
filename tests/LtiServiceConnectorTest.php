@@ -16,39 +16,6 @@ use Psr\Http\Message\StreamInterface;
 
 class LtiServiceConnectorTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->registration = Mockery::mock(ILtiRegistration::class);
-        $this->request = Mockery::mock(IServiceRequest::class);
-        $this->cache = Mockery::mock(ICache::class);
-        $this->client = Mockery::mock(Client::class);
-        $this->response = Mockery::mock(Response::class);
-        $this->streamInterface = Mockery::mock(StreamInterface::class);
-
-        $this->scopes = ['scopeKey'];
-        $this->token = 'TokenOfAccess';
-        $this->method = ServiceRequest::METHOD_POST;
-        $this->url = 'https://example.com';
-        $this->body = json_encode(['userId' => 'id']);
-        $this->requestHeaders = [
-            'Authorization' => 'Bearer '.$this->token,
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ];
-        $this->responseHeaders = [
-            'Content-Type' => ['application/json'],
-            'Server' => ['nginx'],
-        ];
-        $this->requestPayload = [
-            'headers' => $this->requestHeaders,
-            'body' => $this->body,
-        ];
-        $this->responseBody = ['some' => 'response'];
-        $this->responseStatus = 200;
-
-        $this->connector = new LtiServiceConnector($this->cache, $this->client);
-    }
-
     /**
      * @var Mockery\MockInterface
      */
@@ -85,6 +52,38 @@ class LtiServiceConnectorTest extends TestCase
     private $token;
     private $scopes;
     private $streamInterface;
+    protected function setUp(): void
+    {
+        $this->registration = Mockery::mock(ILtiRegistration::class);
+        $this->request = Mockery::mock(IServiceRequest::class);
+        $this->cache = Mockery::mock(ICache::class);
+        $this->client = Mockery::mock(Client::class);
+        $this->response = Mockery::mock(Response::class);
+        $this->streamInterface = Mockery::mock(StreamInterface::class);
+
+        $this->scopes = ['scopeKey'];
+        $this->token = 'TokenOfAccess';
+        $this->method = ServiceRequest::METHOD_POST;
+        $this->url = 'https://example.com';
+        $this->body = json_encode(['userId' => 'id']);
+        $this->requestHeaders = [
+            'Authorization' => 'Bearer '.$this->token,
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ];
+        $this->responseHeaders = [
+            'Content-Type' => ['application/json'],
+            'Server' => ['nginx'],
+        ];
+        $this->requestPayload = [
+            'headers' => $this->requestHeaders,
+            'body' => $this->body,
+        ];
+        $this->responseBody = ['some' => 'response'];
+        $this->responseStatus = 200;
+
+        $this->connector = new LtiServiceConnector($this->cache, $this->client);
+    }
 
     public function test_it_instantiates()
     {

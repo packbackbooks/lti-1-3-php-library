@@ -31,6 +31,17 @@ class LtiMessageLaunchTest extends TestCase
     public const CERT_DATA_DIR = __DIR__.'/data/certification/';
     public const PRIVATE_KEY = __DIR__.'/data/private.key';
     public const STATE = 'state';
+    private LtiMessageLaunch $messageLaunch;
+    private MockInterface $cache;
+    private MockInterface $cookie;
+    private MockInterface $database;
+    private MockInterface $serviceConnector;
+    private MockInterface $registration;
+    private array $issuer;
+    private array $key;
+    private array $payload;
+    private $migrationDatabase;
+    private $deployment;
 
     protected function setUp(): void
     {
@@ -136,17 +147,6 @@ class LtiMessageLaunchTest extends TestCase
             ],
         ];
     }
-    private LtiMessageLaunch $messageLaunch;
-    private MockInterface $cache;
-    private MockInterface $cookie;
-    private MockInterface $database;
-    private MockInterface $serviceConnector;
-    private MockInterface $registration;
-    private array $issuer;
-    private array $key;
-    private array $payload;
-    private $migrationDatabase;
-    private $deployment;
 
     public function test_it_instantiates()
     {

@@ -7,6 +7,10 @@ use Packback\Lti1p3\Concerns\JsonStringable;
 class LtiGradeSubmissionReview
 {
     use JsonStringable;
+    private $reviewable_status;
+    private $label;
+    private $url;
+    private $custom;
 
     public function __construct(?array $gradeSubmission = null)
     {
@@ -23,10 +27,6 @@ class LtiGradeSubmissionReview
     {
         return new LtiGradeSubmissionReview;
     }
-    private $reviewable_status;
-    private $label;
-    private $url;
-    private $custom;
 
     public function getArray(): array
     {

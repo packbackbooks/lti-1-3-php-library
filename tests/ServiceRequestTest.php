@@ -6,14 +6,14 @@ use Packback\Lti1p3\ServiceRequest;
 
 class ServiceRequestTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->request = new ServiceRequest($this->method, $this->url, $this->type);
-    }
     private $method = ServiceRequest::METHOD_GET;
     private $url = 'https://example.com';
     private $type = ServiceRequest::TYPE_AUTH;
     private $request;
+    protected function setUp(): void
+    {
+        $this->request = new ServiceRequest($this->method, $this->url, $this->type);
+    }
 
     public function test_it_instantiates()
     {
