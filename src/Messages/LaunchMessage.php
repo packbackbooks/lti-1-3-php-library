@@ -9,6 +9,7 @@ use Packback\Lti1p3\Messages\Concerns\HasLaunchClaims;
 abstract class LaunchMessage extends LtiMessage
 {
     use HasLaunchClaims;
+    protected string $launchId;
 
     public function __construct(
         protected ILtiServiceConnector $serviceConnector,
@@ -17,7 +18,6 @@ abstract class LaunchMessage extends LtiMessage
     ) {
         $this->launchId = uniqid('lti1p3_launch_', true);
     }
-    protected string $launchId;
 
     public function getLaunchId(): string
     {

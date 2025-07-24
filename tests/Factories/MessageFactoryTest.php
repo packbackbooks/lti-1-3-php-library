@@ -15,6 +15,11 @@ use Tests\TestCase;
 
 class MessageFactoryTest extends TestCase
 {
+    private MessageFactory $messageFactory;
+    private $databaseMock;
+    private $serviceConnectorMock;
+    private $cacheMock;
+    private $cookieMock;
     protected function setUp(): void
     {
         $this->databaseMock = Mockery::mock(IDatabase::class);
@@ -29,11 +34,6 @@ class MessageFactoryTest extends TestCase
             $this->cookieMock,
         );
     }
-    private MessageFactory $messageFactory;
-    private $databaseMock;
-    private $serviceConnectorMock;
-    private $cacheMock;
-    private $cookieMock;
 
     public function test_it_creates_new_instance()
     {

@@ -10,13 +10,13 @@ use Tests\TestCase;
 
 class EulaRequestTest extends TestCase
 {
+    private $serviceConnectorMock;
+    private $registrationMock;
     protected function setUp(): void
     {
         $this->serviceConnectorMock = Mockery::mock(ILtiServiceConnector::class);
         $this->registrationMock = Mockery::mock(ILtiRegistration::class);
     }
-    private $serviceConnectorMock;
-    private $registrationMock;
 
     public function test_it_creates_new_instance()
     {

@@ -7,11 +7,11 @@ use Tests\TestCase;
 
 class AssetProcessorTest extends TestCase
 {
+    private AssetProcessor $assetProcessor;
     protected function setUp(): void
     {
         $this->assetProcessor = new AssetProcessor;
     }
-    private AssetProcessor $assetProcessor;
 
     public function test_it_creates_a_new_instance()
     {

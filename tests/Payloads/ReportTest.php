@@ -12,6 +12,7 @@ class ReportTest extends TestCase
     public const INITIAL_PROCESSING_PROGRESS = 'Processed';
     public const INITIAL_PRIORITY = 2;
     public const INITIAL_TIMESTAMP = '2024-01-15T10:30:00Z';
+    private Report $report;
 
     protected function setUp(): void
     {
@@ -23,7 +24,6 @@ class ReportTest extends TestCase
             self::INITIAL_TIMESTAMP
         );
     }
-    private Report $report;
 
     public function test_it_instantiates()
     {
