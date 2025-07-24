@@ -7,13 +7,13 @@ use Tests\TestCase;
 
 class IconTest extends TestCase
 {
-    private $imageUrl;
-    private $icon;
     protected function setUp(): void
     {
         $this->imageUrl = 'https://example.com/image.png';
         $this->icon = new Icon($this->imageUrl, 1, 2);
     }
+    private $imageUrl;
+    private $icon;
 
     public function test_it_instantiates()
     {

@@ -9,13 +9,13 @@ use Packback\Lti1p3\LtiNamesRolesProvisioningService;
 
 class LtiNamesRolesProvisioningServiceTest extends TestCase
 {
-    private $connector;
-    private $registration;
     protected function setUp(): void
     {
         $this->connector = Mockery::mock(ILtiServiceConnector::class);
         $this->registration = Mockery::mock(ILtiRegistration::class);
     }
+    private $connector;
+    private $registration;
 
     public function test_it_instantiates()
     {

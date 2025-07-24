@@ -17,6 +17,12 @@ class LtiDeepLinkTest extends TestCase
     public const ISSUER = 'issuer';
     public const DEPLOYMENT_ID = 'deployment-id';
     public const LTI_RESOURCE_ARRAY = ['resource'];
+
+    protected function setUp(): void
+    {
+        $this->registrationMock = Mockery::mock(ILtiRegistration::class);
+        $this->resourceMock = Mockery::mock(Resource::class);
+    }
     private $registrationMock;
     private $resourceMock;
     private $settings = [
@@ -31,12 +37,6 @@ class LtiDeepLinkTest extends TestCase
         'data' => 'Some random opaque data that MUST be sent back',
         'deep_link_return_url' => 'https://platform.example/deep_links',
     ];
-
-    protected function setUp(): void
-    {
-        $this->registrationMock = Mockery::mock(ILtiRegistration::class);
-        $this->resourceMock = Mockery::mock(Resource::class);
-    }
 
     public function test_it_instantiates()
     {

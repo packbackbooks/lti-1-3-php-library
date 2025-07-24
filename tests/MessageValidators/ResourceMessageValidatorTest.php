@@ -10,6 +10,18 @@ use Tests\TestCase;
 
 class ResourceMessageValidatorTest extends TestCase
 {
+    private static function validJwtBody()
+    {
+        return [
+            'sub' => 'subscriber',
+            LtiConstants::MESSAGE_TYPE => ResourceMessageValidator::getMessageType(),
+            LtiConstants::VERSION => LtiConstants::V1_3,
+            LtiConstants::ROLES => [],
+            LtiConstants::RESOURCE_LINK => [
+                'id' => 'unique-id',
+            ],
+        ];
+    }
     public function test_it_can_validate()
     {
         $this->assertTrue(ResourceMessageValidator::canValidate(self::validJwtBody()));
@@ -76,18 +88,5 @@ class ResourceMessageValidatorTest extends TestCase
         $this->expectException(LtiException::class);
 
         ResourceMessageValidator::validate($jwtBody);
-    }
-
-    private static function validJwtBody()
-    {
-        return [
-            'sub' => 'subscriber',
-            Claim::MESSAGE_TYPE => ResourceMessageValidator::getMessageType(),
-            Claim::VERSION => LtiConstants::V1_3,
-            Claim::ROLES => [],
-            Claim::RESOURCE_LINK => [
-                'id' => 'unique-id',
-            ],
-        ];
     }
 }

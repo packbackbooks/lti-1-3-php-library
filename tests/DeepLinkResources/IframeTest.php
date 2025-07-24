@@ -10,7 +10,6 @@ class IframeTest extends TestCase
     public const INITIAL_SRC = 'https://example.com';
     public const INITIAL_WIDTH = 1;
     public const INITIAL_HEIGHT = 2;
-    private Iframe $iframe;
 
     protected function setUp(): void
     {
@@ -20,6 +19,7 @@ class IframeTest extends TestCase
             self::INITIAL_HEIGHT
         );
     }
+    private Iframe $iframe;
 
     public function test_it_instantiates()
     {

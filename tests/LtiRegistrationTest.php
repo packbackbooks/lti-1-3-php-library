@@ -6,12 +6,11 @@ use Packback\Lti1p3\LtiRegistration;
 
 class LtiRegistrationTest extends TestCase
 {
-    private $registration;
-
     protected function setUp(): void
     {
         $this->registration = new LtiRegistration;
     }
+    private $registration;
 
     public function test_it_instantiates()
     {

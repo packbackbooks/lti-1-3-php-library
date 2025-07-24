@@ -9,14 +9,13 @@ namespace Packback\Lti1p3;
  */
 class Lti1p1Key
 {
-    private ?string $key;
-    private ?string $secret;
-
     public function __construct(?array $key = null)
     {
         $this->key = $key['key'] ?? null;
         $this->secret = $key['secret'] ?? null;
     }
+    private ?string $key;
+    private ?string $secret;
 
     public function getKey(): ?string
     {

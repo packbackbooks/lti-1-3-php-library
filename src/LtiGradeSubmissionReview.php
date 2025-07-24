@@ -7,10 +7,6 @@ use Packback\Lti1p3\Concerns\JsonStringable;
 class LtiGradeSubmissionReview
 {
     use JsonStringable;
-    private $reviewable_status;
-    private $label;
-    private $url;
-    private $custom;
 
     public function __construct(?array $gradeSubmission = null)
     {
@@ -20,6 +16,18 @@ class LtiGradeSubmissionReview
         $this->custom = $gradeSubmission['custom'] ?? null;
     }
 
+    /**
+     * Static function to allow for method chaining without having to assign to a variable first.
+     */
+    public static function new(): self
+    {
+        return new LtiGradeSubmissionReview;
+    }
+    private $reviewable_status;
+    private $label;
+    private $url;
+    private $custom;
+
     public function getArray(): array
     {
         return [
@@ -28,14 +36,6 @@ class LtiGradeSubmissionReview
             'url' => $this->url,
             'custom' => $this->custom,
         ];
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(): self
-    {
-        return new LtiGradeSubmissionReview;
     }
 
     public function getReviewableStatus()
