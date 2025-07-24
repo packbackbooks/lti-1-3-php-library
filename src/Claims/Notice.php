@@ -7,6 +7,7 @@ use Packback\Lti1p3\Claims\Concerns\HasId;
 class Notice extends Claim
 {
     use HasId;
+
     public static function claimKey(): string
     {
         return Claim::NOTICE;

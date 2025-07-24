@@ -7,6 +7,7 @@ use Packback\Lti1p3\Claims\Concerns\HasScope;
 class PlatformNotificationService extends Claim
 {
     use HasScope;
+
     public static function claimKey(): string
     {
         return Claim::PLATFORMNOTIFICATIONSERVICE;

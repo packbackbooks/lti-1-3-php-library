@@ -6,7 +6,6 @@ use Packback\Lti1p3\Claims\MessageType;
 use Packback\Lti1p3\Claims\ResourceLink;
 use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\LtiConstants;
-use Packback\Lti1p3\MessageValidators\ResourceMessageValidator;
 
 class ResourceLinkRequest extends LaunchMessage
 {
@@ -22,11 +21,6 @@ class ResourceLinkRequest extends LaunchMessage
             TargetLinkUri::claimKey(),
             ResourceLink::claimKey(),
         ];
-    }
-
-    public static function messageValidator(): string
-    {
-        return ResourceMessageValidator::class;
     }
 
     public function resourceLinkClaim(): ResourceLink

@@ -11,7 +11,6 @@ use Packback\Lti1p3\Claims\Submission;
 use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\Messages\Concerns\HasActivityClaim;
-use Packback\Lti1p3\MessageValidators\ReportReviewMessageValidator;
 
 class ReportReviewRequest extends ResourceLinkRequest
 {
@@ -33,11 +32,6 @@ class ReportReviewRequest extends ResourceLinkRequest
             Asset::claimKey(),
             AssetReportType::claimKey(),
         ];
-    }
-
-    public static function messageValidator(): string
-    {
-        return ReportReviewMessageValidator::class;
     }
 
     public function forUserClaim(): ForUser

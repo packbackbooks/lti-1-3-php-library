@@ -9,7 +9,6 @@ use Packback\Lti1p3\Claims\Roles;
 use Packback\Lti1p3\Claims\TargetLinkUri;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\Messages\Concerns\HasActivityClaim;
-use Packback\Lti1p3\MessageValidators\AssetProcessorSettingsValidator;
 
 class AssetProcessorSettingsRequest extends LaunchMessage
 {
@@ -29,11 +28,6 @@ class AssetProcessorSettingsRequest extends LaunchMessage
             Activity::claimKey(),
             Context::claimKey(),
         ];
-    }
-
-    public static function messageValidator(): string
-    {
-        return AssetProcessorSettingsValidator::class;
     }
 
     public function rolesClaim(): Roles

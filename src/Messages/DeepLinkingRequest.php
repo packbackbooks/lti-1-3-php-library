@@ -7,7 +7,6 @@ use Packback\Lti1p3\Claims\MessageType;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeepLink;
 use Packback\Lti1p3\Messages\Concerns\HasActivityClaim;
-use Packback\Lti1p3\MessageValidators\DeepLinkMessageValidator;
 
 class DeepLinkingRequest extends LaunchMessage
 {
@@ -24,11 +23,6 @@ class DeepLinkingRequest extends LaunchMessage
             MessageType::claimKey(),
             DeepLinkSettings::claimKey(),
         ];
-    }
-
-    public static function messageValidator(): string
-    {
-        return DeepLinkMessageValidator::class;
     }
 
     /**
