@@ -7,16 +7,16 @@ use Packback\Lti1p3\Concerns\Arrayable;
 class AssetProcessor
 {
     use Arrayable;
-    private ?string $title = null;
-    private ?string $text = null;
-    private ?string $url = null;
-    private ?array $report = null;
-    private ?array $custom = null;
 
     public static function new(): self
     {
         return new AssetProcessor;
     }
+    private ?string $title = null;
+    private ?string $text = null;
+    private ?string $url = null;
+    private ?array $report = null;
+    private ?array $custom = null;
 
     public function getArray(): array
     {

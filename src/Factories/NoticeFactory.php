@@ -12,6 +12,16 @@ class NoticeFactory extends JwtPayloadFactory
     public const ERR_MISSING_NONCE = 'Missing Nonce.';
     public const ERR_INVALID_NONCE = 'Invalid Nonce.';
 
+    public static function getTypeClaim(): string
+    {
+        return Claim::NOTICE;
+    }
+
+    protected static function getTokenKey(): string
+    {
+        return 'jwt';
+    }
+
     public function create(array $message): Notice
     {
         [$jwt, $registration, $deployment] = $this->validate($message);
@@ -23,11 +33,6 @@ class NoticeFactory extends JwtPayloadFactory
         $this->validateClaims($messageInstance::requiredClaims(), $messageInstance->getBody());
 
         return $messageInstance;
-    }
-
-    public static function getTypeClaim(): string
-    {
-        return Claim::NOTICE;
     }
 
     public function getTypeName($jwt): string
@@ -47,11 +52,6 @@ class NoticeFactory extends JwtPayloadFactory
         // }
 
         return $this;
-    }
-
-    protected static function getTokenKey(): string
-    {
-        return 'jwt';
     }
 
     protected function validateNonce(array $jwt, array $message): static

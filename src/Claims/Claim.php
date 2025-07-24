@@ -55,11 +55,11 @@ abstract class Claim
     // EULA Service
     public const EULASERVICE = 'https://purl.imsglobal.org/spec/lti/claim/eulaservice';
 
-    abstract public static function claimKey(): string;
-
     final public function __construct(
         private $body
     ) {}
+
+    abstract public static function claimKey(): string;
 
     public static function create(LtiMessage $message): static
     {

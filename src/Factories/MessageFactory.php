@@ -31,6 +31,16 @@ class MessageFactory extends JwtPayloadFactory
         parent::__construct($db, $serviceConnector);
     }
 
+    public static function getTypeClaim(): string
+    {
+        return LtiConstants::MESSAGE_TYPE;
+    }
+
+    protected static function getTokenKey(): string
+    {
+        return 'id_token';
+    }
+
     public function create(array $message): LaunchMessage
     {
         [$jwt, $registration, $deployment] = $this->validate($message);
@@ -47,11 +57,6 @@ class MessageFactory extends JwtPayloadFactory
         return $messageInstance;
     }
 
-    public static function getTypeClaim(): string
-    {
-        return LtiConstants::MESSAGE_TYPE;
-    }
-
     public function getTypeName($jwt): string
     {
         return static::getClaimFrom(static::getTypeClaim(), $jwt['body']);
@@ -66,11 +71,6 @@ class MessageFactory extends JwtPayloadFactory
         }
 
         return $this;
-    }
-
-    protected static function getTokenKey(): string
-    {
-        return 'id_token';
     }
 
     protected function validateNonce(array $jwt, array $message): static

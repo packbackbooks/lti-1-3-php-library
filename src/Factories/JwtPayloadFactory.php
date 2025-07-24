@@ -72,13 +72,10 @@ abstract class JwtPayloadFactory
         protected IDatabase $db,
         protected ILtiServiceConnector $serviceConnector
     ) {}
-
-    abstract public static function getTypeClaim(): string;
     abstract public function create(array $message): LtiMessage;
     abstract public function getTypeName($jwt): string;
-    abstract protected static function getTokenKey(): string;
-    abstract protected function validateState(array $message): static;
-    abstract protected function validateNonce(array $jwt, array $message): static;
+
+    abstract public static function getTypeClaim(): string;
 
     public static function getMissingRegistrationErrorMsg(string $issuerUrl, ?string $clientId = null): string
     {
@@ -92,6 +89,9 @@ abstract class JwtPayloadFactory
 
         return str_replace($search, $replace, static::ERR_MISSING_REGISTRATION);
     }
+    abstract protected function validateState(array $message): static;
+    abstract protected function validateNonce(array $jwt, array $message): static;
+    abstract protected static function getTokenKey(): string;
 
     /**
      * Validates all aspects of an incoming LTI message launch and caches the launch if successful.

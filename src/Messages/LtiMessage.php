@@ -14,13 +14,13 @@ abstract class LtiMessage
 {
     use Claimable;
 
-    abstract public static function requiredClaims(): array;
-
     public function __construct(
         protected ILtiServiceConnector $serviceConnector,
         protected ILtiRegistration $registration,
         protected array $body
     ) {}
+
+    abstract public static function requiredClaims(): array;
 
     /**
      * Fetches the decoded body of the JWT used in the current message.

@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class ReportTest extends TestCase
 {
-    private Report $report;
     public const INITIAL_ASSET_ID = 'test-asset-123';
     public const INITIAL_TYPE = 'image';
     public const INITIAL_PROCESSING_PROGRESS = 'Processed';
@@ -24,6 +23,7 @@ class ReportTest extends TestCase
             self::INITIAL_TIMESTAMP
         );
     }
+    private Report $report;
 
     public function test_it_instantiates()
     {

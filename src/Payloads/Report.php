@@ -7,6 +7,28 @@ use Packback\Lti1p3\Concerns\Arrayable;
 class Report
 {
     use Arrayable;
+
+    /**
+     * @param  string  $processingProgress  One of: Processed, Processing, PendingManual, Failed, NotProcessed, NotReady
+     * @param  int  $priority  A number from 0 (meaning "good" or "success") to 5 (meaning urgent or time-critical notable features) indicating the tool's perceived priority of the report.
+     */
+    public function __construct(
+        private $assetId,
+        private string $type,
+        private string $processingProgress,
+        private int $priority,
+        private string $timestamp,
+    ) {}
+
+    public static function new(
+        string $assetId,
+        string $type,
+        string $processingProgress,
+        int $priority,
+        string $timestamp,
+    ): self {
+        return new Report($assetId, $type, $processingProgress, $priority, $timestamp);
+    }
     private ?string $title = null;
 
     /**
@@ -30,28 +52,6 @@ class Report
      * Human-readable explanation of the error code
      */
     private ?string $comment = null;
-
-    /**
-     * @param  string  $processingProgress  One of: Processed, Processing, PendingManual, Failed, NotProcessed, NotReady
-     * @param  int  $priority  A number from 0 (meaning "good" or "success") to 5 (meaning urgent or time-critical notable features) indicating the tool's perceived priority of the report.
-     */
-    public function __construct(
-        private $assetId,
-        private string $type,
-        private string $processingProgress,
-        private int $priority,
-        private string $timestamp,
-    ) {}
-
-    public static function new(
-        string $assetId,
-        string $type,
-        string $processingProgress,
-        int $priority,
-        string $timestamp,
-    ): self {
-        return new Report($assetId, $type, $processingProgress, $priority, $timestamp);
-    }
 
     public function getArray(): array
     {
