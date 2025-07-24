@@ -171,4 +171,87 @@ class AssetProcessorTest extends TestCase
         $this->assertEquals(['chained' => 'report'], $this->assetProcessor->getReport());
         $this->assertEquals(['chained' => 'custom'], $this->assetProcessor->getCustom());
     }
+
+    public function test_get_array_returns_all_properties_including_nulls()
+    {
+        $this->assetProcessor->setTitle('Test Title');
+
+        $expected = [
+            'type' => 'ltiAssetProcessor',
+            'title' => 'Test Title',
+            'text' => null,
+            'url' => null,
+            'report' => null,
+            'custom' => null,
+        ];
+
+        $result = $this->assetProcessor->getArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_to_array_filters_out_nulls()
+    {
+        $this->assetProcessor->setTitle('Test Title');
+
+        $expected = [
+            'type' => 'ltiAssetProcessor',
+            'title' => 'Test Title',
+        ];
+
+        $result = $this->assetProcessor->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_empty_arrays_are_preserved_in_to_array()
+    {
+        $this->assetProcessor->setReport([]);
+        $this->assetProcessor->setCustom([]);
+
+        $expected = [
+            'type' => 'ltiAssetProcessor',
+            'report' => [],
+            'custom' => [],
+        ];
+
+        $result = $this->assetProcessor->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_nested_array_structure_in_report()
+    {
+        $complexReport = [
+            'status' => 'success',
+            'details' => [
+                'processed_at' => '2024-01-15T10:30:00Z',
+                'file_size' => 1024,
+                'warnings' => ['minor formatting issue'],
+            ],
+            'metadata' => [
+                'version' => '1.0',
+                'processor' => 'image-optimizer',
+            ],
+        ];
+
+        $this->assetProcessor->setReport($complexReport);
+        $this->assertEquals($complexReport, $this->assetProcessor->getReport());
+
+        $result = $this->assetProcessor->toArray();
+        $this->assertEquals($complexReport, $result['report']);
+    }
+
+    public function test_special_characters_in_text_fields()
+    {
+        $specialTitle = 'Test with émojis 🎉 and spëcial çhars';
+        $specialText = 'Description with "quotes" and \'apostrophes\' & ampersands';
+        $specialUrl = 'https://example.com/path?param=value&other=test#fragment';
+
+        $this->assetProcessor
+            ->setTitle($specialTitle)
+            ->setText($specialText)
+            ->setUrl($specialUrl);
+
+        $this->assertEquals($specialTitle, $this->assetProcessor->getTitle());
+        $this->assertEquals($specialText, $this->assetProcessor->getText());
+        $this->assertEquals($specialUrl, $this->assetProcessor->getUrl());
+    }
 }

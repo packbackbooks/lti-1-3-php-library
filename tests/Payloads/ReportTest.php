@@ -307,4 +307,181 @@ class ReportTest extends TestCase
             $this->assertEquals($color, $this->report->getIndicationColor());
         }
     }
+
+    public function test_it_gets_visible_to_owner()
+    {
+        $result = $this->report->getVisibleToOwner();
+        $this->assertNull($result);
+    }
+
+    public function test_it_sets_visible_to_owner_true()
+    {
+        $result = $this->report->setVisibleToOwner(true);
+
+        $this->assertSame($this->report, $result);
+        $this->assertTrue($this->report->getVisibleToOwner());
+    }
+
+    public function test_it_sets_visible_to_owner_false()
+    {
+        $result = $this->report->setVisibleToOwner(false);
+
+        $this->assertSame($this->report, $result);
+        $this->assertFalse($this->report->getVisibleToOwner());
+    }
+
+    public function test_set_title_with_null()
+    {
+        $this->report->setTitle('Initial Title');
+        $this->assertEquals('Initial Title', $this->report->getTitle());
+
+        $result = $this->report->setTitle(null);
+        $this->assertSame($this->report, $result);
+        $this->assertNull($this->report->getTitle());
+    }
+
+    public function test_get_array_returns_all_properties_including_nulls()
+    {
+        $this->report->setTitle('Test Title');
+
+        $expected = [
+            'assetId' => self::INITIAL_ASSET_ID,
+            'type' => self::INITIAL_TYPE,
+            'processingProgress' => self::INITIAL_PROCESSING_PROGRESS,
+            'priority' => self::INITIAL_PRIORITY,
+            'timestamp' => self::INITIAL_TIMESTAMP,
+            'errorCode' => null,
+            'indicationAlt' => null,
+            'indicationColor' => null,
+            'result' => null,
+            'visibleToOwner' => null,
+            'title' => 'Test Title',
+            'comment' => null,
+        ];
+
+        $result = $this->report->getArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_visible_to_owner_in_array_output()
+    {
+        $this->report->setVisibleToOwner(true);
+
+        $expected = [
+            'assetId' => self::INITIAL_ASSET_ID,
+            'type' => self::INITIAL_TYPE,
+            'processingProgress' => self::INITIAL_PROCESSING_PROGRESS,
+            'priority' => self::INITIAL_PRIORITY,
+            'timestamp' => self::INITIAL_TIMESTAMP,
+            'visibleToOwner' => true,
+        ];
+
+        $result = $this->report->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_constructor_with_mixed_types()
+    {
+        $report = new Report(
+            123,
+            'numeric_asset_id_type',
+            'Failed',
+            0,
+            '2024-12-31T23:59:59Z'
+        );
+
+        $this->assertEquals(123, $report->getAssetId());
+        $this->assertEquals('numeric_asset_id_type', $report->getType());
+        $this->assertEquals('Failed', $report->getProcessingProgress());
+        $this->assertEquals(0, $report->getPriority());
+        $this->assertEquals('2024-12-31T23:59:59Z', $report->getTimestamp());
+    }
+
+    public function test_new_static_method_with_mixed_types()
+    {
+        $report = Report::new(
+            'uuid-12345',
+            'video',
+            'NotReady',
+            5,
+            '2023-01-01T00:00:00Z'
+        );
+
+        $this->assertInstanceOf(Report::class, $report);
+        $this->assertEquals('uuid-12345', $report->getAssetId());
+        $this->assertEquals('video', $report->getType());
+        $this->assertEquals('NotReady', $report->getProcessingProgress());
+        $this->assertEquals(5, $report->getPriority());
+        $this->assertEquals('2023-01-01T00:00:00Z', $report->getTimestamp());
+    }
+
+    public function test_complex_fluent_chaining_with_all_properties()
+    {
+        $result = $this->report
+            ->setTitle('Complex Report')
+            ->setComment('Detailed processing information')
+            ->setIndicationAlt('Red indicates error')
+            ->setIndicationColor('#FF0000')
+            ->setResult('Error: File corrupted')
+            ->setVisibleToOwner(false)
+            ->setErrorCode('DOWNLOAD_FAILED');
+
+        $this->assertSame($this->report, $result);
+        $this->assertEquals('Complex Report', $this->report->getTitle());
+        $this->assertEquals('Detailed processing information', $this->report->getComment());
+        $this->assertEquals('Red indicates error', $this->report->getIndicationAlt());
+        $this->assertEquals('#FF0000', $this->report->getIndicationColor());
+        $this->assertEquals('Error: File corrupted', $this->report->getResult());
+        $this->assertFalse($this->report->getVisibleToOwner());
+        $this->assertEquals('DOWNLOAD_FAILED', $this->report->getErrorCode());
+    }
+
+    public function test_special_characters_in_text_fields()
+    {
+        $specialTitle = 'Report with émojis 📊 and spëcial çhars';
+        $specialComment = 'Comment with "quotes" and \'apostrophes\' & <HTML> tags';
+        $specialResult = 'Result: 85.5% success rate ✓';
+        $specialIndicationAlt = 'Alt text with ñ and ü characters';
+
+        $this->report
+            ->setTitle($specialTitle)
+            ->setComment($specialComment)
+            ->setResult($specialResult)
+            ->setIndicationAlt($specialIndicationAlt);
+
+        $this->assertEquals($specialTitle, $this->report->getTitle());
+        $this->assertEquals($specialComment, $this->report->getComment());
+        $this->assertEquals($specialResult, $this->report->getResult());
+        $this->assertEquals($specialIndicationAlt, $this->report->getIndicationAlt());
+    }
+
+    public function test_comprehensive_array_output_with_all_fields()
+    {
+        $this->report
+            ->setTitle('Complete Report')
+            ->setComment('All fields populated')
+            ->setIndicationAlt('Success indicator')
+            ->setIndicationColor('#00FF00')
+            ->setResult('100%')
+            ->setVisibleToOwner(true)
+            ->setErrorCode('ASSET_TOO_LARGE');
+
+        $expected = [
+            'assetId' => self::INITIAL_ASSET_ID,
+            'type' => self::INITIAL_TYPE,
+            'processingProgress' => self::INITIAL_PROCESSING_PROGRESS,
+            'priority' => self::INITIAL_PRIORITY,
+            'timestamp' => self::INITIAL_TIMESTAMP,
+            'errorCode' => 'ASSET_TOO_LARGE',
+            'indicationAlt' => 'Success indicator',
+            'indicationColor' => '#00FF00',
+            'result' => '100%',
+            'visibleToOwner' => true,
+            'title' => 'Complete Report',
+            'comment' => 'All fields populated',
+        ];
+
+        $result = $this->report->toArray();
+        $this->assertEquals($expected, $result);
+    }
 }
