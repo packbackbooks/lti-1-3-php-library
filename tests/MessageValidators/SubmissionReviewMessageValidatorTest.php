@@ -14,13 +14,13 @@ class SubmissionReviewMessageValidatorTest extends TestCase
     {
         return [
             'sub' => 'subscriber',
-            LtiConstants::MESSAGE_TYPE => SubmissionReviewMessageValidator::getMessageType(),
-            LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::ROLES => [],
-            LtiConstants::RESOURCE_LINK => [
+            Claim::MESSAGE_TYPE => SubmissionReviewMessageValidator::getMessageType(),
+            Claim::VERSION => LtiConstants::V1_3,
+            Claim::ROLES => [],
+            Claim::RESOURCE_LINK => [
                 'id' => 'unique-id',
             ],
-            LtiConstants::FOR_USER => 'user',
+            Claim::FOR_USER => 'user',
         ];
     }
     public function test_it_can_validate()

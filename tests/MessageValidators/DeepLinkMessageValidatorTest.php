@@ -14,10 +14,10 @@ class DeepLinkMessageValidatorTest extends TestCase
     {
         return [
             'sub' => 'subscriber',
-            LtiConstants::MESSAGE_TYPE => DeepLinkMessageValidator::getMessageType(),
-            LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::ROLES => [],
-            LtiConstants::DL_DEEP_LINK_SETTINGS => [
+            Claim::MESSAGE_TYPE => DeepLinkMessageValidator::getMessageType(),
+            Claim::VERSION => LtiConstants::V1_3,
+            Claim::ROLES => [],
+            Claim::DL_DEEP_LINK_SETTINGS => [
                 'deep_link_return_url' => 'https://example.com',
                 'accept_types' => ['ltiResourceLink'],
                 'accept_presentation_document_targets' => ['iframe'],

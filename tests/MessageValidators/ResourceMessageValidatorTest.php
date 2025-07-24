@@ -14,10 +14,10 @@ class ResourceMessageValidatorTest extends TestCase
     {
         return [
             'sub' => 'subscriber',
-            LtiConstants::MESSAGE_TYPE => ResourceMessageValidator::getMessageType(),
-            LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::ROLES => [],
-            LtiConstants::RESOURCE_LINK => [
+            Claim::MESSAGE_TYPE => ResourceMessageValidator::getMessageType(),
+            Claim::VERSION => LtiConstants::V1_3,
+            Claim::ROLES => [],
+            Claim::RESOURCE_LINK => [
                 'id' => 'unique-id',
             ],
         ];

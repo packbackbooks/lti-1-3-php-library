@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\Factories;
 
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Claims\Lti1p1;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
@@ -9,7 +10,6 @@ use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IMigrationDatabase;
 use Packback\Lti1p3\Lti1p1Key;
-use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeployment;
 use Packback\Lti1p3\LtiException;
 use Packback\Lti1p3\LtiOidcLogin;
@@ -33,7 +33,7 @@ class MessageFactory extends JwtPayloadFactory
 
     public static function getTypeClaim(): string
     {
-        return LtiConstants::MESSAGE_TYPE;
+        return Claim::MESSAGE_TYPE;
     }
 
     protected static function getTokenKey(): string
