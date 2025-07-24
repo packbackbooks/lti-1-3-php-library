@@ -62,4 +62,31 @@ class LaunchPresentationTest extends TestCase
 
         $this->assertEquals($returnUrl, $launchPresentation->returnUrl());
     }
+
+    public function test_document_target_method_returns_document_target_from_body()
+    {
+        $documentTarget = 'window';
+        $body = ['document_target' => $documentTarget, 'height' => 360, 'width' => 480];
+        $launchPresentation = new LaunchPresentation($body);
+
+        $this->assertEquals($documentTarget, $launchPresentation->documentTarget());
+    }
+
+    public function test_height_method_returns_height_from_body()
+    {
+        $height = 360;
+        $body = ['document_target' => 'window', 'height' => $height, 'width' => 480];
+        $launchPresentation = new LaunchPresentation($body);
+
+        $this->assertEquals($height, $launchPresentation->height());
+    }
+
+    public function test_width_method_returns_width_from_body()
+    {
+        $width = 480;
+        $body = ['document_target' => 'window', 'height' => 360, 'width' => $width];
+        $launchPresentation = new LaunchPresentation($body);
+
+        $this->assertEquals($width, $launchPresentation->width());
+    }
 }

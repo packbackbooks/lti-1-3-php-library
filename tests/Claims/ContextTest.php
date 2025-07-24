@@ -51,4 +51,31 @@ class ContextTest extends TestCase
 
         $this->assertEquals($contextId, $context->id());
     }
+
+    public function test_label_method_returns_label_from_body()
+    {
+        $label = 'Biology 102';
+        $body = ['id' => 'context-123', 'label' => $label, 'title' => 'Bio Adventures'];
+        $context = new Context($body);
+
+        $this->assertEquals($label, $context->label());
+    }
+
+    public function test_title_method_returns_title_from_body()
+    {
+        $title = 'Bio Adventures';
+        $body = ['id' => 'context-123', 'label' => 'Biology 102', 'title' => $title];
+        $context = new Context($body);
+
+        $this->assertEquals($title, $context->title());
+    }
+
+    public function test_type_method_returns_type_from_body()
+    {
+        $type = ['http://purl.imsglobal.org/vocab/lis/v2/course#CourseSection'];
+        $body = ['id' => 'context-123', 'type' => $type];
+        $context = new Context($body);
+
+        $this->assertEquals($type, $context->type());
+    }
 }

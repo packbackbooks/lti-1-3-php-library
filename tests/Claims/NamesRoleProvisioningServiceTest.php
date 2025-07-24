@@ -42,4 +42,22 @@ class NamesRoleProvisioningServiceTest extends TestCase
         $this->assertInstanceOf(NamesRoleProvisioningService::class, $nrps);
         $this->assertEquals($nrpsData, $nrps->getBody());
     }
+
+    public function test_context_memberships_url_method_returns_url_from_body()
+    {
+        $url = 'https://ltiadvantagevalidator.imsglobal.org/ltitool/namesandroles.html?memberships=1879';
+        $body = ['context_memberships_url' => $url, 'service_versions' => ['2.0']];
+        $nrps = new NamesRoleProvisioningService($body);
+
+        $this->assertEquals($url, $nrps->contextMembershipsUrl());
+    }
+
+    public function test_service_versions_method_returns_versions_from_body()
+    {
+        $versions = ['2.0'];
+        $body = ['context_memberships_url' => 'https://example.com/memberships', 'service_versions' => $versions];
+        $nrps = new NamesRoleProvisioningService($body);
+
+        $this->assertEquals($versions, $nrps->serviceVersions());
+    }
 }

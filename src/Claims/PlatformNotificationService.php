@@ -4,6 +4,22 @@ namespace Packback\Lti1p3\Claims;
 
 use Packback\Lti1p3\Claims\Concerns\HasScope;
 
+/**
+ * PlatformNotificationService Claim
+ *
+ * Claim key: https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice
+ *
+ * Example payload:
+ * {
+ *     "https://purl.imsglobal.org/spec/lti/claim/platformnotificationservice": {
+ *         "platform_notification_service_url": "https://www.myuniv.org/lti-services/platformNotices",
+ *         "service_versions": ["1.0"],
+ *         "notice_types_supported": [
+ *             "LtiAssetProcessorSubmissionNotice"
+ *         ]
+ *     }
+ * }
+ */
 class PlatformNotificationService extends Claim
 {
     use HasScope;
@@ -31,10 +47,5 @@ class PlatformNotificationService extends Claim
     public function supportsNoticeType(string $noticeType): bool
     {
         return in_array($noticeType, $this->noticeTypesSupported());
-    }
-
-    public function hasScope(string $requiredScope): bool
-    {
-        return in_array($requiredScope, $this->scope());
     }
 }

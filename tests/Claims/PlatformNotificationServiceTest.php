@@ -94,22 +94,6 @@ class PlatformNotificationServiceTest extends TestCase
         $this->assertFalse($pns->supportsNoticeType('context_copy'));
     }
 
-    public function test_has_scope_method_returns_true_when_scope_exists()
-    {
-        $body = ['scope' => ['read', 'write', 'notify']];
-        $pns = new PlatformNotificationService($body);
-
-        $this->assertTrue($pns->hasScope('write'));
-    }
-
-    public function test_has_scope_method_returns_false_when_scope_missing()
-    {
-        $body = ['scope' => ['read']];
-        $pns = new PlatformNotificationService($body);
-
-        $this->assertFalse($pns->hasScope('delete'));
-    }
-
     public function test_scope_method_returns_scope_from_body()
     {
         $scope = ['https://purl.imsglobal.org/spec/lti/scope/notice'];
