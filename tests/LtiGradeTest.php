@@ -6,11 +6,11 @@ use Packback\Lti1p3\LtiGrade;
 
 class LtiGradeTest extends TestCase
 {
-    private $grade;
     protected function setUp(): void
     {
         $this->grade = new LtiGrade;
     }
+    private $grade;
 
     public function test_it_instantiates()
     {

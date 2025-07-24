@@ -9,6 +9,20 @@ use Tests\TestCase;
 
 class DeepLinkMessageValidatorTest extends TestCase
 {
+    private static function validJwtBody()
+    {
+        return [
+            'sub' => 'subscriber',
+            LtiConstants::MESSAGE_TYPE => DeepLinkMessageValidator::getMessageType(),
+            LtiConstants::VERSION => LtiConstants::V1_3,
+            LtiConstants::ROLES => [],
+            LtiConstants::DL_DEEP_LINK_SETTINGS => [
+                'deep_link_return_url' => 'https://example.com',
+                'accept_types' => ['ltiResourceLink'],
+                'accept_presentation_document_targets' => ['iframe'],
+            ],
+        ];
+    }
     public function test_it_can_validate()
     {
         $this->assertTrue(DeepLinkMessageValidator::canValidate(self::validJwtBody()));
@@ -115,20 +129,5 @@ class DeepLinkMessageValidatorTest extends TestCase
         $this->expectException(LtiException::class);
 
         DeepLinkMessageValidator::validate($jwtBody);
-    }
-
-    private static function validJwtBody()
-    {
-        return [
-            'sub' => 'subscriber',
-            LtiConstants::MESSAGE_TYPE => DeepLinkMessageValidator::getMessageType(),
-            LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::ROLES => [],
-            LtiConstants::DL_DEEP_LINK_SETTINGS => [
-                'deep_link_return_url' => 'https://example.com',
-                'accept_types' => ['ltiResourceLink'],
-                'accept_presentation_document_targets' => ['iframe'],
-            ],
-        ];
     }
 }

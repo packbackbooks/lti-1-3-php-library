@@ -6,12 +6,11 @@ use Packback\Lti1p3\LtiGradeSubmissionReview;
 
 class LtiGradeSubmissionReviewTest extends TestCase
 {
-    private $gradeReview;
-
     protected function setUp(): void
     {
         $this->gradeReview = new LtiGradeSubmissionReview;
     }
+    private $gradeReview;
 
     public function test_it_instantiates()
     {

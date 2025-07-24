@@ -7,15 +7,6 @@ use Packback\Lti1p3\Concerns\JsonStringable;
 class LtiGrade
 {
     use JsonStringable;
-    private $score_given;
-    private $score_maximum;
-    private $comment;
-    private $activity_progress;
-    private $grading_progress;
-    private $timestamp;
-    private $user_id;
-    private $submission_review;
-    private $canvas_extension;
 
     public function __construct(?array $grade = null)
     {
@@ -30,6 +21,23 @@ class LtiGrade
         $this->canvas_extension = $grade['https://canvas.instructure.com/lti/submission'] ?? null;
     }
 
+    /**
+     * Static function to allow for method chaining without having to assign to a variable first.
+     */
+    public static function new(): self
+    {
+        return new LtiGrade;
+    }
+    private $score_given;
+    private $score_maximum;
+    private $comment;
+    private $activity_progress;
+    private $grading_progress;
+    private $timestamp;
+    private $user_id;
+    private $submission_review;
+    private $canvas_extension;
+
     public function getArray(): array
     {
         return [
@@ -43,14 +51,6 @@ class LtiGrade
             'submissionReview' => $this->submission_review,
             'https://canvas.instructure.com/lti/submission' => $this->canvas_extension,
         ];
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(): self
-    {
-        return new LtiGrade;
     }
 
     public function getScoreGiven()
