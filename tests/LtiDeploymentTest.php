@@ -6,12 +6,12 @@ use Packback\Lti1p3\LtiDeployment;
 
 class LtiDeploymentTest extends TestCase
 {
+    private $id = 'a deployment';
+    private $deployment;
     protected function setUp(): void
     {
         $this->deployment = new LtiDeployment($this->id);
     }
-    private $id = 'a deployment';
-    private $deployment;
 
     public function test_it_instantiates()
     {

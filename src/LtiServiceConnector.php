@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 class LtiServiceConnector implements ILtiServiceConnector
 {
     public const NEXT_PAGE_REGEX = '/<([^>]*)>; ?rel="next"/i';
+    private bool $debuggingMode = false;
 
     public function __construct(
         private ICache $cache,
@@ -63,7 +64,6 @@ class LtiServiceConnector implements ILtiServiceConnector
 
         return $payload;
     }
-    private bool $debuggingMode = false;
 
     public function setDebuggingMode(bool $enable): self
     {

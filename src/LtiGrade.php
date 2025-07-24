@@ -7,6 +7,15 @@ use Packback\Lti1p3\Concerns\JsonStringable;
 class LtiGrade
 {
     use JsonStringable;
+    private $score_given;
+    private $score_maximum;
+    private $comment;
+    private $activity_progress;
+    private $grading_progress;
+    private $timestamp;
+    private $user_id;
+    private $submission_review;
+    private $canvas_extension;
 
     public function __construct(?array $grade = null)
     {
@@ -28,15 +37,6 @@ class LtiGrade
     {
         return new LtiGrade;
     }
-    private $score_given;
-    private $score_maximum;
-    private $comment;
-    private $activity_progress;
-    private $grading_progress;
-    private $timestamp;
-    private $user_id;
-    private $submission_review;
-    private $canvas_extension;
 
     public function getArray(): array
     {

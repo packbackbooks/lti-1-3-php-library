@@ -13,6 +13,10 @@ use Packback\Lti1p3\OidcException;
 
 class LtiOidcLoginTest extends TestCase
 {
+    private $cache;
+    private $cookie;
+    private $database;
+    private $oidcLogin;
     protected function setUp(): void
     {
         $this->cache = Mockery::mock(ICache::class);
@@ -25,10 +29,6 @@ class LtiOidcLoginTest extends TestCase
             $this->cookie
         );
     }
-    private $cache;
-    private $cookie;
-    private $database;
-    private $oidcLogin;
 
     public function test_it_instantiates()
     {

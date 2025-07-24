@@ -62,6 +62,11 @@ class LtiMessageLaunch
         'ES384' => 'EC',
         'ES512' => 'EC',
     ];
+    public string $launch_id;
+    private array $request;
+    private array $jwt;
+    private ?ILtiRegistration $registration;
+    private ?ILtiDeployment $deployment;
 
     public function __construct(
         private IDatabase $db,
@@ -115,11 +120,6 @@ class LtiMessageLaunch
 
         return str_replace($search, $replace, static::ERR_MISSING_REGISTRATION);
     }
-    public string $launch_id;
-    private array $request;
-    private array $jwt;
-    private ?ILtiRegistration $registration;
-    private ?ILtiDeployment $deployment;
 
     public function setRequest(array $request): self
     {
