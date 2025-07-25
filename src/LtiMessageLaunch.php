@@ -68,6 +68,7 @@ class LtiMessageLaunch
     private ?ILtiRegistration $registration;
     private ?ILtiDeployment $deployment;
 
+    #[\Deprecated(message: 'use one of Packback\Lti1p3\Messages\* instead', since: '6.4')]
     public function __construct(
         private IDatabase $db,
         private ICache $cache,
@@ -108,6 +109,7 @@ class LtiMessageLaunch
         return $new->validateRegistration();
     }
 
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::getMissingRegistrationErrorMsg() instead', since: '6.4')]
     public static function getMissingRegistrationErrorMsg(string $issuerUrl, ?string $clientId = null): string
     {
         // Guard against client ID being null
@@ -128,6 +130,7 @@ class LtiMessageLaunch
         return $this;
     }
 
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\MessageFactory::create() instead', since: '6.4')]
     public function initialize(array $request): self
     {
         return $this->setRequest($request)
@@ -141,6 +144,7 @@ class LtiMessageLaunch
      *
      * @throws LtiException Will throw an LtiException if validation fails
      */
+    #[\Deprecated(message: 'use $messageFactory->validate() instead', since: '6.4')]
     public function validate(): self
     {
         return $this->validateState()
@@ -152,6 +156,7 @@ class LtiMessageLaunch
             ->validateMessage();
     }
 
+    #[\Deprecated(message: 'use $messageFactory->migrate() instead', since: '6.4')]
     public function migrate(): self
     {
         if (!$this->shouldMigrate()) {
@@ -171,6 +176,7 @@ class LtiMessageLaunch
         return $this->ensureDeploymentExists();
     }
 
+    #[\Deprecated(message: 'use $messageFactory->cacheLaunchData() instead', since: '6.4')]
     public function cacheLaunchData(): self
     {
         $this->cache->cacheLaunchData($this->launch_id, $this->jwt['body']);
@@ -181,6 +187,7 @@ class LtiMessageLaunch
     /**
      * Returns whether or not the current launch can use the names and roles service.
      */
+    #[\Deprecated(message: 'use $launchMessage->hasClaim(Packback\Lti1p3\Claims\NamesRoleProvisioningService::getClaimKey()) instead', since: '6.4')]
     public function hasNrps(): bool
     {
         return isset($this->jwt['body'][Claim::NRPS_NAMESROLESSERVICE]['context_memberships_url']);
@@ -189,6 +196,7 @@ class LtiMessageLaunch
     /**
      * Fetches an instance of the names and roles service for the current launch.
      */
+    #[\Deprecated(message: 'use $launchMessage->nrpsClaim() instead', since: '6.4')]
     public function getNrps(): LtiNamesRolesProvisioningService
     {
         return new LtiNamesRolesProvisioningService(
@@ -201,6 +209,7 @@ class LtiMessageLaunch
     /**
      * Returns whether or not the current launch can use the groups service.
      */
+    #[\Deprecated(message: 'use $launchMessage->hasClaim(Packback\Lti1p3\Claims\GroupsService::getClaimKey()) instead', since: '6.4')]
     public function hasGs(): bool
     {
         return isset($this->jwt['body'][Claim::GS_GROUPSSERVICE]['context_groups_url']);
@@ -209,6 +218,7 @@ class LtiMessageLaunch
     /**
      * Fetches an instance of the groups service for the current launch.
      */
+    #[\Deprecated(message: 'use $launchMessage->gsClaim() instead', since: '6.4')]
     public function getGs(): LtiCourseGroupsService
     {
         return new LtiCourseGroupsService(
@@ -221,6 +231,7 @@ class LtiMessageLaunch
     /**
      * Returns whether or not the current launch can use the assignments and grades service.
      */
+    #[\Deprecated(message: 'use $launchMessage->hasClaim(Packback\Lti1p3\Claims\AssignmentsGradesService::getClaimKey()) instead', since: '6.4')]
     public function hasAgs(): bool
     {
         return isset($this->jwt['body'][Claim::AGS_ENDPOINT]);
@@ -229,6 +240,7 @@ class LtiMessageLaunch
     /**
      * Fetches an instance of the assignments and grades service for the current launch.
      */
+    #[\Deprecated(message: 'use $launchMessage->agsClaim() instead', since: '6.4')]
     public function getAgs(): LtiAssignmentsGradesService
     {
         return new LtiAssignmentsGradesService(
@@ -241,6 +253,7 @@ class LtiMessageLaunch
     /**
      * Returns whether or not the current launch is a deep linking launch.
      */
+    #[\Deprecated(message: 'use ($launchMessage instanceOf Packback\Lti1p3\Messages\DeepLinkingRequest) instead', since: '6.4')]
     public function isDeepLinkLaunch(): bool
     {
         return $this->jwt['body'][Claim::MESSAGE_TYPE] === static::TYPE_DEEPLINK;
@@ -249,6 +262,7 @@ class LtiMessageLaunch
     /**
      * Fetches a deep link that can be used to construct a deep linking response.
      */
+    #[\Deprecated(message: 'use $launchMessage->getDeepLink() instead', since: '6.4')]
     public function getDeepLink(): LtiDeepLink
     {
         return new LtiDeepLink(
@@ -261,6 +275,7 @@ class LtiMessageLaunch
     /**
      * Returns whether or not the current launch is a submission review launch.
      */
+    #[\Deprecated(message: 'use ($launchMessage instanceOf Packback\Lti1p3\Messages\SubmissionReviewRequest) instead', since: '6.4')]
     public function isSubmissionReviewLaunch(): bool
     {
         return $this->jwt['body'][Claim::MESSAGE_TYPE] === static::TYPE_SUBMISSIONREVIEW;
@@ -269,6 +284,7 @@ class LtiMessageLaunch
     /**
      * Returns whether or not the current launch is a resource launch.
      */
+    #[\Deprecated(message: 'use ($launchMessage instanceOf Packback\Lti1p3\Messages\ResourceLinkRequest) instead', since: '6.4')]
     public function isResourceLaunch(): bool
     {
         return $this->jwt['body'][Claim::MESSAGE_TYPE] === static::TYPE_RESOURCELINK;
@@ -277,6 +293,7 @@ class LtiMessageLaunch
     /**
      * Fetches the decoded body of the JWT used in the current launch.
      */
+    #[\Deprecated(message: 'use $launchMessage->getBody() instead', since: '6.4')]
     public function getLaunchData(): array
     {
         return $this->jwt['body'];
@@ -285,16 +302,19 @@ class LtiMessageLaunch
     /**
      * Get the unique launch id for the current launch.
      */
+    #[\Deprecated(message: 'use $launchMessage->getLaunchId() instead', since: '6.4')]
     public function getLaunchId(): string
     {
         return $this->launch_id;
     }
 
+    #[\Deprecated(message: 'use $messageFactory->canMigrate() instead', since: '6.4')]
     public function canMigrate(): bool
     {
         return $this->db instanceof IMigrationDatabase;
     }
 
+    #[\Deprecated(message: 'use $messageFactory->validateState() instead', since: '6.4')]
     protected function validateState(): self
     {
         // Check State for OIDC.
@@ -306,6 +326,7 @@ class LtiMessageLaunch
         return $this;
     }
 
+    #[\Deprecated(message: 'use $messageFactory->validateJwtFormat() instead', since: '6.4')]
     protected function validateJwtFormat(): self
     {
         if (!isset($this->request['id_token'])) {
@@ -328,6 +349,7 @@ class LtiMessageLaunch
         return $this;
     }
 
+    #[\Deprecated(message: 'use $messageFactory->validateNonce() instead', since: '6.4')]
     protected function validateNonce(): self
     {
         if (!isset($this->jwt['body']['nonce'])) {
@@ -340,6 +362,7 @@ class LtiMessageLaunch
         return $this;
     }
 
+    #[\Deprecated(message: 'use $messageFactory->validateRegistration() instead', since: '6.4')]
     protected function validateRegistration(): self
     {
         // Find registration.
@@ -360,6 +383,7 @@ class LtiMessageLaunch
         return $this;
     }
 
+    #[\Deprecated(message: 'use $messageFactory->validateJwtSignature() instead', since: '6.4')]
     protected function validateJwtSignature(): self
     {
         if (!isset($this->jwt['header']['kid'])) {
@@ -381,6 +405,7 @@ class LtiMessageLaunch
         return $this;
     }
 
+    #[\Deprecated(message: 'use $messageFactory->validateDeployment() instead', since: '6.4')]
     protected function validateDeployment(): self
     {
         if (!isset($this->jwt['body'][Claim::DEPLOYMENT_ID])) {
@@ -398,6 +423,7 @@ class LtiMessageLaunch
         return $this;
     }
 
+    #[\Deprecated(message: 'use $messageFactory->validateClaims() instead', since: '6.4')]
     protected function validateMessage(): self
     {
         if (!isset($this->jwt['body'][Claim::MESSAGE_TYPE])) {

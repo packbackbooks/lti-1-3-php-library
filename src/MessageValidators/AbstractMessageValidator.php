@@ -9,10 +9,13 @@ use Packback\Lti1p3\LtiException;
 
 abstract class AbstractMessageValidator implements IMessageValidator
 {
+    #[\Deprecated(message: 'Message validation is now handled by the Packback\Lti1p3\Factories\MessageFactory class', since: '6.4')]
     abstract public static function getMessageType(): string;
 
+    #[\Deprecated(message: 'Message validation is now handled by the Packback\Lti1p3\Factories\MessageFactory class', since: '6.4')]
     abstract public static function validate(array $jwtBody): void;
 
+    #[\Deprecated(message: 'Message validation is now handled by the Packback\Lti1p3\Factories\MessageFactory class', since: '6.4')]
     public static function canValidate(array $jwtBody): bool
     {
         return $jwtBody[Claim::MESSAGE_TYPE] === static::getMessageType();
@@ -21,6 +24,7 @@ abstract class AbstractMessageValidator implements IMessageValidator
     /**
      * @throws LtiException
      */
+    #[\Deprecated(message: 'Message validation is now handled by the Packback\Lti1p3\Factories\MessageFactory class', since: '6.4')]
     public static function validateGenericMessage(array $jwtBody): void
     {
         if (empty($jwtBody['sub'])) {
