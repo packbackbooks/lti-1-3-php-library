@@ -7,6 +7,8 @@ use Exception;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
+use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Factories\MessageFactory;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -19,9 +21,9 @@ use Packback\Lti1p3\Lti1p1Key;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiDeployment;
 use Packback\Lti1p3\LtiException;
-use Packback\Lti1p3\LtiMessageLaunch;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\LtiRegistration;
+use Packback\Lti1p3\Messages\LaunchMessage;
 use Tests\TestCase;
 
 class TestCache implements ICache
@@ -112,17 +114,17 @@ class TestMigrateDb extends TestDb implements IMigrationDatabase
     public bool $shouldMigrate;
     public LtiDeployment $createdDeployment;
 
-    public function findLti1p1Keys(LtiMessageLaunch $launch): array
+    public function findLti1p1Keys($launch): array
     {
         return $this->matchingKeys;
     }
 
-    public function shouldMigrate(LtiMessageLaunch $launch): bool
+    public function shouldMigrate($launch): bool
     {
         return $this->shouldMigrate;
     }
 
-    public function migrateFromLti1p1(LtiMessageLaunch $launch): LtiDeployment
+    public function migrateFromLti1p1($launch): LtiDeployment
     {
         return $this->createdDeployment;
     }
@@ -133,6 +135,7 @@ class Lti13CertificationTest extends TestCase
     public const ISSUER_URL = 'https://ltiadvantagevalidator.imsglobal.org';
     public const JWKS_FILE = '/tmp/jwks.json';
     public const CERT_DATA_DIR = __DIR__.'/../data/certification/';
+    public const MESSAGE_DATA_DIR = __DIR__.'/../data/messages/';
     public const PRIVATE_KEY = __DIR__.'/../data/private.key';
     public const STATE = 'state';
     public TestDb $db;
@@ -166,9 +169,9 @@ class Lti13CertificationTest extends TestCase
         ];
 
         $this->payload = [
-            LtiConstants::MESSAGE_TYPE => 'LtiResourceLinkRequest',
-            LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::RESOURCE_LINK => [
+            Claim::MESSAGE_TYPE => 'LtiResourceLinkRequest',
+            Claim::VERSION => LtiConstants::V1_3,
+            Claim::RESOURCE_LINK => [
                 'id' => 'd3a2504bba5184799a38f141e8df2335cfa8206d',
                 'description' => null,
                 'title' => null,
@@ -179,14 +182,14 @@ class Lti13CertificationTest extends TestCase
             ],
             'aud' => $this->issuer['client_id'],
             'azp' => $this->issuer['client_id'],
-            LtiConstants::DEPLOYMENT_ID => $this->key['deployment_id'],
+            Claim::DEPLOYMENT_ID => $this->key['deployment_id'],
             'exp' => Carbon::now()->addDay()->timestamp,
             'iat' => Carbon::now()->subDay()->timestamp,
             'iss' => $this->issuer['issuer'],
             'nonce' => 'nonce-5e73ef2f4c6ea0.93530902',
             'sub' => '66b6a854-9f43-4bb2-90e8-6653c9126272',
-            LtiConstants::TARGET_LINK_URI => 'https://lms-api.packback.localhost/api/lti/launch',
-            LtiConstants::CONTEXT => [
+            Claim::TARGET_LINK_URI => 'https://lms-api.packback.localhost/api/lti/launch',
+            Claim::CONTEXT => [
                 'id' => 'd3a2504bba5184799a38f141e8df2335cfa8206d',
                 'label' => 'Canvas Unlauched',
                 'title' => 'Canvas - A Fresh Course That Remains Unlaunched',
@@ -198,7 +201,7 @@ class Lti13CertificationTest extends TestCase
                     'errors' => [],
                 ],
             ],
-            LtiConstants::TOOL_PLATFORM => [
+            Claim::TOOL_PLATFORM => [
                 'guid' => 'FnwyPrXqSxwv8QCm11UwILpDJMAUPJ9WGn8zcvBM:canvas-lms',
                 'name' => 'Packback Engineering',
                 'version' => 'cloud',
@@ -208,7 +211,7 @@ class Lti13CertificationTest extends TestCase
                     'errors' => [],
                 ],
             ],
-            LtiConstants::LAUNCH_PRESENTATION => [
+            Claim::LAUNCH_PRESENTATION => [
                 'document_target' => 'iframe',
                 'height' => 400,
                 'width' => 800,
@@ -220,14 +223,14 @@ class Lti13CertificationTest extends TestCase
                 ],
             ],
             'locale' => 'en',
-            LtiConstants::ROLES => [
+            Claim::ROLES => [
                 LtiConstants::INSTITUTION_ADMINISTRATOR,
                 LtiConstants::INSTITUTION_INSTRUCTOR,
                 LtiConstants::MEMBERSHIP_INSTRUCTOR,
                 LtiConstants::SYSTEM_SYSADMIN,
                 LtiConstants::SYSTEM_USER,
             ],
-            LtiConstants::CUSTOM => [],
+            Claim::CUSTOM => [],
             'errors' => [
                 'errors' => [],
             ],
@@ -285,7 +288,7 @@ class Lti13CertificationTest extends TestCase
     public function test_lti_version_passed_is_not13()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::VERSION] = 'not-1.3';
+        $payload[Claim::VERSION] = 'not-1.3';
 
         $this->expectExceptionMessage('Incorrect version, expected 1.3.0');
 
@@ -295,9 +298,9 @@ class Lti13CertificationTest extends TestCase
     public function test_no_lti_version_passed_is_in_jwt()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::VERSION]);
+        unset($payload[Claim::VERSION]);
 
-        $this->expectExceptionMessage('Missing LTI Version');
+        $this->expectExceptionMessage('Missing required claim: https://purl.imsglobal.org/spec/lti/claim/version');
 
         $this->launch($payload);
     }
@@ -317,8 +320,8 @@ class Lti13CertificationTest extends TestCase
 
         $this->expectExceptionMessage('Invalid id_token, JWT must contain 3 parts');
 
-        LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
-            ->initialize($params);
+        (new MessageFactory($this->db, $this->serviceConnector, $this->cache, $this->cookie))
+            ->create($params);
     }
 
     public function test_exp_and_iat_fields_invalid()
@@ -335,9 +338,9 @@ class Lti13CertificationTest extends TestCase
     public function test_message_type_claim_missing()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::MESSAGE_TYPE]);
+        unset($payload[Claim::MESSAGE_TYPE]);
 
-        $this->expectExceptionMessage('Invalid message type');
+        $this->expectExceptionMessage('Missing required claim: https://purl.imsglobal.org/spec/lti/claim/message_type');
 
         $this->launch($payload);
     }
@@ -345,9 +348,9 @@ class Lti13CertificationTest extends TestCase
     public function test_role_claim_missing()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::ROLES]);
+        unset($payload[Claim::ROLES]);
 
-        $this->expectExceptionMessage('Missing Roles Claim');
+        $this->expectExceptionMessage('Missing required claim: https://purl.imsglobal.org/spec/lti/claim/roles');
 
         $this->launch($payload);
     }
@@ -355,9 +358,9 @@ class Lti13CertificationTest extends TestCase
     public function test_deployment_id_claim_missing()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::DEPLOYMENT_ID]);
+        unset($payload[Claim::DEPLOYMENT_ID]);
 
-        $this->expectExceptionMessage('No deployment ID was specified');
+        $this->expectExceptionMessage('Missing required claim: https://purl.imsglobal.org/spec/lti/claim/deployment_id');
 
         $this->launch($payload);
     }
@@ -375,13 +378,13 @@ class Lti13CertificationTest extends TestCase
 
         $db->matchingKeys = [$key];
         $db->shouldMigrate = true;
-        $db->createdDeployment = new LtiDeployment($payload[LtiConstants::DEPLOYMENT_ID]);
+        $db->createdDeployment = new LtiDeployment($payload[Claim::DEPLOYMENT_ID]);
 
         $payload['exp'] = '3272987750'; // To ensure signature matches
-        $payload[LtiConstants::LTI1P1] = [
+        $payload[Claim::LTI1P1] = [
             'oauth_consumer_key' => $key->getKey(),
             'oauth_consumer_key_sign' => $key->sign(
-                $payload[LtiConstants::DEPLOYMENT_ID],
+                $payload[Claim::DEPLOYMENT_ID],
                 $payload['iss'],
                 $payload['aud'],
                 $payload['exp'],
@@ -390,7 +393,7 @@ class Lti13CertificationTest extends TestCase
         ];
 
         $launch = $this->launch($payload, $db);
-        $this->assertInstanceOf(LtiMessageLaunch::class, $launch);
+        $this->assertInstanceOf(LaunchMessage::class, $launch);
     }
 
     public function test_does_not_migrate1p1_if_missing_oauth_key_sign()
@@ -407,11 +410,11 @@ class Lti13CertificationTest extends TestCase
         ];
         $db->shouldMigrate = true;
 
-        $payload[LtiConstants::LTI1P1] = [
+        $payload[Claim::LTI1P1] = [
             'oauth_consumer_key' => 'somekey',
         ];
 
-        $this->expectExceptionMessage(LtiMessageLaunch::ERR_OAUTH_KEY_SIGN_MISSING);
+        $this->expectExceptionMessage(MessageFactory::ERR_OAUTH_KEY_SIGN_MISSING);
 
         $this->launch($payload, $db);
     }
@@ -430,22 +433,22 @@ class Lti13CertificationTest extends TestCase
         ];
         $db->shouldMigrate = true;
 
-        $payload[LtiConstants::LTI1P1] = [
+        $payload[Claim::LTI1P1] = [
             'oauth_consumer_key' => 'somekey',
             'oauth_consumer_key_sign' => 'badsignature',
         ];
 
-        $this->expectExceptionMessage(LtiMessageLaunch::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED);
+        $this->expectExceptionMessage(MessageFactory::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED);
 
-        $ltiMessageLaunch = $this->launch($payload, $db);
+        $this->launch($payload, $db);
     }
 
-    public function test_launch_with_missing_resource_link_id()
+    public function test_launch_with_missing_sub()
     {
         $payload = $this->payload;
         unset($payload['sub']);
 
-        $this->expectExceptionMessage('Must have a user (sub)');
+        $this->expectExceptionMessage('Missing required claim: sub');
 
         $this->launch($payload);
     }
@@ -517,8 +520,8 @@ class Lti13CertificationTest extends TestCase
             ];
 
             try {
-                LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
-                    ->initialize($params);
+                (new MessageFactory($this->db, $this->serviceConnector, $this->cache, $this->cookie))
+                    ->create($params);
             } catch (Exception $e) {
                 $this->assertInstanceOf(LtiException::class, $e);
             }
@@ -550,7 +553,7 @@ class Lti13CertificationTest extends TestCase
             $payload['exp'] = Carbon::now()->addDay()->timestamp;
             $payload['iat'] = Carbon::now()->subDay()->timestamp;
             // Set a random context ID to avoid reusing the same LMS Course
-            $payload[LtiConstants::CONTEXT]['id'] = 'lms-course-id';
+            $payload[Claim::CONTEXT]['id'] = 'lms-course-id';
             // Set a random user ID to avoid reusing the same LmsUser
             $payload['sub'] = 'lms-user-id';
 
@@ -572,11 +575,66 @@ class Lti13CertificationTest extends TestCase
             $this->serviceConnector->shouldReceive('getResponseBody')
                 ->once()->andReturn(json_decode(file_get_contents(static::JWKS_FILE), true));
 
-            $result = LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
-                ->initialize($params);
+            $result = (new MessageFactory($this->db, $this->serviceConnector, $this->cache, $this->cookie))
+                ->create($params);
 
             // Assertions
-            $this->assertInstanceOf(LtiMessageLaunch::class, $result);
+            $this->assertInstanceOf(LaunchMessage::class, $result);
+
+            $testedCases++;
+        }
+        echo PHP_EOL;
+        $this->assertEquals($casesCount, $testedCases);
+    }
+
+    public function test_valid_message_cases()
+    {
+        $testCasesDir = static::MESSAGE_DATA_DIR.'valid';
+
+        $testCases = scandir($testCasesDir);
+        // Remove . and ..
+        array_shift($testCases);
+        array_shift($testCases);
+
+        $casesCount = count($testCases);
+        $testedCases = 0;
+
+        foreach ($testCases as $testCase) {
+            $payload = json_decode(
+                file_get_contents($testCasesDir.DIRECTORY_SEPARATOR.$testCase.DIRECTORY_SEPARATOR.'payload.json'),
+                true
+            );
+
+            $payload['exp'] = Carbon::now()->addDay()->timestamp;
+            $payload['iat'] = Carbon::now()->subDay()->timestamp;
+            // Set a random context ID to avoid reusing the same LMS Course
+            $payload[Claim::CONTEXT]['id'] = 'lms-course-id';
+            // Set a random user ID to avoid reusing the same LmsUser
+            $payload['sub'] = 'lms-user-id';
+
+            // I couldn't find a better output function
+            echo PHP_EOL."--> TESTING VALID TEST CASE: {$testCase}";
+
+            $jwt = $this->buildJWT($payload, $this->issuer);
+            $this->cache->cacheNonce($payload['nonce'], static::STATE);
+
+            $params = [
+                'utf8' => '✓',
+                'id_token' => $jwt,
+                'state' => static::STATE,
+            ];
+
+            $request = Mockery::mock(Response::class);
+            $this->serviceConnector->shouldReceive('makeRequest')
+                ->once()->andReturn($request);
+            $this->serviceConnector->shouldReceive('getResponseBody')
+                ->once()->andReturn(json_decode(file_get_contents(static::JWKS_FILE), true));
+
+            $result = (new MessageFactory($this->db, $this->serviceConnector, $this->cache, $this->cookie))
+                ->create($params);
+
+            // Assertions
+            $this->assertInstanceOf(LaunchMessage::class, $result);
 
             $testedCases++;
         }
@@ -605,7 +663,7 @@ class Lti13CertificationTest extends TestCase
         $this->serviceConnector->shouldReceive('getResponseBody')
             ->once()->andReturn(json_decode(file_get_contents(static::JWKS_FILE), true));
 
-        return LtiMessageLaunch::new($db, $this->cache, $this->cookie, $this->serviceConnector)
-            ->initialize($params);
+        return (new MessageFactory($db, $this->serviceConnector, $this->cache, $this->cookie))
+            ->create($params);
     }
 }

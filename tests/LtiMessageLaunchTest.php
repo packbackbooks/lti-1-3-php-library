@@ -7,6 +7,7 @@ use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
 use Mockery\MockInterface;
+use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -80,9 +81,9 @@ class LtiMessageLaunchTest extends TestCase
         ];
 
         $this->payload = [
-            LtiConstants::MESSAGE_TYPE => 'LtiResourceLinkRequest',
-            LtiConstants::VERSION => LtiConstants::V1_3,
-            LtiConstants::RESOURCE_LINK => [
+            Claim::MESSAGE_TYPE => 'LtiResourceLinkRequest',
+            Claim::VERSION => LtiConstants::V1_3,
+            Claim::RESOURCE_LINK => [
                 'id' => 'd3a2504bba5184799a38f141e8df2335cfa8206d',
                 'description' => null,
                 'title' => null,
@@ -93,14 +94,14 @@ class LtiMessageLaunchTest extends TestCase
             ],
             'aud' => $this->issuer['client_id'],
             'azp' => $this->issuer['client_id'],
-            LtiConstants::DEPLOYMENT_ID => $this->key['deployment_id'],
+            Claim::DEPLOYMENT_ID => $this->key['deployment_id'],
             'exp' => Carbon::now()->addDay()->timestamp,
             'iat' => Carbon::now()->subDay()->timestamp,
             'iss' => $this->issuer['issuer'],
             'nonce' => 'nonce-5e73ef2f4c6ea0.93530902',
             'sub' => '66b6a854-9f43-4bb2-90e8-6653c9126272',
-            LtiConstants::TARGET_LINK_URI => 'https://lms-api.packback.localhost/api/lti/launch',
-            LtiConstants::CONTEXT => [
+            Claim::TARGET_LINK_URI => 'https://lms-api.packback.localhost/api/lti/launch',
+            Claim::CONTEXT => [
                 'id' => 'd3a2504bba5184799a38f141e8df2335cfa8206d',
                 'label' => 'Canvas Unlauched',
                 'title' => 'Canvas - A Fresh Course That Remains Unlaunched',
@@ -112,7 +113,7 @@ class LtiMessageLaunchTest extends TestCase
                     'errors' => [],
                 ],
             ],
-            LtiConstants::TOOL_PLATFORM => [
+            Claim::TOOL_PLATFORM => [
                 'guid' => 'FnwyPrXqSxwv8QCm11UwILpDJMAUPJ9WGn8zcvBM:canvas-lms',
                 'name' => 'Packback Engineering',
                 'version' => 'cloud',
@@ -122,7 +123,7 @@ class LtiMessageLaunchTest extends TestCase
                     'errors' => [],
                 ],
             ],
-            LtiConstants::LAUNCH_PRESENTATION => [
+            Claim::LAUNCH_PRESENTATION => [
                 'document_target' => 'iframe',
                 'height' => 400,
                 'width' => 800,
@@ -134,14 +135,14 @@ class LtiMessageLaunchTest extends TestCase
                 ],
             ],
             'locale' => 'en',
-            LtiConstants::ROLES => [
+            Claim::ROLES => [
                 LtiConstants::INSTITUTION_ADMINISTRATOR,
                 LtiConstants::INSTITUTION_INSTRUCTOR,
                 LtiConstants::MEMBERSHIP_INSTRUCTOR,
                 LtiConstants::SYSTEM_SYSADMIN,
                 LtiConstants::SYSTEM_USER,
             ],
-            LtiConstants::CUSTOM => [],
+            Claim::CUSTOM => [],
             'errors' => [
                 'errors' => [],
             ],
@@ -486,7 +487,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_fails_if_deployment_id_is_missing()
     {
         $jwtPayload = $this->payload;
-        unset($jwtPayload[LtiConstants::DEPLOYMENT_ID]);
+        unset($jwtPayload[Claim::DEPLOYMENT_ID]);
         $payload = [
             'utf8' => '✓',
             'id_token' => $this->buildJWT($jwtPayload, $this->issuer),
@@ -551,7 +552,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_fails_if_the_payload_is_invalid()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::MESSAGE_TYPE]);
+        unset($payload[Claim::MESSAGE_TYPE]);
         $params = [
             'utf8' => '✓',
             'id_token' => $this->buildJWT($payload, $this->issuer),
@@ -591,7 +592,7 @@ class LtiMessageLaunchTest extends TestCase
         );
 
         $payload = $this->payload;
-        $payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
+        $payload[Claim::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
 
         $params = [
             'utf8' => '✓',
@@ -622,7 +623,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->migrationDatabase->shouldReceive('findLti1p1Keys')
             ->once()->andReturn([$matchingKey]);
         $matchingKey->shouldReceive('sign')
-            ->once()->andReturn($payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign']);
+            ->once()->andReturn($payload[Claim::LTI1P1]['oauth_consumer_key_sign']);
         $this->migrationDatabase->shouldReceive('migrateFromLti1p1')
             ->once()->andReturn($this->deployment);
         $this->cache->shouldReceive('cacheLaunchData')
@@ -685,7 +686,7 @@ class LtiMessageLaunchTest extends TestCase
         );
 
         $payload = $this->payload;
-        $payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
+        $payload[Claim::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
 
         $params = [
             'utf8' => '✓',
@@ -734,7 +735,7 @@ class LtiMessageLaunchTest extends TestCase
         );
 
         $payload = $this->payload;
-        $payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
+        $payload[Claim::LTI1P1]['oauth_consumer_key_sign'] = 'foo';
 
         $params = [
             'utf8' => '✓',
@@ -765,7 +766,7 @@ class LtiMessageLaunchTest extends TestCase
         $this->migrationDatabase->shouldReceive('findLti1p1Keys')
             ->once()->andReturn([$matchingKey]);
         $matchingKey->shouldReceive('sign')
-            ->once()->andReturn($payload[LtiConstants::LTI1P1]['oauth_consumer_key_sign']);
+            ->once()->andReturn($payload[Claim::LTI1P1]['oauth_consumer_key_sign']);
         $this->migrationDatabase->shouldReceive('migrateFromLti1p1')
             ->once()->andReturn(null);
 
@@ -778,7 +779,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_has_nrps()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url'] = 'https://example.com';
+        $payload[Claim::NRPS_NAMESROLESSERVICE]['context_memberships_url'] = 'https://example.com';
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasNrps();
@@ -789,7 +790,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_does_not_have_nrps()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url']);
+        unset($payload[Claim::NRPS_NAMESROLESSERVICE]['context_memberships_url']);
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasNrps();
@@ -800,7 +801,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_get_nrps_for_a_launch()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::NRPS_CLAIM_SERVICE]['context_memberships_url'] = 'https://example.com';
+        $payload[Claim::NRPS_NAMESROLESSERVICE]['context_memberships_url'] = 'https://example.com';
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getNrps();
@@ -811,7 +812,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_has_gs()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url'] = 'https://example.com';
+        $payload[Claim::GS_GROUPSSERVICE]['context_groups_url'] = 'https://example.com';
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasGs();
@@ -822,7 +823,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_does_not_have_gs()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url']);
+        unset($payload[Claim::GS_GROUPSSERVICE]['context_groups_url']);
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasGs();
@@ -833,7 +834,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_get_gs_for_a_launch()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::GS_CLAIM_SERVICE]['context_groups_url'] = 'https://example.com';
+        $payload[Claim::GS_GROUPSSERVICE]['context_groups_url'] = 'https://example.com';
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getGs();
@@ -844,7 +845,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_has_ags()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::AGS_CLAIM_ENDPOINT] = ['https://example.com'];
+        $payload[Claim::AGS_ENDPOINT] = ['https://example.com'];
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasAgs();
@@ -855,7 +856,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_does_not_have_ags()
     {
         $payload = $this->payload;
-        unset($payload[LtiConstants::AGS_CLAIM_ENDPOINT]);
+        unset($payload[Claim::AGS_ENDPOINT]);
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->hasAgs();
@@ -866,7 +867,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_get_ags_for_a_launch()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::AGS_CLAIM_ENDPOINT] = ['https://example.com'];
+        $payload[Claim::AGS_ENDPOINT] = ['https://example.com'];
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getAgs();
@@ -877,7 +878,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_is_a_deep_link()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isDeepLinkLaunch();
@@ -888,7 +889,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_is_not_a_deep_link()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
+        $payload[Claim::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isDeepLinkLaunch();
@@ -899,8 +900,8 @@ class LtiMessageLaunchTest extends TestCase
     public function test_get_deep_link_for_a_launch()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::DEPLOYMENT_ID] = 'deployment_id';
-        $payload[LtiConstants::DL_DEEP_LINK_SETTINGS] = [];
+        $payload[Claim::DEPLOYMENT_ID] = 'deployment_id';
+        $payload[Claim::DL_DEEP_LINK_SETTINGS] = [];
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getDeepLink();
@@ -911,7 +912,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_is_a_submission_review()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
+        $payload[Claim::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_SUBMISSIONREVIEW;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isSubmissionReviewLaunch();
@@ -922,7 +923,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_is_not_a_submission_review()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isSubmissionReviewLaunch();
@@ -933,7 +934,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_is_a_resource_link()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_RESOURCELINK;
+        $payload[Claim::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_RESOURCELINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isResourceLaunch();
@@ -944,7 +945,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_a_launch_is_not_a_resource()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->isResourceLaunch();
@@ -955,7 +956,7 @@ class LtiMessageLaunchTest extends TestCase
     public function test_get_launch_data()
     {
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload);
 
         $actual = $launch->getLaunchData();
@@ -968,7 +969,7 @@ class LtiMessageLaunchTest extends TestCase
         $expected = 'launch_id';
 
         $payload = $this->payload;
-        $payload[LtiConstants::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
+        $payload[Claim::MESSAGE_TYPE] = LtiMessageLaunch::TYPE_DEEPLINK;
         $launch = $this->fakeLaunch($payload, $expected);
 
         $actual = $launch->getLaunchId();

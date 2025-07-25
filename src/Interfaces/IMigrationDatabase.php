@@ -3,6 +3,7 @@
 namespace Packback\Lti1p3\Interfaces;
 
 use Packback\Lti1p3\LtiMessageLaunch;
+use Packback\Lti1p3\Messages\LaunchMessage;
 
 /**
  * This is an optional interface if an LTI 1.3 tool supports migrations
@@ -16,19 +17,24 @@ interface IMigrationDatabase extends IDatabase
     /**
      * Using the LtiMessageLaunch return an array of matching LTI 1.1 keys
      *
+     * @param  LtiMessageLaunch|LaunchMessage  $launch
      * @return array<\Packback\Lti1p3\Lti1p1Key>
      */
-    public function findLti1p1Keys(LtiMessageLaunch $launch): array;
+    public function findLti1p1Keys($launch): array;
 
     /**
      * Given an LtiMessageLaunch, return true if this tool should migrate from 1.1 to 1.3
+     *
+     * @param  LtiMessageLaunch|LaunchMessage  $launch
      */
-    public function shouldMigrate(LtiMessageLaunch $launch): bool;
+    public function shouldMigrate($launch): bool;
 
     /**
      * This method should create a 1.3 deployment in your DB based on the LtiMessageLaunch.
      * Previous to this, we validated the oauth_consumer_key_sign to ensure this migration
      * can safely occur.
+     *
+     * @param  LtiMessageLaunch|LaunchMessage  $launch
      */
-    public function migrateFromLti1p1(LtiMessageLaunch $launch): ?ILtiDeployment;
+    public function migrateFromLti1p1($launch): ?ILtiDeployment;
 }
