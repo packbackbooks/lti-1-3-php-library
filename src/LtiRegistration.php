@@ -14,7 +14,6 @@ class LtiRegistration implements ILtiRegistration
     private ?string $authServer;
     private ?string $toolPrivateKey;
     private ?string $kid;
-
     public function __construct(?array $registration = null)
     {
         $this->issuer = $registration['issuer'] ?? null;

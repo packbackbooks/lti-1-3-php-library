@@ -30,6 +30,14 @@ class LtiGrade
         $this->canvas_extension = $grade['https://canvas.instructure.com/lti/submission'] ?? null;
     }
 
+    /**
+     * Static function to allow for method chaining without having to assign to a variable first.
+     */
+    public static function new(): self
+    {
+        return new LtiGrade;
+    }
+
     public function getArray(): array
     {
         return [
@@ -43,14 +51,6 @@ class LtiGrade
             'submissionReview' => $this->submission_review,
             'https://canvas.instructure.com/lti/submission' => $this->canvas_extension,
         ];
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(): self
-    {
-        return new LtiGrade;
     }
 
     public function getScoreGiven()

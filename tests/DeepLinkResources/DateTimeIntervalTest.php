@@ -12,7 +12,6 @@ class DateTimeIntervalTest extends TestCase
     private DateTime $initialStart;
     private DateTime $initialEnd;
     private DateTimeInterval $dateTimeInterval;
-
     protected function setUp(): void
     {
         $this->initialStart = date_create();

@@ -84,7 +84,6 @@ class TestDb implements IDatabase
 {
     private $registrations = [];
     private $deployments = [];
-
     public function __construct($registration, $deployment)
     {
         $this->registrations[$registration->getIssuer()] = $registration;

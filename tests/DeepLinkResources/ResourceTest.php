@@ -15,7 +15,6 @@ use Tests\TestCase;
 class ResourceTest extends TestCase
 {
     private Resource $resource;
-
     protected function setUp(): void
     {
         $this->resource = new Resource;

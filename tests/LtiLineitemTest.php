@@ -7,7 +7,6 @@ use Packback\Lti1p3\LtiLineitem;
 class LtiLineitemTest extends TestCase
 {
     private LtiLineitem $lineItem;
-
     protected function setUp(): void
     {
         $this->lineItem = new LtiLineitem;
