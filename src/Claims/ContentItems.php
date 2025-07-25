@@ -7,7 +7,22 @@ namespace Packback\Lti1p3\Claims;
  *
  * Claim key: https://purl.imsglobal.org/spec/lti-dl/claim/content_items
  *
- * No example found in test data.
+ * Example payload:
+ * {
+ *     "https://purl.imsglobal.org/spec/lti-dl/claim/content_items": [
+ *         {
+ *             "type": "file",
+ *             "title": "A file like a PDF that is my assignment submissions",
+ *             "url": "https://my.example.com/assignment1.pdf",
+ *             "mediaType": "application/pdf",
+ *             "expiresAt": "2018-03-06T20:05:02Z"
+ *         },
+ *         {
+ *             "type": "https://www.example.com/custom_type",
+ *             "data": "somedata"
+ *         }
+ *     ],
+ * }
  */
 class ContentItems extends Claim
 {

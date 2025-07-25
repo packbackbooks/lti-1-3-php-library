@@ -9,7 +9,15 @@ use Packback\Lti1p3\Claims\Concerns\HasScope;
  *
  * Claim key: https://purl.imsglobal.org/spec/lti/claim/assetreport
  *
- * No example found in test data.
+ * Example payload:
+ * {
+ *     "https://purl.imsglobal.org/spec/lti/claim/assetreport": {
+ *         "scope": [
+ *             "https://purl.imsglobal.org/spec/lti/scope/report"
+ *         ],
+ *         "report_url": "https://canvas.localhost/api/lti/asset_processors/1/reports"
+ *     }
+ * }
  */
 class AssetReport extends Claim
 {

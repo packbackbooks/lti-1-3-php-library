@@ -7,7 +7,19 @@ namespace Packback\Lti1p3\Claims;
  *
  * Claim key: https://purl.imsglobal.org/spec/lti/claim/tool_platform
  *
- * No example found in test data.
+ * Example payload:
+ * {
+ *     "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+ *         "guid": "KnQbfmlzZWjswfYmnKN7QKTohFOeRn8Jtm6R5GGw:canvas-lms",
+ *         "name": "Packback Engineering",
+ *         "version": "cloud",
+ *         "product_family_code": "canvas",
+ *         "validation_context": null,
+ *         "errors": {
+ *             "errors": {}
+ *         }
+ *     }
+ * }
  */
 class ToolPlatform extends Claim
 {

@@ -9,7 +9,14 @@ use Packback\Lti1p3\Claims\Concerns\HasId;
  *
  * Claim key: https://purl.imsglobal.org/spec/lti/claim/notice
  *
- * No example found in test data.
+ * Example payload:
+ * {
+ *     "https://purl.imsglobal.org/spec/lti/claim/notice": {
+ *         "id": "74376c5d-1f93-491d-b96d-5173938f6e98",
+ *         "timestamp": "2025-05-21T18:41:03Z",
+ *         "type": "LtiContextCopyNotice"
+ *     }
+ * }
  */
 class Notice extends Claim
 {

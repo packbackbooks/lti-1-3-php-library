@@ -7,7 +7,12 @@ namespace Packback\Lti1p3\Claims;
  *
  * Claim key: https://purl.imsglobal.org/spec/lti/claim/origin_contexts
  *
- * No example found in test data.
+ * Example payload:
+ * {
+ *     "https://purl.imsglobal.org/spec/lti/claim/origin_contexts": [
+ *         "7a72828681249ff3a283dfdff8dfb63b05b7a368"
+ *     ]
+ * }
  */
 class OriginContexts extends Claim
 {

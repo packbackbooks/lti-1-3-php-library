@@ -7,7 +7,10 @@ namespace Packback\Lti1p3\Claims;
  *
  * Claim key: https://purl.imsglobal.org/spec/lti-dl/claim/data
  *
- * No example found in test data.
+ * Example payload:
+ * {
+ *     "https://purl.imsglobal.org/spec/lti-dl/claim/data": "csrftoken:c7fbba78-7b75-46e3-9201-11e6d5f36f53"
+ * }
  */
 class Data extends Claim
 {
