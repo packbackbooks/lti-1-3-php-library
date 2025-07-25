@@ -50,15 +50,30 @@ class Lti1p1Test extends TestCase
         $this->assertEquals($lti1p1Data, $lti1p1->getBody());
     }
 
-    public function test_get_oauth_consumer_key_sign_method_returns_key_from_body()
+    public function test_user_id_method_returns_user_id_from_body()
     {
-        $oauthKey = 'oauth-consumer-key-sign-123';
-        $body = [
-            'oauth_consumer_key_sign' => $oauthKey,
-            'user_id' => 'user-456',
-        ];
+        $userId = '34212';
+        $body = ['user_id' => $userId, 'oauth_consumer_key' => '179248902'];
         $lti1p1 = new Lti1p1($body);
 
-        $this->assertEquals($oauthKey, $lti1p1->getOauthConsumerKeySign());
+        $this->assertEquals($userId, $lti1p1->userId());
+    }
+
+    public function test_oauth_consumer_key_sign_method_returns_key_sign_from_body()
+    {
+        $oauthKeySign = 'lWd54kFo5qU7xshAna6v8BwoBm6tmUjc6GTax6+12ps=';
+        $body = ['oauth_consumer_key_sign' => $oauthKeySign, 'user_id' => '34212'];
+        $lti1p1 = new Lti1p1($body);
+
+        $this->assertEquals($oauthKeySign, $lti1p1->oauthConsumerKeySign());
+    }
+
+    public function test_oauth_consumer_key_method_returns_consumer_key_from_body()
+    {
+        $oauthConsumerKey = '179248902';
+        $body = ['oauth_consumer_key' => $oauthConsumerKey, 'user_id' => '34212'];
+        $lti1p1 = new Lti1p1($body);
+
+        $this->assertEquals($oauthConsumerKey, $lti1p1->oauthConsumerKey());
     }
 }

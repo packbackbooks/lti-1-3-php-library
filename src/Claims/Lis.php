@@ -2,6 +2,8 @@
 
 namespace Packback\Lti1p3\Claims;
 
+use Packback\Lti1p3\Claims\Concerns\HasErrors;
+
 /**
  * Lis Claim
  *
@@ -21,8 +23,25 @@ namespace Packback\Lti1p3\Claims;
  */
 class Lis extends Claim
 {
+    use HasErrors;
+
     public static function claimKey(): string
     {
         return Claim::LIS;
+    }
+
+    public function personSourcedId(): ?string
+    {
+        return $this->getBody()['person_sourcedid'] ?? null;
+    }
+
+    public function courseOfferingSourcedId(): ?string
+    {
+        return $this->getBody()['course_offering_sourcedid'] ?? null;
+    }
+
+    public function validationContext(): ?array
+    {
+        return $this->getBody()['validation_context'] ?? null;
     }
 }

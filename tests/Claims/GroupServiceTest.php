@@ -42,4 +42,40 @@ class GroupServiceTest extends TestCase
         $this->assertInstanceOf(GroupService::class, $groupService);
         $this->assertEquals($groupServiceData, $groupService->getBody());
     }
+
+    public function test_scope_method_returns_scope_from_body()
+    {
+        $scope = ['https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly'];
+        $body = ['scope' => $scope, 'context_groups_url' => 'https://example.com/groups'];
+        $groupService = new GroupService($body);
+
+        $this->assertEquals($scope, $groupService->scope());
+    }
+
+    public function test_context_groups_url_method_returns_url_from_body()
+    {
+        $contextGroupsUrl = 'https://www.myuniv.example.com/2344/groups';
+        $body = ['context_groups_url' => $contextGroupsUrl, 'service_versions' => ['1.0']];
+        $groupService = new GroupService($body);
+
+        $this->assertEquals($contextGroupsUrl, $groupService->contextGroupsUrl());
+    }
+
+    public function test_context_group_sets_url_method_returns_url_from_body()
+    {
+        $contextGroupSetsUrl = 'https://www.myuniv.example.com/2344/groups/sets';
+        $body = ['context_group_sets_url' => $contextGroupSetsUrl];
+        $groupService = new GroupService($body);
+
+        $this->assertEquals($contextGroupSetsUrl, $groupService->contextGroupSetsUrl());
+    }
+
+    public function test_service_versions_method_returns_versions_from_body()
+    {
+        $serviceVersions = ['1.0'];
+        $body = ['context_groups_url' => 'https://example.com/groups', 'service_versions' => $serviceVersions];
+        $groupService = new GroupService($body);
+
+        $this->assertEquals($serviceVersions, $groupService->serviceVersions());
+    }
 }

@@ -42,4 +42,58 @@ class ToolPlatformTest extends TestCase
         $this->assertInstanceOf(ToolPlatform::class, $toolPlatform);
         $this->assertEquals($toolPlatformData, $toolPlatform->getBody());
     }
+
+    public function test_errors_method_returns_errors_from_body()
+    {
+        $errors = ['errors' => ['validation_error' => 'Invalid platform']];
+        $body = ['guid' => 'platform-123', 'errors' => $errors];
+        $toolPlatform = new ToolPlatform($body);
+
+        $this->assertEquals($errors, $toolPlatform->errors());
+    }
+
+    public function test_guid_method_returns_guid_from_body()
+    {
+        $guid = 'KnQbfmlzZWjswfYmnKN7QKTohFOeRn8Jtm6R5GGw:canvas-lms';
+        $body = ['guid' => $guid, 'name' => 'Packback Engineering'];
+        $toolPlatform = new ToolPlatform($body);
+
+        $this->assertEquals($guid, $toolPlatform->guid());
+    }
+
+    public function test_name_method_returns_name_from_body()
+    {
+        $name = 'Packback Engineering';
+        $body = ['name' => $name, 'version' => 'cloud'];
+        $toolPlatform = new ToolPlatform($body);
+
+        $this->assertEquals($name, $toolPlatform->name());
+    }
+
+    public function test_version_method_returns_version_from_body()
+    {
+        $version = 'cloud';
+        $body = ['version' => $version, 'product_family_code' => 'canvas'];
+        $toolPlatform = new ToolPlatform($body);
+
+        $this->assertEquals($version, $toolPlatform->version());
+    }
+
+    public function test_product_family_code_method_returns_code_from_body()
+    {
+        $productFamilyCode = 'canvas';
+        $body = ['product_family_code' => $productFamilyCode, 'guid' => 'platform-123'];
+        $toolPlatform = new ToolPlatform($body);
+
+        $this->assertEquals($productFamilyCode, $toolPlatform->productFamilyCode());
+    }
+
+    public function test_validation_context_method_returns_validation_context_from_body()
+    {
+        $validationContext = ['context' => 'platform_validation'];
+        $body = ['validation_context' => $validationContext];
+        $toolPlatform = new ToolPlatform($body);
+
+        $this->assertEquals($validationContext, $toolPlatform->validationContext());
+    }
 }

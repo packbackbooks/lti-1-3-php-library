@@ -315,7 +315,7 @@ class MessageFactoryTest extends TestCase
         $launchMessage->shouldReceive('ltiClaim1p1')
             ->andReturn($lti1p1Claim);
 
-        $lti1p1Claim->shouldReceive('getOauthConsumerKeySign')
+        $lti1p1Claim->shouldReceive('oauthConsumerKeySign')
             ->andReturn(null);
 
         $migrationDb->shouldReceive('shouldMigrate')
@@ -348,7 +348,7 @@ class MessageFactoryTest extends TestCase
         $launchMessage->shouldReceive('ltiClaim1p1')
             ->andReturn($lti1p1Claim);
 
-        $lti1p1Claim->shouldReceive('getOauthConsumerKeySign')
+        $lti1p1Claim->shouldReceive('oauthConsumerKeySign')
             ->andReturn('test-signature');
 
         $migrationDb->shouldReceive('shouldMigrate')
