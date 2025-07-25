@@ -39,9 +39,4 @@ class Lis extends Claim
     {
         return $this->getBody()['course_offering_sourcedid'] ?? null;
     }
-
-    public function validationContext(): ?array
-    {
-        return $this->getBody()['validation_context'] ?? null;
-    }
 }

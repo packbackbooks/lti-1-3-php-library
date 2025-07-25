@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\Claims;
 
+use Packback\Lti1p3\Claims\Concerns\HasErrors;
 use Packback\Lti1p3\Claims\Concerns\HasId;
 
 /**
@@ -12,12 +13,17 @@ use Packback\Lti1p3\Claims\Concerns\HasId;
  * Example payload:
  * {
  *     "https://purl.imsglobal.org/spec/lti/claim/asset": {
- *         "id": "d5063b10-eb2d-40c2-bc5c-a4a1d8c49d10"
+ *         "id": "c61dcc8e-6b5f-45ec-8205-bbf39f3d8b49",
+ *         "validation_context": null,
+ *         "errors": {
+ *             "errors": {}
+ *         }
  *     }
  * }
  */
 class Asset extends Claim
 {
+    use HasErrors;
     use HasId;
 
     public static function claimKey(): string

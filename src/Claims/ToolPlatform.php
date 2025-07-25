@@ -51,9 +51,4 @@ class ToolPlatform extends Claim
     {
         return $this->getBody()['product_family_code'] ?? null;
     }
-
-    public function validationContext(): ?array
-    {
-        return $this->getBody()['validation_context'] ?? null;
-    }
 }

@@ -55,4 +55,22 @@ class AssetTest extends TestCase
 
         $this->assertEquals($assetId, $asset->id());
     }
+
+    public function test_errors_method_returns_errors_from_body()
+    {
+        $errors = ['errors' => ['validation_error' => 'Invalid asset']];
+        $body = ['id' => 'asset-123', 'errors' => $errors];
+        $asset = new Asset($body);
+
+        $this->assertEquals($errors, $asset->errors());
+    }
+
+    public function test_validation_context_method_returns_validation_context_from_body()
+    {
+        $validationContext = ['context' => 'asset_validation'];
+        $body = ['id' => 'c61dcc8e-6b5f-45ec-8205-bbf39f3d8b49', 'validation_context' => $validationContext];
+        $asset = new Asset($body);
+
+        $this->assertEquals($validationContext, $asset->validationContext());
+    }
 }
