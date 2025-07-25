@@ -1,11 +1,9 @@
 <?php
 
-namespace Packback\Lti1p3\Concerns;
+namespace Packback\Lti1p3\Helpers;
 
-trait Claimable
+class Claims
 {
-    // abstract public static function requiredClaims(): array;
-
     public static function getClaimFrom(string $claim, array $jwtBody): mixed
     {
         return $jwtBody[$claim];

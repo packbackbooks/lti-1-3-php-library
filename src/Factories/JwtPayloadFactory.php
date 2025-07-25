@@ -11,7 +11,7 @@ use GuzzleHttp\Exception\TransferException;
 use Packback\Lti1p3\Claims\DeploymentId;
 use Packback\Lti1p3\Claims\Roles;
 use Packback\Lti1p3\Claims\Version;
-use Packback\Lti1p3\Concerns\Claimable;
+use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
@@ -31,7 +31,6 @@ use Packback\Lti1p3\ServiceRequest;
 
 abstract class JwtPayloadFactory
 {
-    use Claimable;
     public const ERR_FETCH_PUBLIC_KEY = 'Failed to fetch public key.';
     public const ERR_NO_PUBLIC_KEY = 'Unable to find public key.';
     public const ERR_NO_MATCHING_PUBLIC_KEY = 'Unable to find a public key which matches your JWT.';
@@ -228,7 +227,7 @@ abstract class JwtPayloadFactory
     protected function validateClaims(array $claims, array $body): static
     {
         foreach ($claims as $claim) {
-            if (!static::hasClaimInBody($claim, $body)) {
+            if (!Claims::hasClaimInBody($claim, $body)) {
                 throw new LtiException('Missing required claim: '.$claim);
             }
         }

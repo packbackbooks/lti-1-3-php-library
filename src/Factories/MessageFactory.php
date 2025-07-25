@@ -4,6 +4,7 @@ namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Claims\Lti1p1;
+use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -59,7 +60,7 @@ class MessageFactory extends JwtPayloadFactory
 
     public function getTypeName($jwt): string
     {
-        return static::getClaimFrom(static::getTypeClaim(), $jwt['body']);
+        return Claims::getClaimFrom(static::getTypeClaim(), $jwt['body']);
     }
 
     /**

@@ -6,14 +6,12 @@ use Firebase\JWT\JWT;
 use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Claims\DeploymentId;
 use Packback\Lti1p3\Claims\Version;
-use Packback\Lti1p3\Concerns\Claimable;
+use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 
 abstract class LtiMessage
 {
-    use Claimable;
-
     public function __construct(
         protected ILtiServiceConnector $serviceConnector,
         protected ILtiRegistration $registration,
@@ -44,7 +42,7 @@ abstract class LtiMessage
      */
     public function hasClaim(string $claim): bool
     {
-        return static::hasClaimInBody($claim::claimKey(), $this->body);
+        return Claims::hasClaimInBody($claim::claimKey(), $this->body);
     }
 
     public function deploymentIdClaim(): DeploymentId

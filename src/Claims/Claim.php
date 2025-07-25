@@ -2,13 +2,11 @@
 
 namespace Packback\Lti1p3\Claims;
 
-use Packback\Lti1p3\Concerns\Claimable;
+use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Messages\LtiMessage;
 
 abstract class Claim
 {
-    use Claimable;
-
     // Basic LTI claims
     public const VERSION = 'https://purl.imsglobal.org/spec/lti/claim/version';
     public const DEPLOYMENT_ID = 'https://purl.imsglobal.org/spec/lti/claim/deployment_id';
@@ -63,7 +61,7 @@ abstract class Claim
 
     public static function create(LtiMessage $message): static
     {
-        return new static(static::getClaimFrom(static::claimKey(), $message->getBody()));
+        return new static(Claims::getClaimFrom(static::claimKey(), $message->getBody()));
     }
 
     public function getBody()

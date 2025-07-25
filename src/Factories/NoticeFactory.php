@@ -3,6 +3,7 @@
 namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\LtiException;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\Messages\Notice;
@@ -37,7 +38,7 @@ class NoticeFactory extends JwtPayloadFactory
 
     public function getTypeName($jwt): string
     {
-        return static::getClaimFrom(static::getTypeClaim(), $jwt['body'])['type'];
+        return Claims::getClaimFrom(static::getTypeClaim(), $jwt['body'])['type'];
     }
 
     protected function validateState(array $message): static
