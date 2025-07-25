@@ -22,16 +22,37 @@ use Packback\Lti1p3\MessageValidators\SubmissionReviewMessageValidator;
 
 class LtiMessageLaunch
 {
+    #[\Deprecated(message: 'use Packback\Lti1p3\LtiConstants::MESSAGE_TYPE_DEEPLINK instead', since: '6.4')]
     public const TYPE_DEEPLINK = 'LtiDeepLinkingRequest';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW instead', since: '6.4')]
     public const TYPE_SUBMISSIONREVIEW = 'LtiSubmissionReviewRequest';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\LtiConstants::MESSAGE_TYPE_RESOURCE instead', since: '6.4')]
     public const TYPE_RESOURCELINK = 'LtiResourceLinkRequest';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_FETCH_PUBLIC_KEY instead', since: '6.4')]
     public const ERR_FETCH_PUBLIC_KEY = 'Failed to fetch public key.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_NO_PUBLIC_KEY instead', since: '6.4')]
     public const ERR_NO_PUBLIC_KEY = 'Unable to find public key.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_NO_MATCHING_PUBLIC_KEY instead', since: '6.4')]
     public const ERR_NO_MATCHING_PUBLIC_KEY = 'Unable to find a public key which matches your JWT.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_STATE_NOT_FOUND instead', since: '6.4')]
     public const ERR_STATE_NOT_FOUND = 'Please make sure you have cookies and cross-site tracking enabled in the privacy and security settings of your browser.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_MISSING_ID_TOKEN instead', since: '6.4')]
     public const ERR_MISSING_ID_TOKEN = 'Missing id_token.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_INVALID_ID_TOKEN instead', since: '6.4')]
     public const ERR_INVALID_ID_TOKEN = 'Invalid id_token, JWT must contain 3 parts.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\MessageFactory::ERR_MISSING_NONCE instead', since: '6.4')]
     public const ERR_MISSING_NONCE = 'Missing Nonce.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\MessageFactory::ERR_INVALID_NONCE instead', since: '6.4')]
     public const ERR_INVALID_NONCE = 'Invalid Nonce.';
 
     /**
@@ -39,18 +60,43 @@ class LtiMessageLaunch
      * and clientId. Do not change those substrings without changing how the
      * error message is built.
      */
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_MISSING_REGISTRATION instead', since: '6.4')]
     public const ERR_MISSING_REGISTRATION = 'LTI 1.3 Registration not found for Issuer :issuerUrl and Client ID :clientId. Please make sure the LMS has provided the right information, and that the LMS has been registered correctly in the tool.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_CLIENT_NOT_REGISTERED instead', since: '6.4')]
     public const ERR_CLIENT_NOT_REGISTERED = 'Client id not registered for this issuer.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_NO_KID instead', since: '6.4')]
     public const ERR_NO_KID = 'No KID specified in the JWT Header.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_INVALID_SIGNATURE instead', since: '6.4')]
     public const ERR_INVALID_SIGNATURE = 'Invalid signature on id_token';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_MISSING_DEPLOYEMENT_ID instead', since: '6.4')]
     public const ERR_MISSING_DEPLOYEMENT_ID = 'No deployment ID was specified';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_NO_DEPLOYMENT instead', since: '6.4')]
     public const ERR_NO_DEPLOYMENT = 'Unable to find deployment.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_INVALID_MESSAGE_TYPE instead', since: '6.4')]
     public const ERR_INVALID_MESSAGE_TYPE = 'Invalid message type';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_UNRECOGNIZED_MESSAGE_TYPE instead', since: '6.4')]
     public const ERR_UNRECOGNIZED_MESSAGE_TYPE = 'Unrecognized message type.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_INVALID_MESSAGE instead', since: '6.4')]
     public const ERR_INVALID_MESSAGE = 'Message validation failed.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_INVALID_ALG instead', since: '6.4')]
     public const ERR_INVALID_ALG = 'Invalid alg was specified in the JWT header.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\JwtPayloadFactory::ERR_MISMATCHED_ALG_KEY instead', since: '6.4')]
     public const ERR_MISMATCHED_ALG_KEY = 'The alg specified in the JWT header is incompatible with the JWK key type.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\MessageFactory::ERR_OAUTH_KEY_SIGN_NOT_VERIFIED instead', since: '6.4')]
     public const ERR_OAUTH_KEY_SIGN_NOT_VERIFIED = 'Unable to upgrade from LTI 1.1 to 1.3. No OAuth Consumer Key matched this signature.';
+
+    #[\Deprecated(message: 'use Packback\Lti1p3\Factories\MessageFactory::ERR_OAUTH_KEY_SIGN_MISSING instead', since: '6.4')]
     public const ERR_OAUTH_KEY_SIGN_MISSING = 'Unable to upgrade from LTI 1.1 to 1.3. The oauth_consumer_key_sign was not provided.';
 
     // See https://www.imsglobal.org/spec/security/v1p1#approved-jwt-signing-algorithms.
