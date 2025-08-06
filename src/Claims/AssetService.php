@@ -43,9 +43,4 @@ class AssetService extends Claim
     {
         return $this->getBody()['assets'];
     }
-
-    public function scope(): array
-    {
-        return $this->getBody()['scope'];
-    }
 }
