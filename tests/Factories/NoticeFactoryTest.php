@@ -97,21 +97,10 @@ class NoticeFactoryTest extends TestCase
         $this->assertSame($this->noticeFactory, $result);
     }
 
-    public function test_validate_nonce_throws_exception_for_missing_nonce()
+    public function test_validate_nonce_returns_self()
     {
         $jwt = ['body' => []];
-        $message = ['state' => 'test-state'];
-
-        $this->expectException(LtiException::class);
-        $this->expectExceptionMessage(NoticeFactory::ERR_MISSING_NONCE);
-
-        $this->invokeMethod($this->noticeFactory, 'validateNonce', [$jwt, $message]);
-    }
-
-    public function test_validate_nonce_returns_self_with_valid_nonce()
-    {
-        $jwt = ['body' => ['nonce' => 'test-nonce']];
-        $message = ['state' => 'test-state'];
+        $message = [];
 
         $result = $this->invokeMethod($this->noticeFactory, 'validateNonce', [$jwt, $message]);
 

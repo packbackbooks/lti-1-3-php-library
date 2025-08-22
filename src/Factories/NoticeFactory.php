@@ -4,8 +4,6 @@ namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Helpers\Claims;
-use Packback\Lti1p3\LtiException;
-use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\Messages\Notice;
 
 class NoticeFactory extends JwtPayloadFactory
@@ -43,31 +41,13 @@ class NoticeFactory extends JwtPayloadFactory
 
     protected function validateState(array $message): static
     {
-        /**
-         * @todo Do we even need to do this?
-         */
-        // Check State for OIDC.
-        // if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$message['state']) !== $message['state']) {
-        //     // Error if state doesn't match
-        //     throw new LtiException(static::ERR_STATE_NOT_FOUND);
-        // }
-
+        // Notices have no state.
         return $this;
     }
 
     protected function validateNonce(array $jwt, array $message): static
     {
-        if (!isset($jwt['body']['nonce'])) {
-            throw new LtiException(static::ERR_MISSING_NONCE);
-        }
-
-        /**
-         * @todo, how do we do this for async notifications?
-         */
-        // if (isset($this->cache) && !$this->cache->checkNonceIsValid($jwt['body']['nonce'], $message['state'])) {
-        //     throw new LtiException(static::ERR_INVALID_NONCE);
-        // }
-
+        // Notices seem to have a nonce, but no obvious way to validate them.
         return $this;
     }
 }
