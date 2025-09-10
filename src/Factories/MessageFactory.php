@@ -49,6 +49,9 @@ class MessageFactory extends JwtPayloadFactory
         $issuerUrl = $jwt['body']['iss'];
         $registration = $this->db->findRegistrationByIssuer($issuerUrl, $clientId);
 
+        /**
+         * @var LaunchMessage
+         */
         return $this->createMessage($registration, $jwt, $launchId);
     }
 
