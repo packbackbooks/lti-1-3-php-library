@@ -10,6 +10,7 @@ use Packback\Lti1p3\Factories\MessageFactory;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
+use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\Interfaces\IMigrationDatabase;
 use Packback\Lti1p3\LtiConstants;
@@ -382,6 +383,33 @@ class MessageFactoryTest extends TestCase
         $this->expectExceptionMessage(MessageFactory::ERR_NO_DEPLOYMENT);
 
         $this->invokeMethod($this->messageFactory, 'validateDeployment', [$jwt]);
+    }
+
+    public function test_from_cache_returns_launch_message_for_valid_launch_id()
+    {
+        $launchId = 'test-launch-id-123';
+        $launchData = [
+            'iss' => 'https://example.platform.com',
+            'aud' => 'test-client-id',
+            'sub' => 'test-subject',
+            'nonce' => 'test-nonce',
+            Claim::MESSAGE_TYPE => LtiConstants::MESSAGE_TYPE_RESOURCE,
+            DeploymentId::claimKey() => 'test-deployment-id',
+        ];
+
+        $registration = Mockery::mock(ILtiRegistration::class);
+
+        $this->cacheMock->shouldReceive('getLaunchData')
+            ->with($launchId)
+            ->andReturn($launchData);
+
+        $this->databaseMock->shouldReceive('findRegistrationByIssuer')
+            ->with('https://example.platform.com', 'test-client-id')
+            ->andReturn($registration);
+
+        $result = $this->messageFactory->fromCache($launchId);
+
+        $this->assertInstanceOf(LaunchMessage::class, $result);
     }
 
     private function createJwtToken(array $body): string

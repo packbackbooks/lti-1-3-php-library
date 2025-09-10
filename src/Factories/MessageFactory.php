@@ -37,7 +37,12 @@ class MessageFactory extends JwtPayloadFactory
         return Claim::MESSAGE_TYPE;
     }
 
-    public static function fromCache(string $launchId): LaunchMessage
+    protected static function getTokenKey(): string
+    {
+        return 'id_token';
+    }
+
+    public function fromCache(string $launchId): LaunchMessage
     {
         $jwt = ['body' => $this->cache->getLaunchData($launchId)];
         $clientId = $this->getAud($jwt);
@@ -45,11 +50,6 @@ class MessageFactory extends JwtPayloadFactory
         $registration = $this->db->findRegistrationByIssuer($issuerUrl, $clientId);
 
         return $this->createMessage($registration, $jwt, $launchId);
-    }
-
-    protected static function getTokenKey(): string
-    {
-        return 'id_token';
     }
 
     public function create(array $message): LaunchMessage
