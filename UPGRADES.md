@@ -1,3 +1,114 @@
+## 6.3.x to 6.4: Platform Notification Service and Asset Processor
+
+### Summary of Changes
+
+- **NEW**: Support for Platform Notification Service and Notices
+- **NEW**: Message types for Asset Processor, EULA, and Report Review requests
+- **NEW**: `MessageFactory` for creating structured message objects from JWT payloads
+- **NEW**: Individual claim classes in `Packback\Lti1p3\Claims\*` namespace with type-safe access methods
+- **NEW**: Message classes in `Packback\Lti1p3\Messages\*` namespace for different LTI message types
+- **NEW**: Support for Platform Notification Service (PNS) messages and Asset Processor functionality
+- **DEPRECATED**: `LtiMessageLaunch` class (will be removed in v7.0)
+- **DEPRECATED**: Constants in `LtiMessageLaunch` and `LtiConstants` (moved to `Claim` class and factories)
+- **CHANGED**: `IMigrationDatabase` interface methods now accept both old and new message object types
+
+### Migration Recommendations
+
+1. **Migrate from LtiMessageLaunch to MessageFactory:** Replace `LtiMessageLaunch` usage with the new `MessageFactory` pattern for creating structured message objects
+2. **Update constant usage:** Replace deprecated constants from `LtiMessageLaunch` and `LtiConstants` with new structured equivalents in `Claim` class and factories
+3. **Access claims through message objects:** Use message-specific claim methods instead of direct array access to JWT body
+4. **Update migration database implementations:** Ensure `IMigrationDatabase` implementations handle both `LtiMessageLaunch` and new `LaunchMessage` objects
+
+The deprecated constants and `LtiMessageLaunch` will continue to work in version 6.* but will be removed in version 7.0. Plan to migrate away from them before upgrading to version 7.
+
+### NEW FEATURES: Structured Message and Claims handling
+
+Version 6.4 introduces structured message factories and claim classes that replace direct array access patterns.
+
+**Example usage for a Deep Linking Request:**
+
+```php
+use Packback\Lti1p3\Factories\MessageFactory;
+use Packback\Lti1p3\Messages\DeepLinkingRequest;
+use Packback\Lti1p3\Claims\ContextClaim;
+use Packback\Lti1p3\Claims\DeepLinkSettings;
+
+// Use the message Factory to create a message from the request
+$messageFactory = new MessageFactory($db, $serviceConnector, $cache, $cookie);
+/** @var DeepLinkingRequest $message */
+$message = $messageFactory->create($request->all());
+
+// Access claims through the message object
+$messageType = $message::messageType(); // LtiDeepLinkingRequest
+/** @var ContextClaim */
+$context = $message->contextClaim(); // {"id":"8893483","label":"Biology 102","title":"Bio Adventures"}
+
+// Access structured message-specific data
+if ($message instanceof DeepLinkingRequest) {
+    /** @var DeepLinkSettings $settings */
+    $settings = $message->deepLinkSettingsClaim();
+    if ($settings->canAcceptType('file')) {
+        // Do something
+    }
+}
+```
+
+### NEW FEATURES: Support for new Platform Notification Service (PNS) and Asset Processor
+
+- New message validators for Asset Processor messages, EULA requests, and Report Review requests
+- Added support for Platform Notification Service (PNS) messages
+- Enhanced deep linking support with structured settings and content items
+- New payload classes for Asset Processor and Report functionality
+
+### HIGH LIKELIHOOD OF IMPACT: Deprecation of constants in `LtiMessageLaunch` and `LtiConstants`
+
+The `LtiMessageLaunch` has been deprecated in favor of using the new `MessageFactory` to create `LtiMessage` objects.
+
+Many constants have been deprecated in favor of new structured classes. The deprecated constants will be removed in version 7.0:
+
+**LtiMessageLaunch constants:**
+```php
+// Deprecated constants (use new ones instead):
+LtiMessageLaunch::TYPE_DEEPLINK -> LtiConstants::MESSAGE_TYPE_DEEPLINK
+LtiMessageLaunch::TYPE_SUBMISSIONREVIEW -> LtiConstants::MESSAGE_TYPE_SUBMISSIONREVIEW  
+LtiMessageLaunch::TYPE_RESOURCELINK -> LtiConstants::MESSAGE_TYPE_RESOURCE
+
+// Error constants moved to factories:
+LtiMessageLaunch::ERR_FETCH_PUBLIC_KEY -> JwtPayloadFactory::ERR_FETCH_PUBLIC_KEY
+LtiMessageLaunch::ERR_NO_PUBLIC_KEY -> JwtPayloadFactory::ERR_NO_PUBLIC_KEY
+LtiMessageLaunch::ERR_NO_MATCHING_PUBLIC_KEY -> JwtPayloadFactory::ERR_NO_MATCHING_PUBLIC_KEY
+LtiMessageLaunch::ERR_STATE_NOT_FOUND -> JwtPayloadFactory::ERR_STATE_NOT_FOUND
+LtiMessageLaunch::ERR_MISSING_ID_TOKEN -> JwtPayloadFactory::ERR_MISSING_ID_TOKEN
+LtiMessageLaunch::ERR_INVALID_ID_TOKEN -> JwtPayloadFactory::ERR_INVALID_ID_TOKEN
+LtiMessageLaunch::ERR_MISSING_NONCE -> MessageFactory::ERR_MISSING_NONCE
+LtiMessageLaunch::ERR_INVALID_NONCE -> MessageFactory::ERR_INVALID_NONCE
+```
+
+**LtiConstants claim constants:**
+```php
+// All claim constants moved to Claim class:
+LtiConstants::VERSION -> Claim::VERSION
+LtiConstants::DEPLOYMENT_ID -> Claim::DEPLOYMENT_ID
+LtiConstants::ROLES -> Claim::ROLES
+LtiConstants::FOR_USER -> Claim::FOR_USER
+LtiConstants::MESSAGE_TYPE -> Claim::MESSAGE_TYPE
+LtiConstants::TARGET_LINK_URI -> Claim::TARGET_LINK_URI
+LtiConstants::RESOURCE_LINK -> Claim::RESOURCE_LINK
+```
+
+### LOW LIKELIHOOD OF IMPACT: Changes to `IMigrationDatabase` interface
+
+The `IMigrationDatabase` interface methods now accept either `LtiMessageLaunch` or the new `LaunchMessage` objects:
+
+```php
+// Updated method signatures:
+public function findLti1p1Keys($launch): array; // was: LtiMessageLaunch $launch
+public function shouldMigrate($launch): bool; // was: LtiMessageLaunch $launch  
+public function migrateFromLti1p1($launch): ?ILtiDeployment; // was: LtiMessageLaunch $launch
+```
+
+Custom implementations should update to handle both object types.
+
 ## 5.x to 6.0
 
 ### HIGH LIKELIHOOD OF IMPACT: Changes to `LtiMessageLaunch`
