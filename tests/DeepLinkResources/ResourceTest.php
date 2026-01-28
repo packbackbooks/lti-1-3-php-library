@@ -311,11 +311,11 @@ class ResourceTest extends TestCase
         $lineitem->shouldReceive('getScoreMaximum')
             ->twice()->andReturn($expected['lineItem']['scoreMaximum']);
         $lineitem->shouldReceive('getLabel')
-            ->twice()->andReturn($expected['lineItem']['label']);
+            ->times(4)->andReturn($expected['lineItem']['label']);
         $lineitem->shouldReceive('getResourceId')
-            ->twice()->andReturn($expected['lineItem']['resourceId']);
+            ->times(4)->andReturn($expected['lineItem']['resourceId']);
         $lineitem->shouldReceive('getTag')
-            ->twice()->andReturn($expected['lineItem']['tag']);
+            ->times(4)->andReturn($expected['lineItem']['tag']);
 
         $this->resource->setTitle($expected['title']);
         $this->resource->setText($expected['text']);
@@ -336,6 +336,32 @@ class ResourceTest extends TestCase
         $expected['custom'] = ['a_key' => 'a_value'];
         $this->resource->setCustomParams(['a_key' => 'a_value']);
         $result = $this->resource->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_creates_array_with_only_required_lineitem_properties()
+    {
+        $expected = [
+            'type' => LtiConstants::DL_RESOURCE_LINK_TYPE,
+            'lineItem' => [
+                'scoreMaximum' => 80,
+            ],
+        ];
+
+        $lineitem = Mockery::mock(LtiLineitem::class);
+        $lineitem->shouldReceive('getScoreMaximum')
+            ->once()->andReturn($expected['lineItem']['scoreMaximum']);
+        $lineitem->shouldReceive('getLabel')
+            ->once()->andReturn(null);
+        $lineitem->shouldReceive('getResourceId')
+            ->once()->andReturn(null);
+        $lineitem->shouldReceive('getTag')
+            ->once()->andReturn(null);
+
+        $this->resource->setLineItem($lineitem);
+
+        $result = $this->resource->toArray();
+
         $this->assertEquals($expected, $result);
     }
 }
