@@ -129,9 +129,6 @@ class MessageFactory extends JwtPayloadFactory
         return $this;
     }
 
-    /**
-     * @return array<string>
-     */
     protected function requiredClaims(): array
     {
         return [
