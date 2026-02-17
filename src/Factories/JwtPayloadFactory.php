@@ -77,10 +77,6 @@ abstract class JwtPayloadFactory
     abstract public function getTypeName($jwt): string;
     abstract protected function validateState(array $message): static;
     abstract protected function validateNonce(array $jwt, array $message): static;
-
-    /**
-     * @return array<string>
-     */
     abstract protected function requiredClaims(): array;
 
     public static function getMissingRegistrationErrorMsg(string $issuerUrl, ?string $clientId = null): string
