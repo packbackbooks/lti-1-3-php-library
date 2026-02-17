@@ -3,7 +3,10 @@
 namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Claims\DeploymentId;
 use Packback\Lti1p3\Claims\Lti1p1;
+use Packback\Lti1p3\Claims\Roles;
+use Packback\Lti1p3\Claims\Version;
 use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
@@ -124,6 +127,20 @@ class MessageFactory extends JwtPayloadFactory
         }
 
         return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    protected function requiredClaims(): array
+    {
+        return [
+            Version::claimKey(),
+            DeploymentId::claimKey(),
+            Roles::claimKey(),
+            static::getTypeClaim(),
+            'sub',
+        ];
     }
 
     protected function validateDeployment(array $jwt): ?LtiDeployment
