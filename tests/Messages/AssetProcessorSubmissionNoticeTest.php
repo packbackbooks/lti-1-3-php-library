@@ -119,9 +119,9 @@ class AssetProcessorSubmissionNoticeTest extends TestCase
     {
         $context = [
             'id' => '8893483',
-            "label" => "Biology 102",
-            "title" => "Bio Adventures",
-            "type" => ["http://purl.imsglobal.org/vocab/lis/v2/course#CourseSection"],
+            'label' => 'Biology 102',
+            'title' => 'Bio Adventures',
+            'type' => ['http://purl.imsglobal.org/vocab/lis/v2/course#CourseSection'],
         ];
         $body = [Claim::CONTEXT => $context];
         $message = new AssetProcessorSubmissionNotice($this->serviceConnectorMock, $this->registrationMock, $body);

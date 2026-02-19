@@ -23,7 +23,7 @@ class AssetProcessorSubmissionNotice extends Notice
             AssetService::claimKey(),
             Custom::claimKey(),
             Submission::claimKey(),
-            Context::claimkey(),
+            Context::claimKey(),
             'sub',
         ];
     }
