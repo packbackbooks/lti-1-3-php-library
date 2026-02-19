@@ -7,6 +7,7 @@ use Packback\Lti1p3\Claims\Activity;
 use Packback\Lti1p3\Claims\AssetReport;
 use Packback\Lti1p3\Claims\AssetService;
 use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Claims\Context;
 use Packback\Lti1p3\Claims\Custom;
 use Packback\Lti1p3\Claims\Notice;
 use Packback\Lti1p3\Claims\Submission;
@@ -35,6 +36,7 @@ class AssetProcessorSubmissionNoticeTest extends TestCase
             AssetService::claimKey(),
             Custom::claimKey(),
             Submission::claimKey(),
+            Context::claimKey(),
             'sub',
         ];
 
@@ -111,6 +113,23 @@ class AssetProcessorSubmissionNoticeTest extends TestCase
 
         $this->assertInstanceOf(Custom::class, $customClaim);
         $this->assertEquals($custom, $customClaim->getBody());
+    }
+
+    public function test_context_claim_returns_context_instance()
+    {
+        $context = [
+            'id' => '8893483',
+            "label" => "Biology 102",
+            "title" => "Bio Adventures",
+            "type" => ["http://purl.imsglobal.org/vocab/lis/v2/course#CourseSection"],
+        ];
+        $body = [Claim::CONTEXT => $context];
+        $message = new AssetProcessorSubmissionNotice($this->serviceConnectorMock, $this->registrationMock, $body);
+
+        $contextClaim = $message->contextClaim();
+
+        $this->assertInstanceOf(Context::class, $contextClaim);
+        $this->assertEquals($context, $contextClaim->getBody());
     }
 
     public function test_sub_method_returns_notice_type_from_body()
