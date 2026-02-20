@@ -36,8 +36,6 @@ class AssetProcessorSubmissionNoticeTest extends TestCase
             AssetService::claimKey(),
             Custom::claimKey(),
             Submission::claimKey(),
-            Context::claimKey(),
-            'sub',
         ];
 
         $this->assertEquals($expectedClaims, AssetProcessorSubmissionNotice::requiredClaims());
