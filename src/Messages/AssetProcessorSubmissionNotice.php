@@ -23,8 +23,6 @@ class AssetProcessorSubmissionNotice extends Notice
             AssetService::claimKey(),
             Custom::claimKey(),
             Submission::claimKey(),
-            Context::claimKey(),
-            'sub',
         ];
     }
 
@@ -53,6 +51,9 @@ class AssetProcessorSubmissionNotice extends Notice
         return Custom::create($this);
     }
 
+    /**
+     * Note: This is an optional claim
+     */
     public function contextClaim(): Context
     {
         return Context::create($this);
