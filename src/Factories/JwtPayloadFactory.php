@@ -9,7 +9,6 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use GuzzleHttp\Exception\TransferException;
 use Packback\Lti1p3\Claims\DeploymentId;
-use Packback\Lti1p3\Claims\Roles;
 use Packback\Lti1p3\Claims\Version;
 use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -78,6 +77,7 @@ abstract class JwtPayloadFactory
     abstract public function getTypeName($jwt): string;
     abstract protected function validateState(array $message): static;
     abstract protected function validateNonce(array $jwt, array $message): static;
+    abstract protected function requiredClaims(): array;
 
     public static function getMissingRegistrationErrorMsg(string $issuerUrl, ?string $clientId = null): string
     {
@@ -203,21 +203,13 @@ abstract class JwtPayloadFactory
 
     protected function validateRequiredClaims(array $jwt): static
     {
-        $requiredClaims = [
-            Version::claimKey(),
-            DeploymentId::claimKey(),
-            Roles::claimKey(),
-            static::getTypeClaim(),
-            'sub',
-        ];
-
-        $this->validateClaims($requiredClaims, $jwt['body']);
+        $this->validateClaims($this->requiredClaims(), $jwt['body']);
 
         if ($jwt['body'][Version::claimKey()] !== LtiConstants::V1_3) {
             throw new LtiException('Incorrect version, expected 1.3.0');
         }
 
-        if ($jwt['body']['sub'] === '') {
+        if (isset($jwt['body']['sub']) && $jwt['body']['sub'] === '') {
             throw new LtiException('Invalid claim: sub cannot be empty');
         }
 

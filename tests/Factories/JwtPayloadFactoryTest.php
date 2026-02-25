@@ -70,6 +70,15 @@ class JwtPayloadFactoryTest extends TestCase
             {
                 return $this;
             }
+
+            protected function requiredClaims(): array
+            {
+                return [
+                    Version::claimKey(),
+                    DeploymentId::claimKey(),
+                    static::getTypeClaim(),
+                ];
+            }
         };
     }
 
@@ -313,6 +322,24 @@ class JwtPayloadFactoryTest extends TestCase
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage('Incorrect version, expected 1.3.0');
+
+        $this->invokeMethod($this->factoryMock, 'validateRequiredClaims', [$jwt]);
+    }
+
+    public function test_validate_required_claims_passes_on_missing_sub()
+    {
+        $this->expectNotToPerformAssertions();
+
+        $jwtBody = [
+            Version::claimKey() => LtiConstants::V1_3,
+            'iss' => 'https://test.issuer.com',
+            'aud' => 'test-client-id',
+            DeploymentId::claimKey() => 'test-deployment',
+            Roles::claimKey() => ['Instructor'],
+            Claim::MESSAGE_TYPE => LtiConstants::MESSAGE_TYPE_RESOURCE,
+        ];
+
+        $jwt = ['body' => $jwtBody];
 
         $this->invokeMethod($this->factoryMock, 'validateRequiredClaims', [$jwt]);
     }

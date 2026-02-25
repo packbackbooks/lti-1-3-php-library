@@ -3,6 +3,8 @@
 namespace Packback\Lti1p3\Factories;
 
 use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Claims\DeploymentId;
+use Packback\Lti1p3\Claims\Version;
 use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Messages\Notice;
 
@@ -49,5 +51,14 @@ class NoticeFactory extends JwtPayloadFactory
     {
         // Notices seem to have a nonce, but no obvious way to validate them.
         return $this;
+    }
+
+    protected function requiredClaims(): array
+    {
+        return [
+            Version::claimKey(),
+            DeploymentId::claimKey(),
+            static::getTypeClaim(),
+        ];
     }
 }

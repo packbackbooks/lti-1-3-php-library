@@ -5,6 +5,7 @@ namespace Packback\Lti1p3\Messages;
 use Packback\Lti1p3\Claims\Activity;
 use Packback\Lti1p3\Claims\AssetReport;
 use Packback\Lti1p3\Claims\AssetService;
+use Packback\Lti1p3\Claims\Context;
 use Packback\Lti1p3\Claims\Custom;
 use Packback\Lti1p3\Claims\Notice as NoticeClaim;
 use Packback\Lti1p3\Claims\Submission;
@@ -48,5 +49,13 @@ class AssetProcessorSubmissionNotice extends Notice
     public function customClaim(): Custom
     {
         return Custom::create($this);
+    }
+
+    /**
+     * Note: This is an optional claim
+     */
+    public function contextClaim(): Context
+    {
+        return Context::create($this);
     }
 }
