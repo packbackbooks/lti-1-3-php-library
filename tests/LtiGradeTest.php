@@ -207,6 +207,10 @@ class LtiGradeTest extends TestCase
             'userId' => 'UserId',
             'submissionReview' => 'SubmissionReview',
             'https://canvas.instructure.com/lti/submission' => 'CanvasExtension',
+            'submission' => [
+                'startedAt' => '2023-01-15T12:30:45Z',
+                'submittedAt' => '2023-01-15T13:15:22Z',
+            ],
         ];
 
         $grade = new LtiGrade($expected);
@@ -226,6 +230,10 @@ class LtiGradeTest extends TestCase
             'userId' => 'UserId',
             'submissionReview' => 'SubmissionReview',
             'https://canvas.instructure.com/lti/submission' => 'CanvasExtension',
+            'submission' => [
+                'startedAt' => '2023-01-15T12:30:45Z',
+                'submittedAt' => '2023-01-15T13:15:22Z',
+            ],
         ];
 
         $grade = new LtiGrade($expected);
@@ -237,4 +245,30 @@ class LtiGradeTest extends TestCase
     {
         $this->assertEquals('[]', (string) $this->grade);
     }
+
+    public function test_it_gets_submission()
+    {
+        $expected = [
+            'startedAt' => '2023-01-15T12:30:45Z',
+            'submittedAt' => '2023-01-15T13:15:22Z',
+        ];
+        $grade = new LtiGrade(['submission' => $expected]);
+
+        $result = $grade->getSubmission();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_sets_submission()
+    {
+        $expected = [
+            'startedAt' => '2023-01-15T12:30:45Z',
+            'submittedAt' => '2023-01-15T13:15:22Z',
+        ];
+
+        $this->grade->setSubmission($expected);
+
+        $this->assertEquals($expected, $this->grade->getSubmission());
+    }
+
 }
