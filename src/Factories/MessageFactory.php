@@ -45,6 +45,19 @@ class MessageFactory extends JwtPayloadFactory
         return 'id_token';
     }
 
+    public function fromCache(string $launchId): LaunchMessage
+    {
+        $jwt = ['body' => $this->cache->getLaunchData($launchId)];
+        $clientId = $this->getAud($jwt);
+        $issuerUrl = $jwt['body']['iss'];
+        $registration = $this->db->findRegistrationByIssuer($issuerUrl, $clientId);
+
+        /**
+         * @var LaunchMessage
+         */
+        return $this->createMessage($registration, $jwt, $launchId);
+    }
+
     public function create(array $message): LaunchMessage
     {
         [$jwt, $registration, $deployment] = $this->validate($message);
