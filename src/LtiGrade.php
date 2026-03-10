@@ -16,6 +16,7 @@ class LtiGrade
     private $user_id;
     private $submission_review;
     private $canvas_extension;
+    private $scoring_user_id;
 
     public function __construct(?array $grade = null)
     {
@@ -28,6 +29,7 @@ class LtiGrade
         $this->user_id = $grade['userId'] ?? null;
         $this->submission_review = $grade['submissionReview'] ?? null;
         $this->canvas_extension = $grade['https://canvas.instructure.com/lti/submission'] ?? null;
+        $this->scoring_user_id = $grade['scoringUserId'] ?? null;
     }
 
     /**
@@ -50,6 +52,7 @@ class LtiGrade
             'userId' => $this->user_id,
             'submissionReview' => $this->submission_review,
             'https://canvas.instructure.com/lti/submission' => $this->canvas_extension,
+            'scoringUserId' => $this->scoring_user_id,
         ];
     }
 
@@ -166,6 +169,18 @@ class LtiGrade
     public function setCanvasExtension($value): self
     {
         $this->canvas_extension = $value;
+
+        return $this;
+    }
+
+    public function getScoringUserId()
+    {
+        return $this->scoring_user_id;
+    }
+
+    public function setScoringUserId($value)
+    {
+        $this->scoring_user_id = $value;
 
         return $this;
     }
