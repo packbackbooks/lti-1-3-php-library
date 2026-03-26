@@ -17,7 +17,6 @@ class Resource
     private ?Icon $icon = null;
     private ?Icon $thumbnail = null;
     private array $custom_params = [];
-    private string $target = 'iframe';
     private ?Iframe $iframe = null;
     private ?Window $window = null;
     private ?DateTimeInterval $availability_interval = null;
@@ -50,9 +49,9 @@ class Resource
         if (isset($this->line_item)) {
             $resource['lineItem'] = [
                 'scoreMaximum' => $this->line_item->getScoreMaximum(),
-                'label' => $this->line_item->getLabel(),
-                'resourceId' => $this->line_item->getResourceId(),
-                'tag' => $this->line_item->getTag(),
+                ...(!is_null($this->line_item->getLabel()) ? ['label' => $this->line_item->getLabel()] : []),
+                ...(!is_null($this->line_item->getResourceId()) ? ['resourceId' => $this->line_item->getResourceId()] : []),
+                ...(!is_null($this->line_item->getTag()) ? ['tag' => $this->line_item->getTag()] : []),
             ];
         }
 

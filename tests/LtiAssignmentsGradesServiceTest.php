@@ -241,7 +241,7 @@ class LtiAssignmentsGradesServiceTest extends TestCase
 
         $expected = new LtiLineitem($ltiLineitemData);
 
-        $result = $service->createLineItem(new LtiLineItem);
+        $result = $service->createLineItem(new LtiLineitem);
 
         $this->assertEquals($expected, $result);
     }

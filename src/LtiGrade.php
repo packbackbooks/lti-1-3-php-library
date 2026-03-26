@@ -17,6 +17,7 @@ class LtiGrade
     private $submission_review;
     private $canvas_extension;
     private $submission;
+    private $scoring_user_id;
 
     public function __construct(?array $grade = null)
     {
@@ -30,6 +31,7 @@ class LtiGrade
         $this->submission_review = $grade['submissionReview'] ?? null;
         $this->canvas_extension = $grade['https://canvas.instructure.com/lti/submission'] ?? null;
         $this->submission = $grade['submission'] ?? null;
+        $this->scoring_user_id = $grade['scoringUserId'] ?? null;
     }
 
     public function getArray(): array
@@ -45,15 +47,8 @@ class LtiGrade
             'submissionReview' => $this->submission_review,
             'https://canvas.instructure.com/lti/submission' => $this->canvas_extension,
             'submission' => $this->submission,
+            'scoringUserId' => $this->scoring_user_id,
         ];
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(): self
-    {
-        return new LtiGrade;
     }
 
     public function getScoreGiven()
@@ -189,6 +184,18 @@ class LtiGrade
     public function setSubmission($value): self
     {
         $this->submission = $value;
+
+        return $this;
+    }
+
+    public function getScoringUserId()
+    {
+        return $this->scoring_user_id;
+    }
+
+    public function setScoringUserId($value): self
+    {
+        $this->scoring_user_id = $value;
 
         return $this;
     }

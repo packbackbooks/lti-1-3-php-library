@@ -8,6 +8,45 @@
                 "const": "only_if_meta",
                 "property": "only_if_meta"
             }
+        },
+        "ordered_class_elements": {
+            "order": [
+                "use_trait",
+                "public",
+                "protected",
+                "private",
+                "case",
+                "constant",
+                "property_public_abstract",
+                "property_protected_abstract",
+                "property_public_static",
+                "property_protected_static",
+                "property_public_readonly",
+                "property_protected_readonly",
+                "property_private_static",
+                "property_private_readonly",
+                "private_public",
+                "private_protected",
+                "private_private",
+                "property",
+                "construct",
+                "destruct",
+                "magic",
+                "phpunit",
+                "method_public_abstract_static",
+                "method_protected_abstract_static",
+                "method_private_abstract_static",
+                "method_public_abstract",
+                "method_protected_abstract",
+                "method_private_abstract",
+                "method_public_static",
+                "method_protected_static",
+                "method_private_static",
+                "method_public",
+                "method_protected",
+                "method_private",
+                "method"
+            ]
         }
     }
 }

@@ -9,7 +9,6 @@ use Packback\Lti1p3\LtiException;
 class DateTimeInterval
 {
     use Arrayable;
-    public const ERROR_NO_START_OR_END = 'Either a start or end time must be specified.';
     public const ERROR_START_GT_END = 'The start time cannot be greater than end time.';
 
     public function __construct(
@@ -26,15 +25,11 @@ class DateTimeInterval
 
     public function getArray(): array
     {
-        if (!isset($this->start) && !isset($this->end)) {
-            throw new LtiException(self::ERROR_NO_START_OR_END);
-        }
-
         $this->validateStartAndEnd();
 
         return [
-            'startDateTime' => $this->start?->format(DateTime::ATOM),
-            'endDateTime' => $this->end?->format(DateTime::ATOM),
+            'startDateTime' => $this->start?->format(DateTime::ATOM) ?? null,
+            'endDateTime' => $this->end?->format(DateTime::ATOM) ?? null,
         ];
     }
 

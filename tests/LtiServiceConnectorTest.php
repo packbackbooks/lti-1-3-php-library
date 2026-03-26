@@ -52,7 +52,6 @@ class LtiServiceConnectorTest extends TestCase
     private $token;
     private $scopes;
     private $streamInterface;
-
     protected function setUp(): void
     {
         $this->registration = Mockery::mock(ILtiRegistration::class);

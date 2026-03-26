@@ -9,6 +9,34 @@ class LtiAssignmentsGradesService extends LtiAbstractService
     public const CONTENTTYPE_LINEITEMCONTAINER = 'application/vnd.ims.lis.v2.lineitemcontainer+json';
     public const CONTENTTYPE_RESULTCONTAINER = 'application/vnd.ims.lis.v2.resultcontainer+json';
 
+    public static function appendLineItemPath(LtiLineitem $lineItem, string $suffix): string
+    {
+        $url = $lineItem->getId();
+
+        $path = implode('', [
+            parse_url($url, PHP_URL_HOST),
+            parse_url($url, PHP_URL_PORT) ? ':'.parse_url($url, PHP_URL_PORT) : '',
+            parse_url($url, PHP_URL_PATH),
+        ]);
+
+        return str_replace($path, $path.$suffix, $url);
+    }
+
+    public static function appendQueryParams(string $url, array $params): string
+    {
+        $existingQueryString = parse_url($url, PHP_URL_QUERY);
+        if ($existingQueryString) {
+            parse_str($existingQueryString, $existingQueryParams);
+            $queryString = http_build_query(array_merge($existingQueryParams, $params));
+
+            return str_replace($existingQueryString, $queryString, $url);
+        } else {
+            $queryString = http_build_query($params);
+
+            return $url.'?'.$queryString;
+        }
+    }
+
     public function getScope(): array
     {
         return $this->getServiceData()['scope'];
@@ -194,33 +222,5 @@ class LtiAssignmentsGradesService extends LtiAbstractService
         return $newLineItem->getTag() == ($lineitem['tag'] ?? null) &&
             $newLineItem->getResourceId() == ($lineitem['resourceId'] ?? null) &&
             $newLineItem->getResourceLinkId() == ($lineitem['resourceLinkId'] ?? null);
-    }
-
-    public static function appendLineItemPath(LtiLineitem $lineItem, string $suffix): string
-    {
-        $url = $lineItem->getId();
-
-        $path = implode('', [
-            parse_url($url, PHP_URL_HOST),
-            parse_url($url, PHP_URL_PORT) ? ':'.parse_url($url, PHP_URL_PORT) : '',
-            parse_url($url, PHP_URL_PATH),
-        ]);
-
-        return str_replace($path, $path.$suffix, $url);
-    }
-
-    public static function appendQueryParams(string $url, array $params): string
-    {
-        $existingQueryString = parse_url($url, PHP_URL_QUERY);
-        if ($existingQueryString) {
-            parse_str($existingQueryString, $existingQueryParams);
-            $queryString = http_build_query(array_merge($existingQueryParams, $params));
-
-            return str_replace($existingQueryString, $queryString, $url);
-        } else {
-            $queryString = http_build_query($params);
-
-            return $url.'?'.$queryString;
-        }
     }
 }

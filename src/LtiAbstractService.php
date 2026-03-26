@@ -14,6 +14,8 @@ abstract class LtiAbstractService
         private array $serviceData
     ) {}
 
+    abstract public function getScope(): array;
+
     public function getServiceData(): array
     {
         return $this->serviceData;
@@ -25,8 +27,6 @@ abstract class LtiAbstractService
 
         return $this;
     }
-
-    abstract public function getScope(): array;
 
     protected function validateScopes(array $scopes): void
     {

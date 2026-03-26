@@ -11,7 +11,6 @@ class Lti1p1Key
 {
     private ?string $key;
     private ?string $secret;
-
     public function __construct(?array $key = null)
     {
         $this->key = $key['key'] ?? null;

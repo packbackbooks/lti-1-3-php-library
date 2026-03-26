@@ -10,7 +10,6 @@ class ServiceRequestTest extends TestCase
     private $url = 'https://example.com';
     private $type = ServiceRequest::TYPE_AUTH;
     private $request;
-
     protected function setUp(): void
     {
         $this->request = new ServiceRequest($this->method, $this->url, $this->type);

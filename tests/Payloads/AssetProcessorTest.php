@@ -1,0 +1,257 @@
+<?php
+
+namespace Tests\Payloads;
+
+use Packback\Lti1p3\Payloads\AssetProcessor;
+use Tests\TestCase;
+
+class AssetProcessorTest extends TestCase
+{
+    private AssetProcessor $assetProcessor;
+    protected function setUp(): void
+    {
+        $this->assetProcessor = new AssetProcessor;
+    }
+
+    public function test_it_creates_a_new_instance()
+    {
+        $assetProcessor = AssetProcessor::new();
+        $this->assertInstanceOf(AssetProcessor::class, $assetProcessor);
+    }
+
+    public function test_it_gets_title()
+    {
+        $result = $this->assetProcessor->getTitle();
+        $this->assertNull($result);
+    }
+
+    public function test_it_sets_title()
+    {
+        $expected = 'Test Asset Processor Title';
+        $result = $this->assetProcessor->setTitle($expected);
+
+        $this->assertSame($this->assetProcessor, $result);
+        $this->assertEquals($expected, $this->assetProcessor->getTitle());
+    }
+
+    public function test_it_gets_text()
+    {
+        $result = $this->assetProcessor->getText();
+        $this->assertNull($result);
+    }
+
+    public function test_it_sets_text()
+    {
+        $expected = 'Test Asset Processor Description';
+        $result = $this->assetProcessor->setText($expected);
+
+        $this->assertSame($this->assetProcessor, $result);
+        $this->assertEquals($expected, $this->assetProcessor->getText());
+    }
+
+    public function test_it_gets_url()
+    {
+        $result = $this->assetProcessor->getUrl();
+        $this->assertNull($result);
+    }
+
+    public function test_it_sets_url()
+    {
+        $expected = 'https://example.com/asset-processor';
+        $result = $this->assetProcessor->setUrl($expected);
+
+        $this->assertSame($this->assetProcessor, $result);
+        $this->assertEquals($expected, $this->assetProcessor->getUrl());
+    }
+
+    public function test_it_gets_report()
+    {
+        $result = $this->assetProcessor->getReport();
+        $this->assertNull($result);
+    }
+
+    public function test_it_sets_report()
+    {
+        $expected = [
+            'status' => 'success',
+            'message' => 'Asset processed successfully',
+        ];
+        $result = $this->assetProcessor->setReport($expected);
+
+        $this->assertSame($this->assetProcessor, $result);
+        $this->assertEquals($expected, $this->assetProcessor->getReport());
+    }
+
+    public function test_it_gets_custom()
+    {
+        $result = $this->assetProcessor->getCustom();
+        $this->assertNull($result);
+    }
+
+    public function test_it_sets_custom()
+    {
+        $expected = [
+            'custom_param1' => 'value1',
+            'custom_param2' => 'value2',
+        ];
+        $result = $this->assetProcessor->setCustom($expected);
+
+        $this->assertSame($this->assetProcessor, $result);
+        $this->assertEquals($expected, $this->assetProcessor->getCustom());
+    }
+
+    public function test_it_creates_array_with_no_optional_properties()
+    {
+        $expected = [
+            'type' => 'ltiAssetProcessor',
+        ];
+
+        $result = $this->assetProcessor->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_creates_array_with_defined_optional_properties()
+    {
+        $expectedTitle = 'Test Title';
+        $expectedText = 'Test Description';
+        $expectedUrl = 'https://example.com/processor';
+        $expectedReport = ['status' => 'complete'];
+        $expectedCustom = ['param' => 'value'];
+
+        $this->assetProcessor->setTitle($expectedTitle);
+        $this->assetProcessor->setText($expectedText);
+        $this->assetProcessor->setUrl($expectedUrl);
+        $this->assetProcessor->setReport($expectedReport);
+        $this->assetProcessor->setCustom($expectedCustom);
+
+        $expected = [
+            'type' => 'ltiAssetProcessor',
+            'title' => $expectedTitle,
+            'text' => $expectedText,
+            'url' => $expectedUrl,
+            'report' => $expectedReport,
+            'custom' => $expectedCustom,
+        ];
+
+        $result = $this->assetProcessor->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_creates_array_with_mixed_properties()
+    {
+        $expectedTitle = 'Mixed Properties Test';
+        $expectedCustom = ['test' => 'data'];
+
+        $this->assetProcessor->setTitle($expectedTitle);
+        $this->assetProcessor->setCustom($expectedCustom);
+
+        $expected = [
+            'type' => 'ltiAssetProcessor',
+            'title' => $expectedTitle,
+            'custom' => $expectedCustom,
+        ];
+
+        $result = $this->assetProcessor->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_fluent_interface_chaining()
+    {
+        $result = $this->assetProcessor
+            ->setTitle('Chained Title')
+            ->setText('Chained Text')
+            ->setUrl('https://example.com/chained')
+            ->setReport(['chained' => 'report'])
+            ->setCustom(['chained' => 'custom']);
+
+        $this->assertSame($this->assetProcessor, $result);
+        $this->assertEquals('Chained Title', $this->assetProcessor->getTitle());
+        $this->assertEquals('Chained Text', $this->assetProcessor->getText());
+        $this->assertEquals('https://example.com/chained', $this->assetProcessor->getUrl());
+        $this->assertEquals(['chained' => 'report'], $this->assetProcessor->getReport());
+        $this->assertEquals(['chained' => 'custom'], $this->assetProcessor->getCustom());
+    }
+
+    public function test_get_array_returns_all_properties_including_nulls()
+    {
+        $this->assetProcessor->setTitle('Test Title');
+
+        $expected = [
+            'type' => 'ltiAssetProcessor',
+            'title' => 'Test Title',
+            'text' => null,
+            'url' => null,
+            'report' => null,
+            'custom' => null,
+        ];
+
+        $result = $this->assetProcessor->getArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_to_array_filters_out_nulls()
+    {
+        $this->assetProcessor->setTitle('Test Title');
+
+        $expected = [
+            'type' => 'ltiAssetProcessor',
+            'title' => 'Test Title',
+        ];
+
+        $result = $this->assetProcessor->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_empty_arrays_are_preserved_in_to_array()
+    {
+        $this->assetProcessor->setReport([]);
+        $this->assetProcessor->setCustom([]);
+
+        $expected = [
+            'type' => 'ltiAssetProcessor',
+            'report' => [],
+            'custom' => [],
+        ];
+
+        $result = $this->assetProcessor->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_nested_array_structure_in_report()
+    {
+        $complexReport = [
+            'status' => 'success',
+            'details' => [
+                'processed_at' => '2024-01-15T10:30:00Z',
+                'file_size' => 1024,
+                'warnings' => ['minor formatting issue'],
+            ],
+            'metadata' => [
+                'version' => '1.0',
+                'processor' => 'image-optimizer',
+            ],
+        ];
+
+        $this->assetProcessor->setReport($complexReport);
+        $this->assertEquals($complexReport, $this->assetProcessor->getReport());
+
+        $result = $this->assetProcessor->toArray();
+        $this->assertEquals($complexReport, $result['report']);
+    }
+
+    public function test_special_characters_in_text_fields()
+    {
+        $specialTitle = 'Test with émojis 🎉 and spëcial çhars';
+        $specialText = 'Description with "quotes" and \'apostrophes\' & ampersands';
+        $specialUrl = 'https://example.com/path?param=value&other=test#fragment';
+
+        $this->assetProcessor
+            ->setTitle($specialTitle)
+            ->setText($specialText)
+            ->setUrl($specialUrl);
+
+        $this->assertEquals($specialTitle, $this->assetProcessor->getTitle());
+        $this->assertEquals($specialText, $this->assetProcessor->getText());
+        $this->assertEquals($specialUrl, $this->assetProcessor->getUrl());
+    }
+}

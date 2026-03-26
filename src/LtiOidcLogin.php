@@ -29,6 +29,11 @@ class LtiOidcLogin
         return new LtiOidcLogin($db, $cache, $cookie);
     }
 
+    public static function secureRandomString(string $prefix = ''): string
+    {
+        return $prefix.hash('sha256', random_bytes(64));
+    }
+
     /**
      * Calculate the redirect location to return to based on an OIDC third party initiated login request.
      */
@@ -93,10 +98,5 @@ class LtiOidcLogin
         }
 
         return $authParams;
-    }
-
-    public static function secureRandomString(string $prefix = ''): string
-    {
-        return $prefix.hash('sha256', random_bytes(64));
     }
 }

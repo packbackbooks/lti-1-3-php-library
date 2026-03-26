@@ -20,6 +20,14 @@ class LtiGradeSubmissionReview
         $this->custom = $gradeSubmission['custom'] ?? null;
     }
 
+    /**
+     * Static function to allow for method chaining without having to assign to a variable first.
+     */
+    public static function new(): self
+    {
+        return new LtiGradeSubmissionReview;
+    }
+
     public function getArray(): array
     {
         return [
@@ -28,14 +36,6 @@ class LtiGradeSubmissionReview
             'url' => $this->url,
             'custom' => $this->custom,
         ];
-    }
-
-    /**
-     * Static function to allow for method chaining without having to assign to a variable first.
-     */
-    public static function new(): self
-    {
-        return new LtiGradeSubmissionReview;
     }
 
     public function getReviewableStatus()

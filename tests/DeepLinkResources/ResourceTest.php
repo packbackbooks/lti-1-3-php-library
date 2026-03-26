@@ -15,7 +15,6 @@ use Tests\TestCase;
 class ResourceTest extends TestCase
 {
     private Resource $resource;
-
     protected function setUp(): void
     {
         $this->resource = new Resource;
@@ -237,6 +236,43 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $this->resource->getSubmissionInterval());
     }
 
+    public function test_it_creates_array_with_null_date_time_intervals()
+    {
+        $expected = [
+            'type' => LtiConstants::DL_RESOURCE_LINK_TYPE,
+        ];
+
+        $this->resource->setAvailabilityInterval(null);
+        $this->resource->setSubmissionInterval(null);
+
+        $result = $this->resource->toArray();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_creates_array_with_date_time_intervals_having_null_dates()
+    {
+        $availabilityInterval = new DateTimeInterval(date_create(), null);
+        $submissionInterval = new DateTimeInterval(null, date_create());
+
+        $expected = [
+            'type' => LtiConstants::DL_RESOURCE_LINK_TYPE,
+            'available' => [
+                'startDateTime' => $availabilityInterval->getStart()->format(\DateTime::ATOM),
+            ],
+            'submission' => [
+                'endDateTime' => $submissionInterval->getEnd()->format(\DateTime::ATOM),
+            ],
+        ];
+
+        $this->resource->setAvailabilityInterval($availabilityInterval);
+        $this->resource->setSubmissionInterval($submissionInterval);
+
+        $result = $this->resource->toArray();
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function test_it_creates_array_with_defined_optional_properties()
     {
         $icon = Icon::new('https://example.com/image.png', 100, 200);
@@ -275,11 +311,11 @@ class ResourceTest extends TestCase
         $lineitem->shouldReceive('getScoreMaximum')
             ->twice()->andReturn($expected['lineItem']['scoreMaximum']);
         $lineitem->shouldReceive('getLabel')
-            ->twice()->andReturn($expected['lineItem']['label']);
+            ->times(4)->andReturn($expected['lineItem']['label']);
         $lineitem->shouldReceive('getResourceId')
-            ->twice()->andReturn($expected['lineItem']['resourceId']);
+            ->times(4)->andReturn($expected['lineItem']['resourceId']);
         $lineitem->shouldReceive('getTag')
-            ->twice()->andReturn($expected['lineItem']['tag']);
+            ->times(4)->andReturn($expected['lineItem']['tag']);
 
         $this->resource->setTitle($expected['title']);
         $this->resource->setText($expected['text']);
@@ -300,6 +336,32 @@ class ResourceTest extends TestCase
         $expected['custom'] = ['a_key' => 'a_value'];
         $this->resource->setCustomParams(['a_key' => 'a_value']);
         $result = $this->resource->toArray();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_creates_array_with_only_required_lineitem_properties()
+    {
+        $expected = [
+            'type' => LtiConstants::DL_RESOURCE_LINK_TYPE,
+            'lineItem' => [
+                'scoreMaximum' => 80,
+            ],
+        ];
+
+        $lineitem = Mockery::mock(LtiLineitem::class);
+        $lineitem->shouldReceive('getScoreMaximum')
+            ->once()->andReturn($expected['lineItem']['scoreMaximum']);
+        $lineitem->shouldReceive('getLabel')
+            ->once()->andReturn(null);
+        $lineitem->shouldReceive('getResourceId')
+            ->once()->andReturn(null);
+        $lineitem->shouldReceive('getTag')
+            ->once()->andReturn(null);
+
+        $this->resource->setLineItem($lineitem);
+
+        $result = $this->resource->toArray();
+
         $this->assertEquals($expected, $result);
     }
 }

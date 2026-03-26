@@ -195,6 +195,25 @@ class LtiGradeTest extends TestCase
         $this->assertEquals($expected, $this->grade->getCanvasExtension());
     }
 
+    public function test_it_gets_scoring_user_id()
+    {
+        $expected = 'expected';
+        $grade = new LtiGrade(['scoringUserId' => $expected]);
+
+        $result = $grade->getScoringUserId();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_it_sets_scoring_user_id()
+    {
+        $expected = 'expected';
+
+        $this->grade->setScoringUserId($expected);
+
+        $this->assertEquals($expected, $this->grade->getScoringUserId());
+    }
+
     public function test_it_casts_full_object_to_string()
     {
         $expected = [
@@ -211,6 +230,7 @@ class LtiGradeTest extends TestCase
                 'startedAt' => '2023-01-15T12:30:45Z',
                 'submittedAt' => '2023-01-15T13:15:22Z',
             ],
+            'scoringUserId' => 'ScoringUserId',
         ];
 
         $grade = new LtiGrade($expected);
@@ -234,6 +254,7 @@ class LtiGradeTest extends TestCase
                 'startedAt' => '2023-01-15T12:30:45Z',
                 'submittedAt' => '2023-01-15T13:15:22Z',
             ],
+            'scoringUserId' => 'ScoringUserId',
         ];
 
         $grade = new LtiGrade($expected);
