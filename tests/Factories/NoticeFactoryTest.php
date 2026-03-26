@@ -13,6 +13,8 @@ use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
 use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiException;
+use Packback\Lti1p3\Messages\AssetProcessorSubmissionNotice;
+use Packback\Lti1p3\Messages\ContextCopyNotice;
 use Packback\Lti1p3\Messages\HelloWorldNotice;
 use Tests\TestCase;
 
@@ -122,7 +124,7 @@ class NoticeFactoryTest extends TestCase
 
         $message = $this->noticeFactory->createMessage($this->registrationMock, $jwt);
 
-        $this->assertInstanceOf(\Packback\Lti1p3\Messages\ContextCopyNotice::class, $message);
+        $this->assertInstanceOf(ContextCopyNotice::class, $message);
     }
 
     public function test_create_message_returns_asset_processor_submission_notice()
@@ -131,7 +133,7 @@ class NoticeFactoryTest extends TestCase
 
         $message = $this->noticeFactory->createMessage($this->registrationMock, $jwt);
 
-        $this->assertInstanceOf(\Packback\Lti1p3\Messages\AssetProcessorSubmissionNotice::class, $message);
+        $this->assertInstanceOf(AssetProcessorSubmissionNotice::class, $message);
     }
 
     public function test_create_message_throws_exception_for_invalid_notice_type()

@@ -16,6 +16,7 @@ class LtiGrade
     private $user_id;
     private $submission_review;
     private $canvas_extension;
+    private $submission;
     private $scoring_user_id;
 
     public function __construct(?array $grade = null)
@@ -29,6 +30,7 @@ class LtiGrade
         $this->user_id = $grade['userId'] ?? null;
         $this->submission_review = $grade['submissionReview'] ?? null;
         $this->canvas_extension = $grade['https://canvas.instructure.com/lti/submission'] ?? null;
+        $this->submission = $grade['submission'] ?? null;
         $this->scoring_user_id = $grade['scoringUserId'] ?? null;
     }
 
@@ -52,6 +54,7 @@ class LtiGrade
             'userId' => $this->user_id,
             'submissionReview' => $this->submission_review,
             'https://canvas.instructure.com/lti/submission' => $this->canvas_extension,
+            'submission' => $this->submission,
             'scoringUserId' => $this->scoring_user_id,
         ];
     }
@@ -173,12 +176,32 @@ class LtiGrade
         return $this;
     }
 
+    /**
+     * @return array{startedAt?: ?string, submittedAt?: ?string}|null
+     */
+    public function getSubmission()
+    {
+        return $this->submission;
+    }
+
+    /**
+     * @param  array{startedAt?: ?string, submittedAt?: ?string}  $value
+     *
+     * @see https://www.imsglobal.org/spec/lti-ags/v2p0
+     */
+    public function setSubmission($value): self
+    {
+        $this->submission = $value;
+
+        return $this;
+    }
+
     public function getScoringUserId()
     {
         return $this->scoring_user_id;
     }
 
-    public function setScoringUserId($value)
+    public function setScoringUserId($value): self
     {
         $this->scoring_user_id = $value;
 

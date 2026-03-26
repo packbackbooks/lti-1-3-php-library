@@ -2,6 +2,7 @@
 
 namespace Packback\Lti1p3\Interfaces;
 
+use Packback\Lti1p3\Lti1p1Key;
 use Packback\Lti1p3\LtiMessageLaunch;
 use Packback\Lti1p3\Messages\LaunchMessage;
 
@@ -18,7 +19,7 @@ interface IMigrationDatabase extends IDatabase
      * Using the LtiMessageLaunch return an array of matching LTI 1.1 keys
      *
      * @param  LtiMessageLaunch|LaunchMessage  $launch
-     * @return array<\Packback\Lti1p3\Lti1p1Key>
+     * @return array<Lti1p1Key>
      */
     public function findLti1p1Keys($launch): array;
 

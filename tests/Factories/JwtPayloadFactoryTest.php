@@ -2,6 +2,8 @@
 
 namespace Tests\Factories;
 
+use Firebase\JWT\Key;
+use GuzzleHttp\Exception\TransferException;
 use Mockery;
 use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Claims\DeploymentId;
@@ -23,6 +25,7 @@ use Packback\Lti1p3\Messages\HelloWorldNotice;
 use Packback\Lti1p3\Messages\LtiMessage;
 use Packback\Lti1p3\Messages\ReportReviewRequest;
 use Packback\Lti1p3\Messages\ResourceLinkRequest;
+use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
 class JwtPayloadFactoryTest extends TestCase
@@ -429,7 +432,7 @@ class JwtPayloadFactoryTest extends TestCase
             ->andReturn('https://example.com/jwks');
 
         $this->serviceConnectorMock->shouldReceive('makeRequest')
-            ->andThrow(new \GuzzleHttp\Exception\TransferException('Network error'));
+            ->andThrow(new TransferException('Network error'));
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage(JwtPayloadFactory::ERR_NO_PUBLIC_KEY);
@@ -444,7 +447,7 @@ class JwtPayloadFactoryTest extends TestCase
             'body' => ['iss' => 'test-issuer'],
         ];
 
-        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock = Mockery::mock(ResponseInterface::class);
 
         $this->registrationMock->shouldReceive('getKeySetUrl')
             ->andReturn('https://example.com/jwks');
@@ -481,7 +484,7 @@ class JwtPayloadFactoryTest extends TestCase
             ],
         ];
 
-        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock = Mockery::mock(ResponseInterface::class);
 
         $this->registrationMock->shouldReceive('getKeySetUrl')
             ->andReturn('https://example.com/jwks');
@@ -519,7 +522,7 @@ class JwtPayloadFactoryTest extends TestCase
             ],
         ];
 
-        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock = Mockery::mock(ResponseInterface::class);
 
         $this->registrationMock->shouldReceive('getKeySetUrl')
             ->andReturn('https://example.com/jwks');
@@ -533,7 +536,7 @@ class JwtPayloadFactoryTest extends TestCase
 
         $result = $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
 
-        $this->assertInstanceOf(\Firebase\JWT\Key::class, $result);
+        $this->assertInstanceOf(Key::class, $result);
     }
 
     public function test_get_public_key_succeeds_with_matching_kid_and_inferred_alg()
@@ -555,7 +558,7 @@ class JwtPayloadFactoryTest extends TestCase
             ],
         ];
 
-        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock = Mockery::mock(ResponseInterface::class);
 
         $this->registrationMock->shouldReceive('getKeySetUrl')
             ->andReturn('https://example.com/jwks');
@@ -569,7 +572,7 @@ class JwtPayloadFactoryTest extends TestCase
 
         $result = $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
 
-        $this->assertInstanceOf(\Firebase\JWT\Key::class, $result);
+        $this->assertInstanceOf(Key::class, $result);
     }
 
     public function test_get_public_key_with_multiple_keys_finds_correct_one()
@@ -600,7 +603,7 @@ class JwtPayloadFactoryTest extends TestCase
             ],
         ];
 
-        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock = Mockery::mock(ResponseInterface::class);
 
         $this->registrationMock->shouldReceive('getKeySetUrl')
             ->andReturn('https://example.com/jwks');
@@ -614,7 +617,7 @@ class JwtPayloadFactoryTest extends TestCase
 
         $result = $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
 
-        $this->assertInstanceOf(\Firebase\JWT\Key::class, $result);
+        $this->assertInstanceOf(Key::class, $result);
     }
 
     public function test_get_public_key_with_ec_algorithm()
@@ -638,7 +641,7 @@ class JwtPayloadFactoryTest extends TestCase
             ],
         ];
 
-        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock = Mockery::mock(ResponseInterface::class);
 
         $this->registrationMock->shouldReceive('getKeySetUrl')
             ->andReturn('https://example.com/jwks');
@@ -652,7 +655,7 @@ class JwtPayloadFactoryTest extends TestCase
 
         $result = $this->invokeMethod($this->factoryMock, 'getPublicKey', [$this->registrationMock, $jwt]);
 
-        $this->assertInstanceOf(\Firebase\JWT\Key::class, $result);
+        $this->assertInstanceOf(Key::class, $result);
     }
 
     public function test_get_key_algorithm_returns_explicit_alg_from_key()
