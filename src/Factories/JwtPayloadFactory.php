@@ -113,19 +113,19 @@ abstract class JwtPayloadFactory
         return [$jwt, $registration, $deployment];
     }
 
-    public function createMessage(ILtiRegistration $registration, array $jwt): LtiMessage
+    public function createMessage(ILtiRegistration $registration, array $jwt, ?string $launchid = null): LtiMessage
     {
         switch ($this->getTypeName($jwt)) {
             case LtiConstants::MESSAGE_TYPE_DEEPLINK:
-                return new DeepLinkingRequest($this->serviceConnector, $registration, $jwt['body']);
+                return new DeepLinkingRequest($this->serviceConnector, $registration, $jwt['body'], $launchid);
             case LtiConstants::MESSAGE_TYPE_RESOURCE:
-                return new ResourceLinkRequest($this->serviceConnector, $registration, $jwt['body']);
+                return new ResourceLinkRequest($this->serviceConnector, $registration, $jwt['body'], $launchid);
             case LtiConstants::MESSAGE_TYPE_EULA:
-                return new EulaRequest($this->serviceConnector, $registration, $jwt['body']);
+                return new EulaRequest($this->serviceConnector, $registration, $jwt['body'], $launchid);
             case LtiConstants::MESSAGE_TYPE_REPORTREVIEW:
-                return new ReportReviewRequest($this->serviceConnector, $registration, $jwt['body']);
+                return new ReportReviewRequest($this->serviceConnector, $registration, $jwt['body'], $launchid);
             case LtiConstants::MESSAGE_TYPE_ASSETPROCESSORSETTINGS:
-                return new AssetProcessorSettingsRequest($this->serviceConnector, $registration, $jwt['body']);
+                return new AssetProcessorSettingsRequest($this->serviceConnector, $registration, $jwt['body'], $launchid);
             case LtiConstants::NOTICE_TYPE_HELLOWORLD:
                 return new HelloWorldNotice($this->serviceConnector, $registration, $jwt['body']);
             case LtiConstants::NOTICE_TYPE_CONTEXTCOPY:
