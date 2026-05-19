@@ -11,16 +11,7 @@ class RegistrationPayloadTest extends TestCase
 {
     public function test_it_builds_basic_payload()
     {
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
-        );
-
-        $result = $payload->toArray();
+        $result = $this->createPayload()->toArray();
 
         $this->assertEquals('web', $result['application_type']);
         $this->assertEquals(['id_token'], $result['response_types']);
@@ -30,38 +21,21 @@ class RegistrationPayloadTest extends TestCase
         $this->assertEquals('My Tool', $result['client_name']);
         $this->assertEquals('https://tool.example.com/jwks', $result['jwks_uri']);
         $this->assertEquals('private_key_jwt', $result['token_endpoint_auth_method']);
-        $this->assertEquals('', $result['scope']);
+        $this->assertArrayNotHasKey('scope', $result);
     }
 
     public function test_it_filters_null_logo_uri()
     {
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
-        );
-
-        $result = $payload->toArray();
+        $result = $this->createPayload()->toArray();
 
         $this->assertArrayNotHasKey('logo_uri', $result);
     }
 
     public function test_it_includes_logo_uri_when_provided()
     {
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
+        $result = $this->createPayload(
             logoUrl: 'https://tool.example.com/logo.png',
-        );
-
-        $result = $payload->toArray();
+        )->toArray();
 
         $this->assertEquals('https://tool.example.com/logo.png', $result['logo_uri']);
     }
@@ -73,50 +47,25 @@ class RegistrationPayloadTest extends TestCase
             'https://tool.example.com/callback',
         ];
 
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
+        $result = $this->createPayload(
             redirectUris: $redirectUris,
-        );
-
-        $result = $payload->toArray();
+        )->toArray();
 
         $this->assertEquals($redirectUris, $result['redirect_uris']);
     }
 
     public function test_it_joins_scopes()
     {
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
+        $result = $this->createPayload(
             scopes: ['openid', 'profile', 'email'],
-        );
-
-        $result = $payload->toArray();
+        )->toArray();
 
         $this->assertEquals('openid profile email', $result['scope']);
     }
 
     public function test_it_builds_lti_tool_configuration()
     {
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
-        );
-
-        $result = $payload->toArray();
+        $result = $this->createPayload()->toArray();
         $ltiConfig = $result['https://purl.imsglobal.org/spec/lti-tool-configuration'];
 
         $this->assertEquals('tool.example.com', $ltiConfig['domain']);
@@ -130,16 +79,7 @@ class RegistrationPayloadTest extends TestCase
 
     public function test_it_builds_messages_array()
     {
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
-        );
-
-        $result = $payload->toArray();
+        $result = $this->createPayload()->toArray();
         $messages = $result['https://purl.imsglobal.org/spec/lti-tool-configuration']['messages'];
 
         $this->assertCount(2, $messages);
@@ -151,16 +91,7 @@ class RegistrationPayloadTest extends TestCase
 
     public function test_it_uses_empty_object_for_no_custom_parameters()
     {
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
-        );
-
-        $result = $payload->toArray();
+        $result = $this->createPayload()->toArray();
         $ltiConfig = $result['https://purl.imsglobal.org/spec/lti-tool-configuration'];
 
         $json = json_encode($ltiConfig['custom_parameters']);
@@ -171,21 +102,33 @@ class RegistrationPayloadTest extends TestCase
     {
         $customParams = ['key1' => 'value1', 'key2' => 'value2'];
 
-        $payload = new RegistrationPayload(
+        $result = $this->createPayload(
+            customParameters: $customParams,
+        )->toArray();
+        $ltiConfig = $result['https://purl.imsglobal.org/spec/lti-tool-configuration'];
+
+        $this->assertEquals($customParams, $ltiConfig['custom_parameters']);
+        $this->assertEquals($customParams, $ltiConfig['messages'][0]['custom_parameters']);
+        $this->assertEquals($customParams, $ltiConfig['messages'][1]['custom_parameters']);
+    }
+
+    private function createPayload(
+        ?string $logoUrl = null,
+        array $scopes = [],
+        array $redirectUris = [],
+        array $customParameters = [],
+    ): RegistrationPayload {
+        return new RegistrationPayload(
             toolName: 'My Tool',
             toolDescription: 'A test tool',
             domain: 'tool.example.com',
             oidcInitiationUrl: 'https://tool.example.com/oidc',
             targetLinkUri: 'https://tool.example.com/launch',
             jwksUrl: 'https://tool.example.com/jwks',
-            customParameters: $customParams,
+            logoUrl: $logoUrl,
+            scopes: $scopes,
+            redirectUris: $redirectUris,
+            customParameters: $customParameters,
         );
-
-        $result = $payload->toArray();
-        $ltiConfig = $result['https://purl.imsglobal.org/spec/lti-tool-configuration'];
-
-        $this->assertEquals($customParams, $ltiConfig['custom_parameters']);
-        $this->assertEquals($customParams, $ltiConfig['messages'][0]['custom_parameters']);
-        $this->assertEquals($customParams, $ltiConfig['messages'][1]['custom_parameters']);
     }
 }

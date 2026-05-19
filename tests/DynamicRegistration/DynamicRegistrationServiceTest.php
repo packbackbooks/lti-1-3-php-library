@@ -77,22 +77,8 @@ class DynamicRegistrationServiceTest extends TestCase
 
     public function test_it_registers_tool()
     {
-        $config = new OidcConfiguration(
-            issuer: 'https://platform.example.com',
-            authorizationEndpoint: 'https://platform.example.com/auth',
-            tokenEndpoint: 'https://platform.example.com/token',
-            jwksUri: 'https://platform.example.com/jwks',
-            registrationEndpoint: 'https://platform.example.com/register',
-        );
-
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
-        );
+        $config = $this->createTestConfig();
+        $payload = $this->createTestPayload();
 
         $responseBody = json_encode([
             'client_id' => 'new-client-id',
@@ -121,22 +107,8 @@ class DynamicRegistrationServiceTest extends TestCase
 
     public function test_it_registers_tool_with_bearer_token()
     {
-        $config = new OidcConfiguration(
-            issuer: 'https://platform.example.com',
-            authorizationEndpoint: 'https://platform.example.com/auth',
-            tokenEndpoint: 'https://platform.example.com/token',
-            jwksUri: 'https://platform.example.com/jwks',
-            registrationEndpoint: 'https://platform.example.com/register',
-        );
-
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
-        );
+        $config = $this->createTestConfig();
+        $payload = $this->createTestPayload();
 
         $responseBody = json_encode(['client_id' => 'new-client-id']);
 
@@ -155,22 +127,8 @@ class DynamicRegistrationServiceTest extends TestCase
 
     public function test_it_throws_on_register_http_failure()
     {
-        $config = new OidcConfiguration(
-            issuer: 'https://platform.example.com',
-            authorizationEndpoint: 'https://platform.example.com/auth',
-            tokenEndpoint: 'https://platform.example.com/token',
-            jwksUri: 'https://platform.example.com/jwks',
-            registrationEndpoint: 'https://platform.example.com/register',
-        );
-
-        $payload = new RegistrationPayload(
-            toolName: 'My Tool',
-            toolDescription: 'A test tool',
-            domain: 'tool.example.com',
-            oidcInitiationUrl: 'https://tool.example.com/oidc',
-            targetLinkUri: 'https://tool.example.com/launch',
-            jwksUrl: 'https://tool.example.com/jwks',
-        );
+        $config = $this->createTestConfig();
+        $payload = $this->createTestPayload();
 
         $this->client
             ->shouldReceive('post')
@@ -184,5 +142,28 @@ class DynamicRegistrationServiceTest extends TestCase
         $this->expectExceptionMessage('Failed to register tool at https://platform.example.com/register: Server error');
 
         $this->service->register($config, $payload);
+    }
+
+    private function createTestConfig(): OidcConfiguration
+    {
+        return new OidcConfiguration(
+            issuer: 'https://platform.example.com',
+            authorizationEndpoint: 'https://platform.example.com/auth',
+            tokenEndpoint: 'https://platform.example.com/token',
+            jwksUri: 'https://platform.example.com/jwks',
+            registrationEndpoint: 'https://platform.example.com/register',
+        );
+    }
+
+    private function createTestPayload(): RegistrationPayload
+    {
+        return new RegistrationPayload(
+            toolName: 'My Tool',
+            toolDescription: 'A test tool',
+            domain: 'tool.example.com',
+            oidcInitiationUrl: 'https://tool.example.com/oidc',
+            targetLinkUri: 'https://tool.example.com/launch',
+            jwksUrl: 'https://tool.example.com/jwks',
+        );
     }
 }

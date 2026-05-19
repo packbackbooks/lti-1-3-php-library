@@ -6,6 +6,10 @@ namespace Packback\Lti1p3\DynamicRegistration;
 
 class RegistrationPayload
 {
+    private const LTI_TOOL_CONFIG_KEY = 'https://purl.imsglobal.org/spec/lti-tool-configuration';
+    private const MESSAGE_TYPE_RESOURCE_LINK = 'LtiResourceLinkRequest';
+    private const MESSAGE_TYPE_DEEP_LINKING = 'LtiDeepLinkingRequest';
+
     public function __construct(
         private readonly string $toolName,
         private readonly string $toolDescription,
@@ -38,10 +42,8 @@ class RegistrationPayload
                 : [$this->targetLinkUri],
             'client_name' => $this->toolName,
             'jwks_uri' => $this->jwksUrl,
-            'logo_uri' => $this->logoUrl,
             'token_endpoint_auth_method' => 'private_key_jwt',
-            'scope' => implode(' ', $this->scopes),
-            'https://purl.imsglobal.org/spec/lti-tool-configuration' => [
+            self::LTI_TOOL_CONFIG_KEY => [
                 'domain' => $this->domain,
                 'description' => $this->toolDescription,
                 'target_link_uri' => $this->targetLinkUri,
@@ -49,12 +51,12 @@ class RegistrationPayload
                 'claims' => ['iss', 'sub', 'name', 'email', 'given_name', 'family_name'],
                 'messages' => [
                     [
-                        'type' => 'LtiResourceLinkRequest',
+                        'type' => self::MESSAGE_TYPE_RESOURCE_LINK,
                         'target_link_uri' => $this->targetLinkUri,
                         'custom_parameters' => $customParams,
                     ],
                     [
-                        'type' => 'LtiDeepLinkingRequest',
+                        'type' => self::MESSAGE_TYPE_DEEP_LINKING,
                         'target_link_uri' => $this->targetLinkUri,
                         'custom_parameters' => $customParams,
                     ],
@@ -62,6 +64,14 @@ class RegistrationPayload
             ],
         ];
 
-        return array_filter($payload, fn ($value) => $value !== null);
+        if (!empty($this->scopes)) {
+            $payload['scope'] = implode(' ', $this->scopes);
+        }
+
+        if ($this->logoUrl !== null) {
+            $payload['logo_uri'] = $this->logoUrl;
+        }
+
+        return $payload;
     }
 }
