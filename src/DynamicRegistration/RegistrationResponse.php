@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Packback\Lti1p3\DynamicRegistration;
 
+use Packback\Lti1p3\LtiConstants;
 use Packback\Lti1p3\LtiException;
 
 class RegistrationResponse
 {
-    private const LTI_TOOL_CONFIG_KEY = 'https://purl.imsglobal.org/spec/lti-tool-configuration';
-
     public function __construct(
         public readonly string $clientId,
         public readonly ?string $deploymentId = null,
@@ -42,7 +41,7 @@ class RegistrationResponse
             throw new LtiException("Missing required field 'client_id' in registration response");
         }
 
-        $deploymentId = $data[self::LTI_TOOL_CONFIG_KEY]['deployment_id'] ?? null;
+        $deploymentId = $data[LtiConstants::LTI_TOOL_CONFIGURATION]['deployment_id'] ?? null;
 
         return new self(
             clientId: $data['client_id'],

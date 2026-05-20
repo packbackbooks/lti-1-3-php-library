@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Packback\Lti1p3\DynamicRegistration;
 
+use Packback\Lti1p3\Concerns\Arrayable;
+use Packback\Lti1p3\LtiConstants;
+
 class RegistrationPayload
 {
-    private const LTI_TOOL_CONFIG_KEY = 'https://purl.imsglobal.org/spec/lti-tool-configuration';
-    private const MESSAGE_TYPE_RESOURCE_LINK = 'LtiResourceLinkRequest';
-    private const MESSAGE_TYPE_DEEP_LINKING = 'LtiDeepLinkingRequest';
+    use Arrayable;
 
     public function __construct(
         private readonly string $toolName,
@@ -23,16 +24,13 @@ class RegistrationPayload
         private readonly array $customParameters = [],
     ) {}
 
-    /**
-     * Build the registration POST body per the IMS spec.
-     */
-    public function toArray(): array
+    public function getArray(): array
     {
         $customParams = !empty($this->customParameters)
             ? $this->customParameters
             : (object) [];
 
-        $payload = [
+        return [
             'application_type' => 'web',
             'response_types' => ['id_token'],
             'grant_types' => ['implicit', 'client_credentials'],
@@ -43,7 +41,11 @@ class RegistrationPayload
             'client_name' => $this->toolName,
             'jwks_uri' => $this->jwksUrl,
             'token_endpoint_auth_method' => 'private_key_jwt',
-            self::LTI_TOOL_CONFIG_KEY => [
+            'scope' => !empty($this->scopes)
+                ? implode(' ', $this->scopes)
+                : null,
+            'logo_uri' => $this->logoUrl,
+            LtiConstants::LTI_TOOL_CONFIGURATION => [
                 'domain' => $this->domain,
                 'description' => $this->toolDescription,
                 'target_link_uri' => $this->targetLinkUri,
@@ -51,27 +53,17 @@ class RegistrationPayload
                 'claims' => ['iss', 'sub', 'name', 'email', 'given_name', 'family_name'],
                 'messages' => [
                     [
-                        'type' => self::MESSAGE_TYPE_RESOURCE_LINK,
+                        'type' => LtiConstants::MESSAGE_TYPE_RESOURCE,
                         'target_link_uri' => $this->targetLinkUri,
                         'custom_parameters' => $customParams,
                     ],
                     [
-                        'type' => self::MESSAGE_TYPE_DEEP_LINKING,
+                        'type' => LtiConstants::MESSAGE_TYPE_DEEPLINK,
                         'target_link_uri' => $this->targetLinkUri,
                         'custom_parameters' => $customParams,
                     ],
                 ],
             ],
         ];
-
-        if (!empty($this->scopes)) {
-            $payload['scope'] = implode(' ', $this->scopes);
-        }
-
-        if ($this->logoUrl !== null) {
-            $payload['logo_uri'] = $this->logoUrl;
-        }
-
-        return $payload;
     }
 }
