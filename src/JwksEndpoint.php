@@ -29,9 +29,12 @@ class JwksEndpoint
 
     public function getPublicJwks(): array
     {
+        // phpseclib 4 renamed its namespace from phpseclib3 to phpseclib4; support whichever major is installed
+        $rsaClass = class_exists(RSA::class) ? RSA::class : \phpseclib4\Crypt\RSA::class;
+
         $jwks = [];
         foreach ($this->keys as $kid => $private_key) {
-            $key = RSA::load($private_key);
+            $key = $rsaClass::load($private_key);
             $jwk = json_decode($key->getPublicKey()->toString('JWK'), true);
             $jwks[] = array_merge($jwk['keys'][0], [
                 'alg' => 'RS256',
