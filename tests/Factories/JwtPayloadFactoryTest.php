@@ -79,7 +79,7 @@ class JwtPayloadFactoryTest extends TestCase
                 return [
                     Version::claimKey(),
                     DeploymentId::claimKey(),
-                    static::getTypeClaim(),
+                    self::getTypeClaim(),
                 ];
             }
         };
@@ -432,7 +432,7 @@ class JwtPayloadFactoryTest extends TestCase
             ->andReturn('https://example.com/jwks');
 
         $this->serviceConnectorMock->shouldReceive('makeRequest')
-            ->andThrow(new TransferException('Network error'));
+            ->andThrow(Mockery::mock(TransferException::class));
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage(JwtPayloadFactory::ERR_NO_PUBLIC_KEY);
