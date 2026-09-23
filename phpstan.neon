@@ -1,5 +1,10 @@
 parameters:
     level: 5
+    # composer.json allows phpseclib ^3.0 || ^4.0 with no committed composer.lock, so which
+    # major actually gets installed varies by run. The RSA-related ignore rule below only
+    # fires under one of the two majors; suppressing the "ignore never matched" meta-error
+    # keeps that from failing the other.
+    reportUnmatchedIgnoredErrors: false
     paths:
         - src
         - tests
@@ -25,6 +30,6 @@ parameters:
             path: tests/MessageValidators/*
 
         -
-            message: "#^Call to static method load\\(\\) on an unknown class phpseclib[0-9]\\\\Crypt\\\\RSA\\.$#"
+            message: "#^Call to an undefined method phpseclib[0-9]\\\\Crypt\\\\RSA\\:\\:getPublicKey\\(\\)\\.$#"
             path: src/JwksEndpoint.php
 
