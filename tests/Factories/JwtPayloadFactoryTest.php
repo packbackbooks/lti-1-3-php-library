@@ -31,11 +31,8 @@ use Tests\TestCase;
 class JwtPayloadFactoryTest extends TestCase
 {
     private $factoryMock;
-
     private $databaseMock;
-
     private $serviceConnectorMock;
-
     private $registrationMock;
 
     protected function setUp(): void
