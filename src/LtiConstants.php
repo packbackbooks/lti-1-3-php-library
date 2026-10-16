@@ -143,6 +143,9 @@ class LtiConstants
     public const COURSE_SECTION = 'http://purl.imsglobal.org/vocab/lis/v2/course#CourseSection';
     public const COURSE_GROUP = 'http://purl.imsglobal.org/vocab/lis/v2/course#Group';
 
+    // Dynamic Registration
+    public const LTI_TOOL_CONFIGURATION = 'https://purl.imsglobal.org/spec/lti-tool-configuration';
+
     // Message Types
     public const MESSAGE_TYPE_DEEPLINK = 'LtiDeepLinkingRequest';
     public const MESSAGE_TYPE_DEEPLINK_RESPONSE = 'LtiDeepLinkingResponse';
