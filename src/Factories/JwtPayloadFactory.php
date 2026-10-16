@@ -3,7 +3,6 @@
 namespace Packback\Lti1p3\Factories;
 
 use Exception;
-use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -193,8 +192,8 @@ abstract class JwtPayloadFactory
         // Validate JWT signature
         try {
             JWT::decode($message[static::getTokenKey()], $public_key, $headers);
-        } catch (ExpiredException $e) {
-            // Error validating signature.
+        } catch (Exception $e) {
+            // php-jwt reports bad signatures, expired tokens and unusable keys with different exceptions
             throw new LtiException(static::ERR_INVALID_SIGNATURE, previous: $e);
         }
 

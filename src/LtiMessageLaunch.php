@@ -3,7 +3,6 @@
 namespace Packback\Lti1p3;
 
 use Exception;
-use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -443,8 +442,8 @@ class LtiMessageLaunch
         try {
             $headers = new \stdClass;
             JWT::decode($this->request['id_token'], $public_key, $headers);
-        } catch (ExpiredException $e) {
-            // Error validating signature.
+        } catch (Exception $e) {
+            // php-jwt reports bad signatures, expired tokens and unusable keys with different exceptions
             throw new LtiException(static::ERR_INVALID_SIGNATURE, previous: $e);
         }
 
