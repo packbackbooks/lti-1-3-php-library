@@ -335,6 +335,17 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload);
     }
 
+    public function test_iat_in_the_future_is_not_yet_valid()
+    {
+        $payload = $this->payload;
+        $payload['iat'] = Carbon::now()->addHour()->timestamp;
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage(MessageFactory::ERR_TOKEN_NOT_YET_VALID);
+
+        $this->launch($payload);
+    }
+
     public function test_tampered_signature_is_invalid()
     {
         $jwt = $this->buildJWT($this->payload, $this->issuer);
@@ -348,7 +359,7 @@ class Lti13CertificationTest extends TestCase
         $this->launchWithIdToken($tamperedJwt);
     }
 
-    public function test_jwt_signed_with_too_short_rsa_key_is_invalid()
+    public function test_jwt_signed_with_too_short_rsa_key_is_unusable()
     {
         $shortPrivateKey = openssl_pkey_new(['private_key_bits' => 512, 'private_key_type' => OPENSSL_KEYTYPE_RSA]);
         openssl_pkey_export($shortPrivateKey, $shortPrivateKeyPem);
@@ -364,7 +375,7 @@ class Lti13CertificationTest extends TestCase
         $this->cache->cacheNonce($this->payload['nonce'], static::STATE);
 
         $this->expectException(LtiException::class);
-        $this->expectExceptionMessage('Invalid signature on id_token');
+        $this->expectExceptionMessage(MessageFactory::ERR_UNUSABLE_PLATFORM_KEY);
 
         $this->launchWithIdToken($shortKeyJwt);
     }

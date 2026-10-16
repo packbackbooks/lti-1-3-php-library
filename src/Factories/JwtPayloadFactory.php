@@ -2,7 +2,9 @@
 
 namespace Packback\Lti1p3\Factories;
 
+use DomainException;
 use Exception;
+use Firebase\JWT\BeforeValidException;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -46,6 +48,8 @@ abstract class JwtPayloadFactory
     public const ERR_CLIENT_NOT_REGISTERED = 'Client id not registered for this issuer.';
     public const ERR_NO_KID = 'No KID specified in the JWT Header.';
     public const ERR_INVALID_SIGNATURE = 'Invalid signature on id_token';
+    public const ERR_TOKEN_NOT_YET_VALID = 'The id_token is not valid yet; check the clock on the platform and the tool';
+    public const ERR_UNUSABLE_PLATFORM_KEY = 'The platform signing key cannot be used to verify the id_token';
     public const ERR_MISSING_DEPLOYEMENT_ID = 'No deployment ID was specified';
     public const ERR_MISMATCHED_ALG_KEY = 'The alg specified in the JWT header is incompatible with the JWK key type.';
     public const ERR_STATE_NOT_FOUND = 'Please make sure you have cookies and cross-site tracking enabled in the privacy and security settings of your browser.';
@@ -192,8 +196,12 @@ abstract class JwtPayloadFactory
         // Validate JWT signature
         try {
             JWT::decode($message[static::getTokenKey()], $public_key, $headers);
+        } catch (BeforeValidException $e) {
+            throw new LtiException(static::ERR_TOKEN_NOT_YET_VALID, previous: $e);
+        } catch (DomainException $e) {
+            // php-jwt rejects RSA keys under 2048 bits and keys openssl cannot read
+            throw new LtiException(static::ERR_UNUSABLE_PLATFORM_KEY, previous: $e);
         } catch (Exception $e) {
-            // php-jwt reports bad signatures, expired tokens and unusable keys with different exceptions
             throw new LtiException(static::ERR_INVALID_SIGNATURE, previous: $e);
         }
 
