@@ -109,6 +109,20 @@ public function migrateFromLti1p1($launch): ?ILtiDeployment; // was: LtiMessageL
 
 Custom implementations should update to handle both object types.
 
+### MEDIUM LIKELIHOOD OF IMPACT: PHP-JWT 7 rejects RSA keys under 2048 bits
+
+Version 6.4 requires `firebase/php-jwt` 7, which refuses to verify a token signed with an RSA key shorter than 2048 bits. Launches from a platform that signs with a shorter key will fail until the platform rotates to a 2048-bit or longer key.
+
+Every failure to decode the `id_token` throws an `LtiException`, with the original php-jwt exception available from `getPrevious()`. The message says what went wrong:
+
+```php
+JwtPayloadFactory::ERR_UNUSABLE_PLATFORM_KEY // the platform key is too short or cannot be read
+JwtPayloadFactory::ERR_TOKEN_NOT_YET_VALID   // iat or nbf is in the future, usually clock drift
+JwtPayloadFactory::ERR_INVALID_SIGNATURE     // expired, tampered, malformed, or any other failure
+```
+
+Earlier 6.4 releases let a short key, a tampered signature, or a token that was not yet valid escape as a raw php-jwt exception (`DomainException`, `SignatureInvalidException`, or `BeforeValidException`). Code that caught those exceptions directly should catch `LtiException` instead. The deprecated `LtiMessageLaunch` reports all of these as `ERR_INVALID_SIGNATURE`.
+
 ## 5.x to 6.0
 
 ### HIGH LIKELIHOOD OF IMPACT: Changes to `LtiMessageLaunch`

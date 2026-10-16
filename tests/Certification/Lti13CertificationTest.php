@@ -335,6 +335,51 @@ class Lti13CertificationTest extends TestCase
         $this->launch($payload);
     }
 
+    public function test_iat_in_the_future_is_not_yet_valid()
+    {
+        $payload = $this->payload;
+        $payload['iat'] = Carbon::now()->addHour()->timestamp;
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage(MessageFactory::ERR_TOKEN_NOT_YET_VALID);
+
+        $this->launch($payload);
+    }
+
+    public function test_tampered_signature_is_invalid()
+    {
+        $jwt = $this->buildJWT($this->payload, $this->issuer);
+        [$header, $body] = explode('.', $jwt);
+        $tamperedJwt = $header.'.'.$body.'.'.JWT::urlsafeB64Encode('not-the-real-signature');
+        $this->cache->cacheNonce($this->payload['nonce'], static::STATE);
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage('Invalid signature on id_token');
+
+        $this->launchWithIdToken($tamperedJwt);
+    }
+
+    public function test_jwt_signed_with_too_short_rsa_key_is_unusable()
+    {
+        $shortPrivateKey = openssl_pkey_new(['private_key_bits' => 512, 'private_key_type' => OPENSSL_KEYTYPE_RSA]);
+        openssl_pkey_export($shortPrivateKey, $shortPrivateKeyPem);
+        file_put_contents(static::JWKS_FILE, json_encode(JwksEndpoint::new([
+            $this->issuer['kid'] => $shortPrivateKeyPem,
+        ])->getPublicJwks()));
+
+        // php-jwt refuses to sign with a key under 2048 bits, so sign with openssl directly
+        $signingInput = JWT::urlsafeB64Encode(JWT::jsonEncode(['typ' => 'JWT', 'alg' => 'RS256', 'kid' => $this->issuer['kid']]))
+            .'.'.JWT::urlsafeB64Encode(JWT::jsonEncode($this->payload));
+        openssl_sign($signingInput, $signature, $shortPrivateKey, OPENSSL_ALGO_SHA256);
+        $shortKeyJwt = $signingInput.'.'.JWT::urlsafeB64Encode($signature);
+        $this->cache->cacheNonce($this->payload['nonce'], static::STATE);
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage(MessageFactory::ERR_UNUSABLE_PLATFORM_KEY);
+
+        $this->launchWithIdToken($shortKeyJwt);
+    }
+
     public function test_message_type_claim_missing()
     {
         $payload = $this->payload;
@@ -644,12 +689,17 @@ class Lti13CertificationTest extends TestCase
 
     private function launch($payload, ?IDatabase $db = null)
     {
-        $db = $db ?? $this->db;
-
         $jwt = $this->buildJWT($payload, $this->issuer);
         if (isset($payload['nonce'])) {
             $this->cache->cacheNonce($payload['nonce'], static::STATE);
         }
+
+        return $this->launchWithIdToken($jwt, $db);
+    }
+
+    private function launchWithIdToken(string $jwt, ?IDatabase $db = null)
+    {
+        $db = $db ?? $this->db;
 
         $params = [
             'utf8' => '✓',
