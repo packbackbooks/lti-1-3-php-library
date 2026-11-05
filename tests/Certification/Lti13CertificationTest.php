@@ -552,6 +552,26 @@ class Lti13CertificationTest extends TestCase
         $this->launchRejectedBeforeKeyFetch($payload);
     }
 
+    public function test_launch_with_malformed_aud_entry_is_rejected()
+    {
+        $payload = $this->payload;
+        $payload['aud'] = [$this->issuer['client_id'], false];
+
+        $this->expectExceptionMessage(Claims::ERR_INVALID_AUD);
+
+        $this->launchRejectedBeforeKeyFetch($payload);
+    }
+
+    public function test_launch_with_null_azp_is_rejected()
+    {
+        $payload = $this->payload;
+        $payload['azp'] = null;
+
+        $this->expectExceptionMessage(Claims::ERR_AZP_NOT_IN_AUD);
+
+        $this->launchRejectedBeforeKeyFetch($payload);
+    }
+
     public function test_invalid_certification_cases()
     {
         $testCasesDir = static::CERT_DATA_DIR.'invalid';
