@@ -12,8 +12,8 @@ interface ICache
 
     /**
      * Returns true only if the nonce was cached for this state, and removes it
-     * so a captured launch can't be replayed. Make the removal atomic so that
-     * only one of two simultaneous launches with the same nonce succeeds.
+     * so each OIDC login allows one launch. Make the removal atomic so this
+     * holds when two requests arrive together.
      */
     public function checkNonceIsValid(string $nonce, string $state): bool;
 
