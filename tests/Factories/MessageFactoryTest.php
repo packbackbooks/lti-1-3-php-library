@@ -48,7 +48,10 @@ class MessageFactoryTest extends TestCase
 
     public function test_validate_jwt_format_throws_exception_for_missing_jwt()
     {
-        $message = ['no_jwt' => 'value'];
+        $message = ['no_jwt' => 'value', 'state' => 'test-state'];
+
+        $this->cookieMock->shouldReceive('getCookie')
+            ->andReturn($message['state']);
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage(MessageFactory::ERR_MISSING_ID_TOKEN);
@@ -58,7 +61,10 @@ class MessageFactoryTest extends TestCase
 
     public function test_validate_jwt_format_throws_exception_for_invalid_jwt_parts()
     {
-        $message = ['id_token' => 'invalid.jwt'];
+        $message = ['id_token' => 'invalid.jwt', 'state' => 'test-state'];
+
+        $this->cookieMock->shouldReceive('getCookie')
+            ->andReturn($message['state']);
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage(MessageFactory::ERR_INVALID_ID_TOKEN);
@@ -74,7 +80,10 @@ class MessageFactoryTest extends TestCase
             'aud' => 'test-client-id',
         ]);
 
-        $message = ['id_token' => $jwtWithoutNonce];
+        $message = ['id_token' => $jwtWithoutNonce, 'state' => 'test-state'];
+
+        $this->cookieMock->shouldReceive('getCookie')
+            ->andReturn($message['state']);
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage(MessageFactory::ERR_MISSING_NONCE);

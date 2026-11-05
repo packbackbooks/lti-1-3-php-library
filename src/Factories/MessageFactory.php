@@ -107,8 +107,10 @@ class MessageFactory extends JwtPayloadFactory
 
     protected function validateState(array $message): static
     {
+        $state = $message['state'] ?? null;
+
         // Check State for OIDC.
-        if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$message['state']) !== $message['state']) {
+        if (!is_string($state) || $this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$state) !== $state) {
             // Error if state doesn't match
             throw new LtiException(static::ERR_STATE_NOT_FOUND);
         }
