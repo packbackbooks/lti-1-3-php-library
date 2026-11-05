@@ -10,6 +10,11 @@ interface ICache
 
     public function cacheNonce(string $nonce, string $state): void;
 
+    /**
+     * Returns true only if the nonce was cached for this state, and removes it
+     * so a captured launch can't be replayed. Make the removal atomic so that
+     * only one of two simultaneous launches with the same nonce succeeds.
+     */
     public function checkNonceIsValid(string $nonce, string $state): bool;
 
     public function cacheAccessToken(string $key, string $accessToken): void;
