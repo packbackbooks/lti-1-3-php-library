@@ -102,10 +102,7 @@ abstract class JwtPayloadFactory
      */
     public function validate(array $message): array
     {
-        if (isset($message['state'])) {
-            $this->validateState($message);
-        }
-
+        $this->validateState($message);
         $jwt = $this->validateJwtFormat($message);
         $this->validateNonce($jwt, $message);
         $registration = $this->validateRegistration($jwt);
