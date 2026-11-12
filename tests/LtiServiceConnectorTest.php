@@ -89,6 +89,16 @@ class LtiServiceConnectorTest extends TestCase
         $this->connector = new LtiServiceConnector($this->cache, $this->client);
     }
 
+    public static function tokenResponsesWithoutAUsableAccessToken(): array
+    {
+        return [
+            'error object' => [json_encode(['error' => 'invalid_client'])],
+            'scalar JSON' => ['false'],
+            'non-string token' => [json_encode(['access_token' => []])],
+            'empty token' => [json_encode(['access_token' => ''])],
+        ];
+    }
+
     public function test_it_instantiates()
     {
         $this->assertInstanceOf(LtiServiceConnector::class, $this->connector);
@@ -192,11 +202,14 @@ class LtiServiceConnectorTest extends TestCase
         $this->connector->getAccessToken($this->tokenRegistration('https://lms.example.edu/token'), ['scopeKey']);
     }
 
-    public function test_it_throws_when_the_token_response_has_no_access_token()
+    /**
+     * @dataProvider tokenResponsesWithoutAUsableAccessToken
+     */
+    public function test_it_throws_when_the_token_response_has_no_usable_access_token(string $responseBody)
     {
         $this->cache->shouldReceive('getAccessToken')->andReturn();
         $this->client->shouldReceive('request')
-            ->andReturn(new Response(200, [], json_encode(['error' => 'invalid_client'])));
+            ->andReturn(new Response(200, [], $responseBody));
 
         $this->expectException(LtiException::class);
         $this->expectExceptionMessage(

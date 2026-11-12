@@ -126,7 +126,8 @@ class LtiServiceConnector implements ILtiServiceConnector
 
         $tokenData = $this->getResponseBody($response);
 
-        if (!is_array($tokenData) || !isset($tokenData['access_token'])) {
+        $accessToken = $tokenData['access_token'] ?? null;
+        if (!is_string($accessToken) || $accessToken === '') {
             throw new LtiException(sprintf(
                 static::ERR_NO_ACCESS_TOKEN,
                 $response->getStatusCode(),
@@ -136,7 +137,7 @@ class LtiServiceConnector implements ILtiServiceConnector
 
         $this->cacheAccessToken($accessTokenKey, $tokenData);
 
-        return $tokenData['access_token'];
+        return $accessToken;
     }
 
     public function makeRequest(IServiceRequest $request): ResponseInterface
@@ -170,9 +171,9 @@ class LtiServiceConnector implements ILtiServiceConnector
 
     public function getResponseBody(ResponseInterface $response): ?array
     {
-        $responseBody = (string) $response->getBody();
+        $responseBody = json_decode((string) $response->getBody(), true);
 
-        return json_decode($responseBody, true);
+        return is_array($responseBody) ? $responseBody : null;
     }
 
     public function makeServiceRequest(
