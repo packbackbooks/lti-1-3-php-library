@@ -8,6 +8,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use GuzzleHttp\Exception\TransferException;
 use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -579,11 +580,7 @@ class LtiMessageLaunch
 
     private function getAud(): string
     {
-        if (is_array($this->jwt['body']['aud'])) {
-            return $this->jwt['body']['aud'][0];
-        } else {
-            return $this->jwt['body']['aud'];
-        }
+        return Claims::getClientIdFrom($this->jwt['body']);
     }
 
     /**

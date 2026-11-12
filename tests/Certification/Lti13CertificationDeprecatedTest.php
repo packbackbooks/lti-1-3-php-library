@@ -8,6 +8,7 @@ use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
 use Packback\Lti1p3\Claims\Claim;
+use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -485,6 +486,38 @@ class Lti13CertificationDeprecatedTest extends TestCase
         $this->launch($payload);
     }
 
+    public function test_launch_selects_client_id_from_azp()
+    {
+        $payload = $this->payload;
+        $payload['aud'] = ['other-client-id', $this->issuer['client_id']];
+
+        $launch = $this->launch($payload);
+
+        $this->assertInstanceOf(LtiMessageLaunch::class, $launch);
+    }
+
+    public function test_launch_with_unregistered_azp_is_rejected()
+    {
+        $payload = $this->payload;
+        $payload['aud'] = [$this->issuer['client_id'], 'other-client-id'];
+        $payload['azp'] = 'other-client-id';
+
+        $this->expectExceptionMessage(LtiMessageLaunch::ERR_CLIENT_NOT_REGISTERED);
+
+        $this->launchRejectedBeforeKeyFetch($payload);
+    }
+
+    public function test_launch_with_multiple_audiences_requires_azp()
+    {
+        $payload = $this->payload;
+        $payload['aud'] = [$this->issuer['client_id'], 'other-client-id'];
+        unset($payload['azp']);
+
+        $this->expectExceptionMessage(Claims::ERR_MISSING_AZP);
+
+        $this->launchRejectedBeforeKeyFetch($payload);
+    }
+
     public function test_invalid_certification_cases()
     {
         $testCasesDir = static::CERT_DATA_DIR.'invalid';
@@ -617,6 +650,18 @@ class Lti13CertificationDeprecatedTest extends TestCase
         }
         echo PHP_EOL;
         $this->assertEquals($casesCount, $testedCases);
+    }
+
+    private function launchRejectedBeforeKeyFetch(array $payload)
+    {
+        $this->cache->cacheNonce($payload['nonce'], static::STATE);
+        $params = [
+            'id_token' => $this->buildJWT($payload, $this->issuer),
+            'state' => static::STATE,
+        ];
+
+        return LtiMessageLaunch::new($this->db, $this->cache, $this->cookie, $this->serviceConnector)
+            ->initialize($params);
     }
 
     private function launch($payload, ?IDatabase $db = null)

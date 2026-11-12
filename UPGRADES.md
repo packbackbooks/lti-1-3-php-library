@@ -1,3 +1,7 @@
+## 6.5.x to 6.6: Pick the client_id from azp when a token has several audiences
+
+No changes are required for tokens with one audience. Launches, deep linking requests and notices now find the registration from the `azp` claim when it is present, and reject the token when `azp` is not one of the `aud` values. A token whose `aud` lists more than one client_id must include `azp`; previously the first `aud` value was used and `azp` was ignored. `LtiMessage::getAud()` follows the same rule, and the rule is available to applications as `Packback\Lti1p3\Helpers\Claims::getClientIdFrom()`.
+
 ## 6.4.x to 6.5: Cache access tokens for their platform lifetime
 
 No changes are required. A cache passed to `LtiServiceConnector` can now also implement `Packback\Lti1p3\Interfaces\IAccessTokenExpiryCache`. When it does and the platform's token response includes `expires_in`, the connector calls `cacheAccessTokenWithExpiry()` with that value instead of `cacheAccessToken()`, so the cache can keep the token until shortly before it expires. Caches that only implement `ICache` behave as before.

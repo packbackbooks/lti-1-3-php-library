@@ -9,6 +9,7 @@ use Packback\Lti1p3\Claims\Version;
 use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
 use Packback\Lti1p3\Interfaces\ILtiServiceConnector;
+use Packback\Lti1p3\LtiException;
 
 abstract class LtiMessage
 {
@@ -28,13 +29,14 @@ abstract class LtiMessage
         return $this->body;
     }
 
+    /**
+     * The client_id this message was issued to.
+     *
+     * @throws LtiException
+     */
     public function getAud(): string
     {
-        if (is_array($this->body['aud'])) {
-            return $this->body['aud'][0];
-        } else {
-            return $this->body['aud'];
-        }
+        return Claims::getClientIdFrom($this->body);
     }
 
     /**
