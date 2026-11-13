@@ -68,13 +68,31 @@ class TestCache implements ICache
     }
 }
 
+/**
+ * Accepts any nonce it has cached.
+ */
+class NonceOnlyTestCache extends TestCache
+{
+    private array $issuedNonces = [];
+
+    public function cacheNonce(string $nonce, string $state): void
+    {
+        $this->issuedNonces[$nonce] = true;
+    }
+
+    public function checkNonceIsValid(string $nonce, ?string $state): bool
+    {
+        return isset($this->issuedNonces[$nonce]);
+    }
+}
+
 class TestCookie implements ICookie
 {
     private $cookies = [];
 
     public function getCookie(string $name): ?string
     {
-        return $this->cookies[$name];
+        return $this->cookies[$name] ?? null;
     }
 
     public function setCookie(string $name, string $value, $exp = 3600, $options = []): void
@@ -497,6 +515,25 @@ class Lti13CertificationTest extends TestCase
         $this->expectExceptionMessage('Missing required claim: sub');
 
         $this->launch($payload);
+    }
+
+    public function test_launch_without_state_is_rejected()
+    {
+        $cache = new NonceOnlyTestCache;
+        $cache->cacheNonce($this->payload['nonce'], 'other-state');
+        $params = [
+            'id_token' => $this->buildJWT($this->payload, $this->issuer),
+        ];
+        $this->serviceConnector->shouldReceive('makeRequest')
+            ->andReturn(Mockery::mock(Response::class));
+        $this->serviceConnector->shouldReceive('getResponseBody')
+            ->andReturn(json_decode(file_get_contents(static::JWKS_FILE), true));
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage(MessageFactory::ERR_STATE_NOT_FOUND);
+
+        (new MessageFactory($this->db, $this->serviceConnector, $cache, $this->cookie))
+            ->create($params);
     }
 
     public function test_launch_selects_client_id_from_azp()

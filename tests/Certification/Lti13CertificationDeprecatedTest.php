@@ -67,13 +67,31 @@ class DeprecatedTestCache implements ICache
     }
 }
 
+/**
+ * Accepts any nonce it has cached.
+ */
+class DeprecatedNonceOnlyTestCache extends DeprecatedTestCache
+{
+    private array $issuedNonces = [];
+
+    public function cacheNonce(string $nonce, string $state): void
+    {
+        $this->issuedNonces[$nonce] = true;
+    }
+
+    public function checkNonceIsValid(string $nonce, ?string $state): bool
+    {
+        return isset($this->issuedNonces[$nonce]);
+    }
+}
+
 class DeprecatedTestCookie implements ICookie
 {
     private $cookies = [];
 
     public function getCookie(string $name): ?string
     {
-        return $this->cookies[$name];
+        return $this->cookies[$name] ?? null;
     }
 
     public function setCookie(string $name, string $value, $exp = 3600, $options = []): void
@@ -484,6 +502,25 @@ class Lti13CertificationDeprecatedTest extends TestCase
         $this->expectExceptionMessage('Must have a user (sub)');
 
         $this->launch($payload);
+    }
+
+    public function test_launch_without_state_is_rejected()
+    {
+        $cache = new DeprecatedNonceOnlyTestCache;
+        $cache->cacheNonce($this->payload['nonce'], 'other-state');
+        $params = [
+            'id_token' => $this->buildJWT($this->payload, $this->issuer),
+        ];
+        $this->serviceConnector->shouldReceive('makeRequest')
+            ->andReturn(Mockery::mock(Response::class));
+        $this->serviceConnector->shouldReceive('getResponseBody')
+            ->andReturn(json_decode(file_get_contents(static::JWKS_FILE), true));
+
+        $this->expectException(LtiException::class);
+        $this->expectExceptionMessage('Please make sure you have cookies and cross-site tracking enabled in the privacy and security settings of your browser.');
+
+        LtiMessageLaunch::new($this->db, $cache, $this->cookie, $this->serviceConnector)
+            ->initialize($params);
     }
 
     public function test_launch_selects_client_id_from_azp()

@@ -363,8 +363,10 @@ class LtiMessageLaunch
     #[\Deprecated(message: 'use $messageFactory->validateState() instead', since: '6.4')]
     protected function validateState(): self
     {
+        $state = $this->request['state'] ?? null;
+
         // Check State for OIDC.
-        if ($this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$this->request['state']) !== $this->request['state']) {
+        if (!is_string($state) || $this->cookie->getCookie(LtiOidcLogin::COOKIE_PREFIX.$state) !== $state) {
             // Error if state doesn't match
             throw new LtiException(static::ERR_STATE_NOT_FOUND);
         }
