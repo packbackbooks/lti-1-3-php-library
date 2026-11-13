@@ -6,6 +6,7 @@ use Exception;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\TransferStats;
 use Packback\Lti1p3\Interfaces\IAccessTokenExpiryCache;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ILtiRegistration;
@@ -16,6 +17,7 @@ use Psr\Http\Message\ResponseInterface;
 class LtiServiceConnector implements ILtiServiceConnector
 {
     public const NEXT_PAGE_REGEX = '/<([^>]*)>; ?rel="next"/i';
+    public const ERR_NO_ACCESS_TOKEN = 'The platform\'s token endpoint did not return an access token (HTTP %d from %s).';
     private bool $debuggingMode = false;
 
     public function __construct(
@@ -112,15 +114,30 @@ class LtiServiceConnector implements ILtiServiceConnector
             $registration->getAuthTokenUrl(),
             ServiceRequest::TYPE_AUTH
         );
-        $request->setPayload(['form_params' => $authRequest])
-            ->setMaskResponseLogs(true);
+        // Redirects are followed, so the response may come from another URL
+        $finalUrl = $registration->getAuthTokenUrl();
+        $request->setPayload([
+            'form_params' => $authRequest,
+            'on_stats' => function (TransferStats $stats) use (&$finalUrl) {
+                $finalUrl = (string) $stats->getEffectiveUri();
+            },
+        ])->setMaskResponseLogs(true);
         $response = $this->makeRequest($request);
 
         $tokenData = $this->getResponseBody($response);
 
+        $accessToken = $tokenData['access_token'] ?? null;
+        if (!is_string($accessToken) || $accessToken === '') {
+            throw new LtiException(sprintf(
+                static::ERR_NO_ACCESS_TOKEN,
+                $response->getStatusCode(),
+                parse_url($finalUrl, PHP_URL_HOST) ?: 'an unknown host'
+            ));
+        }
+
         $this->cacheAccessToken($accessTokenKey, $tokenData);
 
-        return $tokenData['access_token'];
+        return $accessToken;
     }
 
     public function makeRequest(IServiceRequest $request): ResponseInterface
@@ -154,9 +171,9 @@ class LtiServiceConnector implements ILtiServiceConnector
 
     public function getResponseBody(ResponseInterface $response): ?array
     {
-        $responseBody = (string) $response->getBody();
+        $responseBody = json_decode((string) $response->getBody(), true);
 
-        return json_decode($responseBody, true);
+        return is_array($responseBody) ? $responseBody : null;
     }
 
     public function makeServiceRequest(
