@@ -246,13 +246,12 @@ abstract class JwtPayloadFactory
         return $deployment;
     }
 
+    /**
+     * @throws LtiException
+     */
     protected function getAud(array $jwt): string
     {
-        if (is_array($jwt['body']['aud'])) {
-            return $jwt['body']['aud'][0];
-        } else {
-            return $jwt['body']['aud'];
-        }
+        return Claims::getClientIdFrom($jwt['body']);
     }
 
     /**
