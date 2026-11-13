@@ -45,13 +45,13 @@ class LtiMessageTest extends TestCase
         $this->assertEquals($aud, $message->getAud());
     }
 
-    public function test_get_aud_returns_first_element_when_aud_is_array()
+    public function test_get_aud_returns_azp_when_aud_is_array()
     {
         $audArray = ['client-id-123', 'client-id-456'];
-        $body = ['aud' => $audArray];
+        $body = ['aud' => $audArray, 'azp' => 'client-id-456'];
         $message = $this->createTestMessage($body);
 
-        $this->assertEquals('client-id-123', $message->getAud());
+        $this->assertEquals('client-id-456', $message->getAud());
     }
 
     public function test_has_claim_returns_true_when_claim_exists()

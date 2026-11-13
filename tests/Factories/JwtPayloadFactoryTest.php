@@ -395,9 +395,12 @@ class JwtPayloadFactoryTest extends TestCase
         $this->assertEquals('test-client-id', $aud);
     }
 
-    public function test_get_aud_returns_first_element_when_aud_is_array()
+    public function test_get_aud_returns_azp_when_aud_is_array()
     {
-        $jwt = ['body' => ['aud' => ['test-client-id', 'other-client-id']]];
+        $jwt = ['body' => [
+            'aud' => ['other-client-id', 'test-client-id'],
+            'azp' => 'test-client-id',
+        ]];
 
         $aud = $this->invokeMethod($this->factoryMock, 'getAud', [$jwt]);
 

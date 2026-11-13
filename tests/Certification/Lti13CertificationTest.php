@@ -9,6 +9,7 @@ use GuzzleHttp\Psr7\Response;
 use Mockery;
 use Packback\Lti1p3\Claims\Claim;
 use Packback\Lti1p3\Factories\MessageFactory;
+use Packback\Lti1p3\Helpers\Claims;
 use Packback\Lti1p3\Interfaces\ICache;
 use Packback\Lti1p3\Interfaces\ICookie;
 use Packback\Lti1p3\Interfaces\IDatabase;
@@ -535,6 +536,79 @@ class Lti13CertificationTest extends TestCase
             ->create($params);
     }
 
+    public function test_launch_selects_client_id_from_azp()
+    {
+        $payload = $this->payload;
+        $payload['aud'] = ['other-client-id', $this->issuer['client_id']];
+
+        $launch = $this->launch($payload);
+
+        $this->assertInstanceOf(LaunchMessage::class, $launch);
+    }
+
+    public function test_launch_with_single_audience_array_is_accepted()
+    {
+        $payload = $this->payload;
+        $payload['aud'] = [$this->issuer['client_id']];
+        unset($payload['azp']);
+
+        $launch = $this->launch($payload);
+
+        $this->assertInstanceOf(LaunchMessage::class, $launch);
+    }
+
+    public function test_launch_with_unregistered_azp_is_rejected()
+    {
+        $payload = $this->payload;
+        $payload['aud'] = [$this->issuer['client_id'], 'other-client-id'];
+        $payload['azp'] = 'other-client-id';
+
+        $this->expectExceptionMessage(MessageFactory::ERR_CLIENT_NOT_REGISTERED);
+
+        $this->launchRejectedBeforeKeyFetch($payload);
+    }
+
+    public function test_launch_with_multiple_audiences_requires_azp()
+    {
+        $payload = $this->payload;
+        $payload['aud'] = [$this->issuer['client_id'], 'other-client-id'];
+        unset($payload['azp']);
+
+        $this->expectExceptionMessage(Claims::ERR_MISSING_AZP);
+
+        $this->launchRejectedBeforeKeyFetch($payload);
+    }
+
+    public function test_launch_with_azp_not_in_aud_is_rejected()
+    {
+        $payload = $this->payload;
+        $payload['azp'] = 'other-client-id';
+
+        $this->expectExceptionMessage(Claims::ERR_AZP_NOT_IN_AUD);
+
+        $this->launchRejectedBeforeKeyFetch($payload);
+    }
+
+    public function test_launch_with_malformed_aud_entry_is_rejected()
+    {
+        $payload = $this->payload;
+        $payload['aud'] = [$this->issuer['client_id'], false];
+
+        $this->expectExceptionMessage(Claims::ERR_INVALID_AUD);
+
+        $this->launchRejectedBeforeKeyFetch($payload);
+    }
+
+    public function test_launch_with_null_azp_is_rejected()
+    {
+        $payload = $this->payload;
+        $payload['azp'] = null;
+
+        $this->expectExceptionMessage(Claims::ERR_AZP_NOT_IN_AUD);
+
+        $this->launchRejectedBeforeKeyFetch($payload);
+    }
+
     public function test_invalid_certification_cases()
     {
         $testCasesDir = static::CERT_DATA_DIR.'invalid';
@@ -722,6 +796,18 @@ class Lti13CertificationTest extends TestCase
         }
         echo PHP_EOL;
         $this->assertEquals($casesCount, $testedCases);
+    }
+
+    private function launchRejectedBeforeKeyFetch(array $payload)
+    {
+        $this->cache->cacheNonce($payload['nonce'], static::STATE);
+        $params = [
+            'id_token' => $this->buildJWT($payload, $this->issuer),
+            'state' => static::STATE,
+        ];
+
+        return (new MessageFactory($this->db, $this->serviceConnector, $this->cache, $this->cookie))
+            ->create($params);
     }
 
     private function launch($payload, ?IDatabase $db = null)
